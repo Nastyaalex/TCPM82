@@ -93,7 +93,6 @@ namespace project_vniia
 
         private void DataGridView2_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            //MessageBox.Show("Ошибка");
             e.ThrowException = false;
         }
 
