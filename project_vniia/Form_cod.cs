@@ -25,24 +25,24 @@ namespace project_vniia
         {
             InitializeComponent();
             
-            zamena_1.Location = new System.Drawing.Point(230, 50);
-            zamena_1.Size = new System.Drawing.Size(95, 25);
+            zamena_1.Location = new System.Drawing.Point(180, 60);
+            zamena_1.Size = new System.Drawing.Size(100, 25);
             Controls.Add(zamena_1);
 
-            zamena.Location = new System.Drawing.Point(100, 50);
-            zamena.Size = new System.Drawing.Size(95, 25);
+            zamena.Location = new System.Drawing.Point(40, 60);
+            zamena.Size = new System.Drawing.Size(100, 25);
             Controls.Add(zamena);
 
             
-            _zamena.Location = new System.Drawing.Point(130, 100);
+            _zamena.Location = new System.Drawing.Point(110, 100);
             _zamena.Size = new System.Drawing.Size(95, 25);
             _zamena.Text = "Замена";
             _zamena.Click += _zamena_Click;
             Controls.Add(_zamena);
 
-            name.Location = new Point(100, 25);
-            name.Size = new System.Drawing.Size(150,25);
-            name.Text = "Введите номера блоков:";
+            name.Location = new Point(40, 25);
+            name.Size = new System.Drawing.Size(400,25);
+            name.Text = "Введите номера блоков (сначала КАКОЙ заменить, далее НА какой):";
             Controls.Add(name);
 
         }
@@ -55,129 +55,137 @@ namespace project_vniia
 
         private void _zamena_Click(object sender, EventArgs e)
         {
-            int one = 0, two = 0, colom = 0;
-            
-            if (dataTables[0].Columns.Contains("s_ColLineage") == true)
-                colom++;
-            if (dataTables[0].Columns.Contains("s_Generation") == true)
-                colom++;
-            if (dataTables[0].Columns.Contains("s_GUID") == true)
-                colom++;
-            if (dataTables[0].Columns.Contains("s_Lineage") == true)
-                colom++;
-
-            string[] mass = new string[dataTables[0].Columns.Count - colom];
-            string[] mass1 = new string[dataTables[0].Columns.Count - colom];
-
-            for (int i = 0; i < dataTables[0].Rows.Count; i++)
+            if (Form1.zam == true)
             {
-                if (dataTables[0].Rows[i][0].ToString() == zamena.Text)
-                {
-                    for (int j = 0; j < dataTables[0].Columns.Count - colom; j++)
-                    {
-                        mass[j] = dataTables[0].Rows[i][j].ToString();
-                    }
-
-                    one = i;
-                }
-                if (dataTables[0].Rows[i][0].ToString() == zamena_1.Text)
-                {
-                    for (int j = 0; j < dataTables[0].Columns.Count - colom; j++)
-                    {
-                        mass1[j] = dataTables[0].Rows[i][j].ToString();
-                    }
-
-                    two = i;
-                }
+                Change_BD_();
+                Form1.zam = false;
             }
-            for (int i = 1; i < dataTables[0].Columns.Count - colom; i++)
+            else
             {
-                dataTables[0].Rows[one][i] = mass1[i];
-                dataTables[0].Rows[two][i] = mass[i];
-            }
-            using (StreamWriter writer = new StreamWriter(Form1.filePath, true, Encoding.Default))
-            {
-                writer.WriteLine("Замена значений номера блока:" + zamena.Text + "  На номер блока:" + zamena_1.Text);
-                foreach (string str in mass)
+                int one = 0, two = 0, colom = 0;
+
+                if (dataTables[0].Columns.Contains("s_ColLineage") == true)
+                    colom++;
+                if (dataTables[0].Columns.Contains("s_Generation") == true)
+                    colom++;
+                if (dataTables[0].Columns.Contains("s_GUID") == true)
+                    colom++;
+                if (dataTables[0].Columns.Contains("s_Lineage") == true)
+                    colom++;
+
+                string[] mass = new string[dataTables[0].Columns.Count - colom];
+                string[] mass1 = new string[dataTables[0].Columns.Count - colom];
+
+                for (int i = 0; i < dataTables[0].Rows.Count; i++)
                 {
-                    writer.WriteLine(str);
-                }
-
-                foreach (string str in mass1)
-                {
-                    writer.WriteLine(str);
-                }
-            }
-
-            ////////////////////////////
-
-            int k=0,g=0,m=0;
-            for (v = 0; v < vs.Length; v++)
-            {
-                
-                string[] stolbez = new string[3] { "Номер блока", "Номер БД", "Номер изделия" }; //"Номер системы" };
-
-                for (int i = 0; i < stolbez.Length; i++)
-                {
-                    string stolb = dataTables[vs[v]].Columns.Contains(stolbez[i]) ? "is" : "is not";
-                    if (stolb == "is")
+                    if (dataTables[0].Rows[i][0].ToString() == zamena.Text)
                     {
-                         k = i;
-                        break;
-                    }
-                }
-                number_filtr(zamena);
-                m = items.Count;
-                string[] mass_sv= new string[m];
-                items.Clear();
-                 
-                number_filtr(zamena_1);
-                if (items.Count == 0 && m == 0)
-                { }
-                else
-                //if(items.Count != 0)
-                {
-                    for (int i = 0; i < dataTables[vs[v]].Rows.Count; i++)
-                    {
-                        if (dataTables[vs[v]].Rows[i][stolbez[k]].ToString() == zamena_1.Text)
+                        for (int j = 0; j < dataTables[0].Columns.Count - colom; j++)
                         {
-                            dataTables[vs[v]].Rows[i][stolbez[k]] = zamena.Text;
+                            mass[j] = dataTables[0].Rows[i][j].ToString();
+                        }
+
+                        one = i;
+                    }
+                    if (dataTables[0].Rows[i][0].ToString() == zamena_1.Text)
+                    {
+                        for (int j = 0; j < dataTables[0].Columns.Count - colom; j++)
+                        {
+                            mass1[j] = dataTables[0].Rows[i][j].ToString();
+                        }
+
+                        two = i;
+                    }
+                }
+                for (int i = 1; i < dataTables[0].Columns.Count - colom; i++)
+                {
+                    dataTables[0].Rows[one][i] = mass1[i];
+                    dataTables[0].Rows[two][i] = mass[i];
+                }
+                using (StreamWriter writer = new StreamWriter(Form1.filePath, true, Encoding.Default))
+                {
+                    writer.WriteLine("Замена значений номера блока:" + zamena.Text + "  На номер блока:" + zamena_1.Text);
+                    foreach (string str in mass)
+                    {
+                        writer.WriteLine(str);
+                    }
+
+                    foreach (string str in mass1)
+                    {
+                        writer.WriteLine(str);
+                    }
+                }
+
+                ////////////////////////////
+
+                int k = 0, g = 0, m = 0;
+                for (v = 0; v < vs.Length; v++)
+                {
+
+                    string[] stolbez = new string[3] { "Номер блока", "Номер БД", "Номер изделия" }; //"Номер системы" };
+
+                    for (int i = 0; i < stolbez.Length; i++)
+                    {
+                        string stolb = dataTables[vs[v]].Columns.Contains(stolbez[i]) ? "is" : "is not";
+                        if (stolb == "is")
+                        {
+                            k = i;
+                            break;
                         }
                     }
-                    for (int i = 0; i < dataTables[vs[v]].Rows.Count; i++)
+                    number_filtr(zamena);
+                    m = items.Count;
+                    string[] mass_sv = new string[m];
+                    items.Clear();
+
+                    number_filtr(zamena_1);
+                    if (items.Count == 0 && m == 0)
+                    { }
+                    else
+                    //if(items.Count != 0)
                     {
-                        if (dataTables[vs[v]].Rows[i][stolbez[k]].ToString() == zamena.Text)
+                        for (int i = 0; i < dataTables[vs[v]].Rows.Count; i++)
                         {
-                            if (items.Contains(dataTables[vs[v]].Rows[i]["Номер записи"].ToString()))
-                            { }
-                            else
+                            if (dataTables[vs[v]].Rows[i][stolbez[k]].ToString() == zamena_1.Text)
                             {
-                                dataTables[vs[v]].Rows[i][stolbez[k]] = zamena_1.Text;
-                                mass_sv[g] = dataTables[vs[v]].Rows[i]["Номер записи"].ToString();
-                                g++;
+                                dataTables[vs[v]].Rows[i][stolbez[k]] = zamena.Text;
                             }
                         }
-                    }
-                    using (StreamWriter writer_sv = new StreamWriter(Form1.filePath, true, Encoding.Default))
-                    {
-                        writer_sv.WriteLine("Замена номера блока в связной табл. " + vs[v] + ":"
-                            + zamena.Text + "  На номер блока:" + zamena_1.Text + "   В строках номер:");
-
-                        foreach (string str in mass_sv)
+                        for (int i = 0; i < dataTables[vs[v]].Rows.Count; i++)
                         {
-                            writer_sv.WriteLine(str);
+                            if (dataTables[vs[v]].Rows[i][stolbez[k]].ToString() == zamena.Text)
+                            {
+                                if (items.Contains(dataTables[vs[v]].Rows[i]["Номер записи"].ToString()))
+                                { }
+                                else
+                                {
+                                    dataTables[vs[v]].Rows[i][stolbez[k]] = zamena_1.Text;
+                                    mass_sv[g] = dataTables[vs[v]].Rows[i]["Номер записи"].ToString();
+                                    g++;
+                                }
+                            }
                         }
-                        writer_sv.WriteLine("////////////////////////////////");
-                        foreach (string str in items)
+                        using (StreamWriter writer_sv = new StreamWriter(Form1.filePath, true, Encoding.Default))
                         {
-                            writer_sv.WriteLine(str);
-                        }
-                        writer_sv.WriteLine("////////////////////////////////");
-                        writer_sv.WriteLine("////////////////////////////////");
-                    }
+                            writer_sv.WriteLine("Замена номера блока в связной табл. " + vs[v] + ":"
+                                + zamena.Text + "  На номер блока:" + zamena_1.Text + "   В строках номер:");
 
-                    items.Clear();
-                    g = 0;
+                            foreach (string str in mass_sv)
+                            {
+                                writer_sv.WriteLine(str);
+                            }
+                            writer_sv.WriteLine("////////////////////////////////");
+                            foreach (string str in items)
+                            {
+                                writer_sv.WriteLine(str);
+                            }
+                            writer_sv.WriteLine("////////////////////////////////");
+                            writer_sv.WriteLine("////////////////////////////////");
+                        }
+
+                        items.Clear();
+                        g = 0;
+                    }
                 }
             }
                 // доработать таймер
@@ -207,7 +215,6 @@ namespace project_vniia
 
         static List<string> items = new List<string>();
         
-
         public void number_filtr(TextBox box)
         {
             var table1 = dataTables[vs[v]];
@@ -265,9 +272,96 @@ namespace project_vniia
                 //MessageBox.Show(table2.Rows[i][0].ToString());
             }
         }
+
+        public void Change_BD_()
+        {
+            int one = 0, colom = 0;
+
+            if (dataTables[0].Columns.Contains("s_ColLineage") == true)
+                colom++;
+            if (dataTables[0].Columns.Contains("s_Generation") == true)
+                colom++;
+            if (dataTables[0].Columns.Contains("s_GUID") == true)
+                colom++;
+            if (dataTables[0].Columns.Contains("s_Lineage") == true)
+                colom++;
+
+            string[] mass = new string[dataTables[0].Columns.Count - colom];
+
+            for (int i = 0; i < dataTables[0].Rows.Count; i++)
+            {
+                if (dataTables[0].Rows[i][0].ToString() == zamena.Text)
+                {
+                    for (int j = 0; j < dataTables[0].Columns.Count - colom; j++)
+                    {
+                        mass[j] = dataTables[0].Rows[i][j].ToString();
+                    }
+                    one = i;
+                }
+            }
+
+            dataTables[0].Rows[one][0] = zamena_1.Text;
+
+            using (StreamWriter writer = new StreamWriter(Form1.filePath, true, Encoding.Default))
+            {
+                writer.WriteLine("Замена номера блока:" + zamena.Text + "  На номер блока:" + zamena_1.Text);
+                foreach (string str in mass)
+                {
+                    writer.WriteLine(str);
+                }
+            }
+
+            ////////////////////////////
+
+            int k = 0, m = 0;
+            for (v = 0; v < vs.Length; v++)
+            {
+                string[] stolbez = new string[3] { "Номер блока", "Номер БД", "Номер изделия" }; //"Номер системы" };
+
+                for (int i = 0; i < stolbez.Length; i++)
+                {
+                    string stolb = dataTables[vs[v]].Columns.Contains(stolbez[i]) ? "is" : "is not";
+                    if (stolb == "is")
+                    {
+                        k = i;
+                        break;
+                    }
+                }
+                number_filtr(zamena);
+                m = items.Count;
+                
+                if (items.Count == 0 && m == 0)
+                { }
+                else
+                {
+                    for (int i = 0; i < dataTables[vs[v]].Rows.Count; i++)
+                    {
+                        if (dataTables[vs[v]].Rows[i][stolbez[k]].ToString() == zamena.Text)
+                        {
+                            dataTables[vs[v]].Rows[i][stolbez[k]] = zamena_1.Text;
+                        }
+                    }
+                    
+                    using (StreamWriter writer_sv = new StreamWriter(Form1.filePath, true, Encoding.Default))
+                    {
+                        writer_sv.WriteLine("Замена поля 'номер блока' в связной табл. " + vs[v] + ":"
+                            + zamena.Text + "  На номер блока:" + zamena_1.Text + "   В строках номер:");
+
+                        foreach (string str in items)
+                        {
+                            writer_sv.WriteLine(str);
+                        }
+                        writer_sv.WriteLine("////////////////////////////////");
+                        writer_sv.WriteLine("////////////////////////////////");
+                    }
+
+                    items.Clear();
+                }
+            }
+        }
     }
 }
-//изменить нумерацию-так как столбик c номенром то нулевой то первый-> +
+//изменить нумерацию-так как столбик c номером то нулевой то первый-> +
 //была проблема с номером столбца в фильтре в табл ОперацииМетро-> как выше описано-> +
 
 //в табл КАН название счётчика выглядит иначе "Номер_Записи", а везде "Номер_записи"

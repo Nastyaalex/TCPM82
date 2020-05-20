@@ -47,8 +47,9 @@ namespace project_vniia
         public Form1()
         {
             InitializeComponent();
+            //this.KeyPreview = true;
 
-            for (int t = 6; this.Controls[t] != this.Controls[8]; t++)
+            for (int t = 4; this.Controls[t] != this.Controls[6]; t++)
             {
                 Control c = this.Controls[t];
                 pb.WireControl(c);
@@ -59,12 +60,12 @@ namespace project_vniia
             dataGridView2.RowPrePaint += DataGridView2_RowPrePaint;
             dataGridView1.RowPrePaint += DataGridView1_RowPrePaint;
             textBox1.KeyUp += TextBox1_KeyUp;
-
+            
             //резервное копирование
             //File.Copy(openFileDialog1.FileName, "C:\\Users\\APM\\Desktop\\2.mdb", true);
 
         }
-
+        
         private void TextBox1_KeyUp(object sender, KeyEventArgs e)
         {
             button_filtr_Click();
@@ -87,7 +88,6 @@ namespace project_vniia
             object header = this.dataGridView2.Rows[index].HeaderCell.Value;
             if (header == null || !header.Equals(indexStr))
                 this.dataGridView2.Rows[index].HeaderCell.Value = indexStr;
-
         }
 
 
@@ -119,7 +119,6 @@ namespace project_vniia
             }
             int k_tr=0;
             
-
             foreach (bool f in flag_sysh)
             {
                 if (f) { k_tr++; }
@@ -151,6 +150,7 @@ namespace project_vniia
             Class_zagruz.Combobox_(conString, comboBox1, ds, myDB, myDBs);
 
             dataGridView1.DataSource = myDBs["[Блоки]"].table.DefaultView;
+            dataGridView1.Columns["Номер БД"].ReadOnly = true;
 
             Datagrid_columns_delete_blocks();
             Datagrid_columns_delete();
@@ -169,10 +169,20 @@ namespace project_vniia
         {
         }
 
+        string[] stolbez = new string[5] { "Номер блока", "Номер КАН", "Номер БД", "Номер изделия", "Номер системы"};
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             dataGridView2.DataSource = myDBs["[" + comboBox1.Text + "]"].table.DefaultView;
+            
+            for (i = 0; i < 5; i++)
+            {
+                if (dataGridView2.Columns.Contains(stolbez[i]))
+                {
+                    dataGridView2.Columns[stolbez[i]].ReadOnly = true;
+                    break;
+                }
+            }
             Datagrid_columns_delete();
             if (flag_filtr)
                 button_filtr_Click();
@@ -383,73 +393,12 @@ namespace project_vniia
 
         private Dictionary<string, MyDB> myDBs = new Dictionary<string, MyDB>();
 
-        private void but_saved_Click(object sender, EventArgs e)
-        { //сохранение для таблицы(авто)
-            
-            ds = new DataSet();
-            myDBs["[Блоки]"].adapter.Fill(ds);
-            myDBs["[Блоки]"].ds = ds;
-
-            Class_Save_blocks.AnalizTable(myDBs["[Блоки]"].ds.Tables[0], myDBs["[Блоки]"].table, myDBs["[Блоки]"].adapter);
-
-            foreach (string str in comboBox1.Items)
-            {
-                ds = new DataSet();
-                myDBs["["+ str +"]"].adapter.Fill(ds);
-                myDBs["[" + str + "]"].ds = ds;
-            }
-            
-            #region SAVE
-            Class_Save_cannote.AnalizTable(myDBs["[CANNote]"].ds.Tables[0], myDBs["[CANNote]"].table, myDBs["[CANNote]"].adapter);
-
-            Class_Save_blockMetro.AnalizTable(myDBs["[БлокиМетро]"].ds.Tables[0], myDBs["[БлокиМетро]"].table, myDBs["[БлокиМетро]"].adapter);
-
-            Class_Save_kan.AnalizTable(myDBs["[КАН]"].ds.Tables[0], myDBs["[КАН]"].table, myDBs["[КАН]"].adapter);
-
-            Class_Save_kanS.AnalizTable(myDBs["[КАНы]"].ds.Tables[0], myDBs["[КАНы]"].table, myDBs["[КАНы]"].adapter);
-
-            Class_Save_operMetro.AnalizTable(myDBs["[ОперацииМетро]"].ds.Tables[0], myDBs["[ОперацииМетро]"].table, myDBs["[ОперацииМетро]"].adapter);
-
-            Class_Save_prov.AnalizTable(myDBs["[Проверка]"].ds.Tables[0], myDBs["[Проверка]"].table, myDBs["[Проверка]"].adapter);
-
-            Class_Save_provFey.AnalizTable(myDBs["[Проверка ФЭУ]"].ds.Tables[0], myDBs["[Проверка ФЭУ]"].table, myDBs["[Проверка ФЭУ]"].adapter);
-
-            Class_Save_provTCPM.AnalizTable(myDBs["[ПроверкаТСРМ61]"].ds.Tables[0], myDBs["[ПроверкаТСРМ61]"].table, myDBs["[ПроверкаТСРМ61]"].adapter);
-
-            Class_Save_rabotBD.AnalizTable(myDBs["[Работы по БД]"].ds.Tables[0], myDBs["[Работы по БД]"].table, myDBs["[Работы по БД]"].adapter);
-
-            Class_Save_systemVsbore.AnalizTable(myDBs["[Системы в сборе]"].ds.Tables[0], myDBs["[Системы в сборе]"].table, myDBs["[Системы в сборе]"].adapter);
-
-            Class_Save_termocalibr.AnalizTable(myDBs["[Термокалибровка]"].ds.Tables[0], myDBs["[Термокалибровка]"].table, myDBs["[Термокалибровка]"].adapter);
-
-            Class_Save_zamechPoBD.AnalizTable(myDBs["[Замечания по БД]"].ds.Tables[0], myDBs["[Замечания по БД]"].table, myDBs["[Замечания по БД]"].adapter);
-            // доработать таймер
-            timer.Interval = 500;
-            timer.Tick += Timer_Tick;
-            timer.Start();
-            #endregion
-        }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            but_saved.BackColor = colors[counter++];
-            if (counter == colors.Length)
-            {
-                counter = 0;
-                timer.Stop();
-            }
-        }
-        Timer timer = new Timer();
-        Color[] colors = { Color.AliceBlue, Color.AntiqueWhite, Color.Aqua, Color.Aquamarine, Color.Azure };
-        int counter = 0;
-
         private void but_peregruzka_Click(object sender, EventArgs e)
         {//работает- для замены строк
             dataGridView1.DataSource = myDBs["[Блоки]"].table.DefaultView;
             Datagrid_columns_delete_blocks();
         }
-
-
+        
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
@@ -476,11 +425,62 @@ namespace project_vniia
 
             return cod;
         }
-
-        private void button_change_Click(object sender, EventArgs e)
+        
+        private void поменятьСтрокиМестамиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           CreateForm_zamena();
-            /// добавить текст файл с записями о замене->+ 
+            CreateForm_zamena();
+        }
+
+        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //сохранение для таблицы(авто)
+
+            ds = new DataSet();
+            myDBs["[Блоки]"].adapter.Fill(ds);
+            myDBs["[Блоки]"].ds = ds;
+
+            Class_Save_blocks.AnalizTable(myDBs["[Блоки]"].ds.Tables[0], myDBs["[Блоки]"].table, myDBs["[Блоки]"].adapter);
+
+            foreach (string str in comboBox1.Items)
+            {
+                ds = new DataSet();
+                myDBs["[" + str + "]"].adapter.Fill(ds);
+                myDBs["[" + str + "]"].ds = ds;
+            }
+
+            #region SAVE
+            Class_Save_cannote.AnalizTable(myDBs["[CANNote]"].ds.Tables[0], myDBs["[CANNote]"].table, myDBs["[CANNote]"].adapter);
+
+            Class_Save_blockMetro.AnalizTable(myDBs["[БлокиМетро]"].ds.Tables[0], myDBs["[БлокиМетро]"].table, myDBs["[БлокиМетро]"].adapter);
+
+            Class_Save_kan.AnalizTable(myDBs["[КАН]"].ds.Tables[0], myDBs["[КАН]"].table, myDBs["[КАН]"].adapter);
+
+            Class_Save_kanS.AnalizTable(myDBs["[КАНы]"].ds.Tables[0], myDBs["[КАНы]"].table, myDBs["[КАНы]"].adapter);
+
+            Class_Save_operMetro.AnalizTable(myDBs["[ОперацииМетро]"].ds.Tables[0], myDBs["[ОперацииМетро]"].table, myDBs["[ОперацииМетро]"].adapter);
+
+            Class_Save_prov.AnalizTable(myDBs["[Проверка]"].ds.Tables[0], myDBs["[Проверка]"].table, myDBs["[Проверка]"].adapter);
+
+            Class_Save_provFey.AnalizTable(myDBs["[Проверка ФЭУ]"].ds.Tables[0], myDBs["[Проверка ФЭУ]"].table, myDBs["[Проверка ФЭУ]"].adapter);
+
+            Class_Save_provTCPM.AnalizTable(myDBs["[ПроверкаТСРМ61]"].ds.Tables[0], myDBs["[ПроверкаТСРМ61]"].table, myDBs["[ПроверкаТСРМ61]"].adapter);
+
+            Class_Save_rabotBD.AnalizTable(myDBs["[Работы по БД]"].ds.Tables[0], myDBs["[Работы по БД]"].table, myDBs["[Работы по БД]"].adapter);
+
+            Class_Save_systemVsbore.AnalizTable(myDBs["[Системы в сборе]"].ds.Tables[0], myDBs["[Системы в сборе]"].table, myDBs["[Системы в сборе]"].adapter);
+
+            Class_Save_termocalibr.AnalizTable(myDBs["[Термокалибровка]"].ds.Tables[0], myDBs["[Термокалибровка]"].table, myDBs["[Термокалибровка]"].adapter);
+
+            Class_Save_zamechPoBD.AnalizTable(myDBs["[Замечания по БД]"].ds.Tables[0], myDBs["[Замечания по БД]"].table, myDBs["[Замечания по БД]"].adapter);
+
+            #endregion
+        }
+        public static bool zam = false;
+        private void заменитьНомерБДToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            zam = true;
+            CreateForm_zamena();
+            
         }
     }
     

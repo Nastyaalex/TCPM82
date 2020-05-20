@@ -33,14 +33,15 @@
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button_change = new System.Windows.Forms.Button();
-            this.but_saved = new System.Windows.Forms.Button();
             this.but_peregruzka = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.Add_Blocks_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.поменятьСтрокиМестамиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.сохранитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.заменитьНомерБДToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -96,30 +97,6 @@
             this.textBox1.Size = new System.Drawing.Size(132, 22);
             this.textBox1.TabIndex = 4;
             // 
-            // button_change
-            // 
-            this.button_change.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_change.Location = new System.Drawing.Point(508, 784);
-            this.button_change.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button_change.Name = "button_change";
-            this.button_change.Size = new System.Drawing.Size(203, 28);
-            this.button_change.TabIndex = 5;
-            this.button_change.Text = "Поменять строки местами";
-            this.button_change.UseVisualStyleBackColor = true;
-            this.button_change.Click += new System.EventHandler(this.button_change_Click);
-            // 
-            // but_saved
-            // 
-            this.but_saved.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.but_saved.Location = new System.Drawing.Point(867, 784);
-            this.but_saved.Margin = new System.Windows.Forms.Padding(4);
-            this.but_saved.Name = "but_saved";
-            this.but_saved.Size = new System.Drawing.Size(100, 28);
-            this.but_saved.TabIndex = 8;
-            this.but_saved.Text = "Сохранить";
-            this.but_saved.UseVisualStyleBackColor = true;
-            this.but_saved.Click += new System.EventHandler(this.but_saved_Click);
-            // 
             // but_peregruzka
             // 
             this.but_peregruzka.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -149,17 +126,37 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Add_Blocks_ToolStripMenuItem});
+            this.Add_Blocks_ToolStripMenuItem,
+            this.поменятьСтрокиМестамиToolStripMenuItem,
+            this.сохранитьToolStripMenuItem,
+            this.заменитьНомерБДToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(88, 24);
-            this.toolStripMenuItem1.Text = "Добавить";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(86, 24);
+            this.toolStripMenuItem1.Text = "Действия";
             // 
             // Add_Blocks_ToolStripMenuItem
             // 
             this.Add_Blocks_ToolStripMenuItem.Name = "Add_Blocks_ToolStripMenuItem";
-            this.Add_Blocks_ToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
+            this.Add_Blocks_ToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.A)));
+            this.Add_Blocks_ToolStripMenuItem.Size = new System.Drawing.Size(318, 26);
             this.Add_Blocks_ToolStripMenuItem.Text = "Добавить блоки";
             this.Add_Blocks_ToolStripMenuItem.Click += new System.EventHandler(this.добавитьБлокиToolStripMenuItem_Click);
+            // 
+            // поменятьСтрокиМестамиToolStripMenuItem
+            // 
+            this.поменятьСтрокиМестамиToolStripMenuItem.Name = "поменятьСтрокиМестамиToolStripMenuItem";
+            this.поменятьСтрокиМестамиToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
+            this.поменятьСтрокиМестамиToolStripMenuItem.Size = new System.Drawing.Size(318, 26);
+            this.поменятьСтрокиМестамиToolStripMenuItem.Text = "Поменять строки местами";
+            this.поменятьСтрокиМестамиToolStripMenuItem.Click += new System.EventHandler(this.поменятьСтрокиМестамиToolStripMenuItem_Click);
+            // 
+            // сохранитьToolStripMenuItem
+            // 
+            this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
+            this.сохранитьToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Z)));
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(318, 26);
+            this.сохранитьToolStripMenuItem.Text = "Сохранить";
+            this.сохранитьToolStripMenuItem.Click += new System.EventHandler(this.сохранитьToolStripMenuItem_Click);
             // 
             // label1
             // 
@@ -175,6 +172,14 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // заменитьНомерБДToolStripMenuItem
+            // 
+            this.заменитьНомерБДToolStripMenuItem.Name = "заменитьНомерБДToolStripMenuItem";
+            this.заменитьНомерБДToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Q)));
+            this.заменитьНомерБДToolStripMenuItem.Size = new System.Drawing.Size(318, 26);
+            this.заменитьНомерБДToolStripMenuItem.Text = "Заменить номер БД";
+            this.заменитьНомерБДToolStripMenuItem.Click += new System.EventHandler(this.заменитьНомерБДToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -182,14 +187,13 @@
             this.ClientSize = new System.Drawing.Size(1368, 833);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.but_peregruzka);
-            this.Controls.Add(this.but_saved);
-            this.Controls.Add(this.button_change);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "project_vniia_TCPM82";
@@ -207,8 +211,6 @@
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button_change;
-        private System.Windows.Forms.Button but_saved;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button but_peregruzka;
         private System.Windows.Forms.MenuStrip menuStrip1;
@@ -216,6 +218,9 @@
         private System.Windows.Forms.ToolStripMenuItem Add_Blocks_ToolStripMenuItem;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.ToolStripMenuItem поменятьСтрокиМестамиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem сохранитьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem заменитьНомерБДToolStripMenuItem;
     }
 }
 
