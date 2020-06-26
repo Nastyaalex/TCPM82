@@ -30,6 +30,8 @@ namespace project_vniia
         public static string textbox2_;
         public static string textbox3_;
         public static string textbox4_;
+        public static string textbox5_;
+        public static string textbox6_;
 
         private void Form2_Load(object sender, EventArgs e)
         {
@@ -41,11 +43,33 @@ namespace project_vniia
             textbox2_ = textBox2.Text;
             textbox3_ = textBox3.Text;
             textbox4_ = textBox4.Text;
+            textbox5_ = textBox5.Text;
+            textbox6_ = textBox6.Text;
             knopka = true;
             Close();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox6_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox5_TextChanged(object sender, EventArgs e)
         {
 
         }

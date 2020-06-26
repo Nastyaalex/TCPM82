@@ -57,13 +57,10 @@ namespace project_vniia
 
                 try
                 {
-                    // Create an instance of StreamReader to read from a file.
-                    // The using statement also closes the StreamReader.
                     using (StreamReader sr = new StreamReader(path + "\\TestWay" + _ways))
                     {
                         string line = sr.ReadLine();
-                        // Read and display lines from the file until the end of 
-                        // the file is reached.
+
                         if (Directory.Exists(line))//del
                         {
                             sysh = true;
@@ -94,7 +91,7 @@ namespace project_vniia
 
         public static string[] Forma2_()
         {
-            string[] F2=new string[4];
+            string[] F2=new string[6];
 
             Form2 form2 = new Form2();
             form2.ShowDialog();
@@ -107,6 +104,8 @@ namespace project_vniia
             F2[1] = Form2.textbox2_;
             F2[2] = Form2.textbox3_;
             F2[3] = Form2.textbox4_;
+            F2[4] = Form2.textbox5_;
+            F2[5] = Form2.textbox6_;
             int g = 0;
             foreach (string t in F2)
             {
@@ -128,9 +127,9 @@ namespace project_vniia
         public static void Zap_(string[] _ways, string[] F2, int k_tr)
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            if (k_tr != 4 && k_tr < 4)
+            if (k_tr != 6 && k_tr < 6)
             {
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     using (StreamWriter sw = new StreamWriter(path + "\\TestWay" + _ways[i]))
                     {
@@ -142,6 +141,8 @@ namespace project_vniia
             Form1.Log_ways_peremesti = F2[1];
             Form1.Zamech_ways = F2[2];
             Form1.Zamech_ways_peremesti = F2[3];
+            Form1.Proverka_ways = F2[4];
+            Form1.Proverka_ways_perem = F2[5];
         }
     }
 }

@@ -16,7 +16,8 @@ namespace project_vniia
         DataSet ds = new DataSet();
 
         public int i;
-        bool flag_filtr = false;
+        public bool flag_filtr = false;
+        public static bool flag_filtr_1 = false;
         public static string[] cmdText = new string[13] { "SELECT * FROM [CANNote] ORDER BY Номер_КАН ASC",
         "SELECT * FROM [БлокиМетро]","SELECT * FROM [Замечания по БД]","SELECT * FROM [КАН]",
         "SELECT * FROM [КАНы]","SELECT * FROM [ОперацииМетро]","SELECT * FROM [Проверка]",
@@ -35,21 +36,30 @@ namespace project_vniia
 
         public static string conString;// = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\nasty\\Desktop\\_TCPM82_New.mdb";
 
-        public static string[] F2 = new string[4];
+        public static string[] F2 = new string[6];
 
         public static string Log_ways;
         public static string Log_ways_peremesti;
         public static string Zamech_ways;
         public static string Zamech_ways_peremesti;
+        /// <summary>
+        /// /дописать к проверке запись пути к папкам
+        /// </summary>
+        public static string Proverka_ways;
+        public static string Proverka_ways_perem;
 
-        public static string[] _ways_=new string[4] {"\\log_ways.txt", "\\log_peremesti.txt", "\\zamech_ways.txt", "\\zamech_peremesti.txt" };
+        public static bool Flags = false;
+        public static bool Flags_ = false;
+        public static bool Flags_1 = false;
+
+        public static string[] _ways_=new string[6] {"\\log_ways.txt", "\\log_peremesti.txt", "\\zamech_ways.txt", "\\zamech_peremesti.txt", "\\prov_ways.txt", "\\prov_peremesti.txt" };
         
         public Form1()
         {
             InitializeComponent();
             //this.KeyPreview = true;
 
-            for (int t = 4; this.Controls[t] != this.Controls[6]; t++)
+            for (int t = 5; this.Controls[t] != this.Controls[7]; t++)
             {
                 Control c = this.Controls[t];
                 pb.WireControl(c);
@@ -60,15 +70,40 @@ namespace project_vniia
             dataGridView2.RowPrePaint += DataGridView2_RowPrePaint;
             dataGridView1.RowPrePaint += DataGridView1_RowPrePaint;
             textBox1.KeyUp += TextBox1_KeyUp;
+
+            textBox2.KeyUp += TextBox2_KeyUp;
             
             //резервное копирование
             //File.Copy(openFileDialog1.FileName, "C:\\Users\\APM\\Desktop\\2.mdb", true);
 
         }
         
+        private void TextBox2_KeyUp(object sender, KeyEventArgs e)
+        {
+            Filtr_2.Tabl2(myDBs, comboBox1, textBox1,textBox2, dataGridView1, dataGridView2);
+            if(Filtr_2.Bbb == true)
+            {
+                TextBox1_KeyUp(sender, e);
+                Filtr_2.Bbb = false;
+            }
+            if (Filtr_2.Ccc == true)
+            {
+                TextBox1_KeyUp(sender, e);
+                Filtr_2.Ccc = false;
+            }
+            if (textBox2.Text=="")
+                Filtr_2.Filtr2 = false;
+            Datagrid_columns_delete();
+            Datagrid_columns_delete_blocks();
+        }
+
         private void TextBox1_KeyUp(object sender, KeyEventArgs e)
         {
-            button_filtr_Click();
+            button_filtr_Click(myDBs, comboBox1, textBox1, textBox2);
+            Datagrid_columns_delete();
+            Datagrid_columns_delete_blocks();
+            if (Filtr_2.Filtr2 == true && Filtr_2.Ccc == false)
+            { TextBox2_KeyUp(sender, e); }
         }
 
 
@@ -110,9 +145,9 @@ namespace project_vniia
             }
             while (conString == null);
 
-            bool[] flag_sysh = new bool[4];
+            bool[] flag_sysh = new bool[6];
             
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 6; i++)
             {
                 bool pusto = Class_ways.Pusto_(_ways_[i]);
                 flag_sysh[i] = Class_ways.Log_pusto(_ways_[i], pusto);
@@ -125,7 +160,7 @@ namespace project_vniia
             }
             try
             {
-                if (k_tr != 4 && k_tr < 4)
+                if (k_tr != 6 && k_tr < 6)
                 {
                     do
                     {
@@ -163,6 +198,9 @@ namespace project_vniia
             Zamech_BD zamech_BD = new Zamech_BD();
             zamech_BD.Main_Zamech_BD(this);
 
+            Proverka proverka = new Proverka();
+            proverka.Main_Proverka(this, myDBs["[Проверка]"].table);
+
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -185,7 +223,22 @@ namespace project_vniia
             }
             Datagrid_columns_delete();
             if (flag_filtr)
-                button_filtr_Click();
+            {
+                button_filtr_Click(myDBs, comboBox1, textBox1, textBox2);
+            }
+            if(flag_filtr_1)
+            {
+                Filtr_2.Tabl2(myDBs, comboBox1, textBox1, textBox2, dataGridView1, dataGridView2);
+                Datagrid_columns_delete();
+                Datagrid_columns_delete_blocks();
+                if (Filtr_2.Ccc == true)
+                {
+                    button_filtr_Click(myDBs, comboBox1, textBox1, textBox2);
+                    Filtr_2.Ccc = false;
+                }
+                if (textBox2.Text == "")
+                    Filtr_2.Filtr2 = false;
+            }
 
         }
         public void Datagrid_columns_delete()
@@ -236,10 +289,15 @@ namespace project_vniia
         {
 
         }
-       
-        public void filtr()
+        public string text;
+        public void filtr(Dictionary<string, MyDB> myDBs, TextBox textBox1, TextBox textBox2)
         {
-            if (textBox1.Text == null)
+            if (Filtr_2.Ccc == true)
+            { text = textBox2.Text; }
+            else text = textBox1.Text;
+
+
+            if (text == "")
                 dataGridView1.DataSource = myDBs["[Блоки]"].table;
             else
             {
@@ -273,7 +331,7 @@ namespace project_vniia
                         {
                             if ((k < kolvo) && (k < kolvo - 1) && (k < kolvo - 2) && (k < kolvo - 3))
                             {
-                                if (c.ToString().Contains(textBox1.Text))
+                                if (c.ToString().Contains(text))
                                 {
                                     f = false;
                                 }
@@ -282,7 +340,7 @@ namespace project_vniia
                         }
                         else
                         {
-                            if (c.ToString().Contains(textBox1.Text))
+                            if (c.ToString().Contains(text))
                             {
                                 f = false;
                             }
@@ -300,84 +358,103 @@ namespace project_vniia
                 {
                     rows.Remove(r);
                 }
-                
+
+                rows_to_delete.Clear();
+
                 dataGridView1.DataSource = table2;
+                
                 Datagrid_columns_delete_blocks();
               
             }
         }
-        private void button_filtr_Click()
+        public void button_filtr_Click(Dictionary<string, MyDB> myDBs, ComboBox comboBox1, TextBox textBox1, TextBox textBox2)
         {
-            filtr(); // for 1 table
-            if (textBox1.Text == null)
-                dataGridView2.DataSource = myDBs["[" + comboBox1.Text + "]"].table;
-            else
-            {
-                var table1 = myDBs["[" + comboBox1.Text + "]"].table;
-                int k = 0;bool s_ = false;
-                if (table1.Columns.Contains("s_ColLineage") == true)
-                    k++; //table1.Columns.Remove("s_ColLineage");
-                if (table1.Columns.Contains("s_Generation") == true)
-                    k++; // table1.Columns.Remove("s_Generation");
-                if (table1.Columns.Contains("s_GUID") == true)
-                    k++; // table1.Columns.Remove("s_GUID");
-                if (table1.Columns.Contains("s_Lineage") == true)
-                    k++;// table1.Columns.Remove("s_Lineage");
-                var table2 = table1.Copy();
-                if (k != 0)
-                    s_ = true; 
-                //переписать t1 -> t2 С учетом фильтра
+            if (Filtr_2.Filtr2 == false || Filtr_2.Ccc == true)
+            { 
+                filtr(myDBs, textBox1, textBox2); // for 1 table
+                if (Filtr_2.Ccc == true)
+                { text = textBox2.Text; }
+                else text = textBox1.Text;
 
-                var rows_to_delete = new List<DataRow>();
-
-                var rows = table2.Rows;
-                foreach (DataRow r in rows)
+                if (text == "")
                 {
-                    bool f = true;
-                    int kolvo= r.ItemArray.Length;
-                    k = 1;
-                    foreach (var c in r.ItemArray)
+                    dataGridView2.DataSource = myDBs["[" + comboBox1.Text + "]"].table;
+
+                    Datagrid_columns_delete();
+                    Datagrid_columns_delete_blocks();
+                }
+                else
+                {
+                    var table1 = myDBs["[" + comboBox1.Text + "]"].table;
+                    int k = 0; bool s_ = false;
+                    if (table1.Columns.Contains("s_ColLineage") == true)
+                        k++; //table1.Columns.Remove("s_ColLineage");
+                    if (table1.Columns.Contains("s_Generation") == true)
+                        k++; // table1.Columns.Remove("s_Generation");
+                    if (table1.Columns.Contains("s_GUID") == true)
+                        k++; // table1.Columns.Remove("s_GUID");
+                    if (table1.Columns.Contains("s_Lineage") == true)
+                        k++;// table1.Columns.Remove("s_Lineage");
+                    var table2 = table1.Copy();
+                    if (k != 0)
+                        s_ = true;
+                    //переписать t1 -> t2 С учетом фильтра
+
+                    var rows_to_delete = new List<DataRow>();
+
+                    var rows = table2.Rows;
+                    foreach (DataRow r in rows)
                     {
-                        if (s_)
+                        bool f = true;
+                        int kolvo = r.ItemArray.Length;
+                        k = 1;
+                        foreach (var c in r.ItemArray)
                         {
-                            if ((k < kolvo) && (k < kolvo - 1) && (k < kolvo - 2) && (k < kolvo - 3))
+                            if (s_)
                             {
-                                if (c.ToString().Contains(textBox1.Text))
+                                if ((k < kolvo) && (k < kolvo - 1) && (k < kolvo - 2) && (k < kolvo - 3))
+                                {
+                                    if (c.ToString().Contains(text))
+                                    {
+                                        f = false;
+                                    }
+                                }
+                                else { break; }
+                            }
+                            else
+                            {
+                                //Console.Write (c.ToString() + " "); // для проверки
+                                if (c.ToString().Contains(text))
                                 {
                                     f = false;
                                 }
                             }
-                            else { break; }
+                            k++;
                         }
-                        else
+                        if (f)
                         {
-                            //Console.Write (c.ToString() + " "); // для проверки
-                            if (c.ToString().Contains(textBox1.Text))
-                            {
-                                f = false;
-                            }
+                            rows_to_delete.Add(r);
                         }
-                        k++;
+                        Console.WriteLine();
                     }
-                    if (f)
+
+                    foreach (var r in rows_to_delete)
                     {
-                        rows_to_delete.Add(r);
+                        rows.Remove(r);
                     }
-                    Console.WriteLine();
-                }
 
-                foreach (var r in rows_to_delete)
-                {
-                    rows.Remove(r);
-                }
+                    rows_to_delete.Clear();
 
-                dataGridView2.DataSource = table2;
-                Datagrid_columns_delete();
-                flag_filtr = true;
-                
+                    dataGridView2.DataSource = table2;
+
+                    Datagrid_columns_delete();
+                    flag_filtr = true;
+
+                }
             }
         }
         
+
         private void добавитьБлокиToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateForm();
@@ -480,16 +557,17 @@ namespace project_vniia
         {
             zam = true;
             CreateForm_zamena();
-            
+        }
+
+        private void сложнаяФильтрацияToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBox2.Visible = true;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
     
-
-    //замену изменить+
-    /// калибровку закончила
-
-    //сделать проверку на наличие при добавление новых блоков->сделала
-
-    // создать блоки и проверить класс замечания по бд->+
-
 }
