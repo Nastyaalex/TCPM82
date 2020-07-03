@@ -568,6 +568,27 @@ namespace project_vniia
         {
 
         }
+        public Otchet CreateForm_otchet()
+        {
+            // Проверяем существование формы
+            foreach (Form frm in Application.OpenForms)
+                if (frm is Otchet)
+                {
+                    frm.Activate();
+                    return frm as Otchet;
+                }
+            // Создаем новую форму
+            Otchet otchet = new Otchet();
+            otchet.myDBs = myDBs;
+            
+            otchet.Show();
+
+            return otchet;
+        }
+        private void отчётПоТипамБДToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateForm_otchet();
+        }
     }
     
 }

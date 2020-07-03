@@ -138,13 +138,13 @@ namespace project_vniia
                     var table3 = myDBs["[" + comboBox1.Text + "]"].table;
                     k = 0; s_ = false;
                     if (table3.Columns.Contains("s_ColLineage") == true)
-                        k++; //table1.Columns.Remove("s_ColLineage");
+                        k++; 
                     if (table3.Columns.Contains("s_Generation") == true)
-                        k++; // table1.Columns.Remove("s_Generation");
+                        k++; 
                     if (table3.Columns.Contains("s_GUID") == true)
-                        k++; // table1.Columns.Remove("s_GUID");
+                        k++; 
                     if (table3.Columns.Contains("s_Lineage") == true)
-                        k++;// table1.Columns.Remove("s_Lineage");
+                        k++;
                     var table4 = table3.Copy();
                     if (k != 0)
                         s_ = true;
