@@ -102,6 +102,18 @@
     <Compile Include="Form_cod.Designer.cs">
       <DependentUpon>Form_cod.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form_System.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_System.Designer.cs">
+      <DependentUpon>Form_System.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_way_system.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_way_system.Designer.cs">
+      <DependentUpon>Form_way_system.cs</DependentUpon>
+    </Compile>
     <Compile Include="Otchet.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,6 +141,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form_cod.resx">
       <DependentUpon>Form_cod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_System.resx">
+      <DependentUpon>Form_System.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_way_system.resx">
+      <DependentUpon>Form_way_system.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Otchet.resx">
       <DependentUpon>Otchet.cs</DependentUpon>

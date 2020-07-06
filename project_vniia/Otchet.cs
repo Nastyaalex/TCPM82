@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PickBoxTest;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,13 +23,14 @@ namespace project_vniia
         Button[] buttons_2;
         Button[] buttons_3;
         Button[] buttons_4;
-        static int kolvo, kolvo1;/// <summary>
-        /// сделала статик???????????????????????
-        /// </summary>
+        static int kolvo, kolvo1;
+
+        private PickBox pb = new PickBox();
+
         public Otchet()
         {
             InitializeComponent();
-
+            
             dataGrid.Location = new Point(20, 70 + 90 + 90+ 120);
             dataGrid.Size = new Size(900,200);
             dataGrid.Anchor = (AnchorStyles)(AnchorStyles.Top|AnchorStyles.Bottom | AnchorStyles.Left);
@@ -36,12 +38,12 @@ namespace project_vniia
             tabPage1.Controls.Add(dataGrid);
 
             dataGrid.DataError += DataGrid_DataError;
+
+            Control c = tabPage1.Controls[0];
+            pb.WireControl(c);
             
-           
         }
-
-       
-
+        
         private void DataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.ThrowException = false;
@@ -63,8 +65,6 @@ namespace project_vniia
 
         public void Otrchet_BD(Dictionary<string, Form1.MyDB> myDBs, Dictionary<string, MyDB_Type> myDBs_Type, MyDB_Type dB_Type)
         {
-            // 14 56 55 location
-            // 82 61 84
             // if цифра в столбце- проверить были ли такие раньше/ нет - это новая цифра, значит новое количество для неё
 
             var table1 = myDBs["[Блоки]"].table.Copy();
@@ -203,8 +203,7 @@ namespace project_vniia
                 table.BeginLoadData();
                 ds.Tables.AddRange(new DataTable[] { table.Copy() });
             }
-
-
+            
             foreach (DataRow r in rows)
             {
                 bool f = false ;
@@ -304,17 +303,16 @@ namespace project_vniia
 
                 h++;
             }
-
-            //cozd ds for type 1,2,3...
+            
             foreach (var row in rows_Type_obj)
             {
                 DataSet dataSet = new DataSet();
                 dB_Type = new MyDB_Type();
                 string rrr = row.ToString();
                 myDBs_Type["[" + rrr + "]"] = dB_Type;
-                dB_Type.ds = dataSet;                                          //??????????????????
+                dB_Type.ds = dataSet;                                      
                 
-                DataTable type_ = new DataTable();   //-1?
+                DataTable type_ = new DataTable();  
 
                 for (int i = 0; i < kolvo1 * kolvo2 + kolvo1; i++)
                 {
@@ -340,7 +338,6 @@ namespace project_vniia
                 j++;
             }
 
-
         }
 
         private void Otchet_Click2(object sender, EventArgs e)
@@ -362,12 +359,9 @@ namespace project_vniia
         private void Otchet_Click(object sender, EventArgs e)
         {
             string msg = ((Button)sender).Text;
-            //MessageBox.Show(msg);
             int msg_ = Convert.ToInt32(msg);
             dataGrid.DataSource = ds.Tables[msg_];
-
-            //string type = rows_Type_obj[msg_].ToString();
-            //dataGrid.DataSource = myDBs_Type["["+type+"]"].ds.Tables[msg_];
+            
             dataGrid.Visible = true;
 
         }
@@ -408,7 +402,15 @@ namespace project_vniia
                     var pp = p.ToString();
                     if (rt2.Contains(pp))
                     {
-                        ds.Tables[k].LoadDataRow(r.ItemArray, true);
+                        if(pp =="+")
+                        {
+                            if (!rt2.Contains("г"))
+                            {
+                                ds.Tables[k].LoadDataRow(r.ItemArray, true);
+                            }
+                        }
+                        else
+                            ds.Tables[k].LoadDataRow(r.ItemArray, true);
                     }
                     
                     k++;
@@ -460,7 +462,15 @@ namespace project_vniia
                     var pp = p.ToString();
                     if (rt2.Contains(pp))
                     {
-                        ds.Tables[k].LoadDataRow(r.ItemArray, true);
+                        if (pp == "+")
+                        {
+                            if (!rt2.Contains("г"))
+                            {
+                                ds.Tables[k].LoadDataRow(r.ItemArray, true);
+                            }
+                        }
+                        else
+                            ds.Tables[k].LoadDataRow(r.ItemArray, true);
                     }
                     k++;
                 }
@@ -493,7 +503,10 @@ namespace project_vniia
             dataGrid_1.Visible = false; 
             dataGrid_1.DataError += DataGrid_1_DataError1;
             tabPage2.Controls.Add(dataGrid_1);
-            
+
+            Control c = tabPage2.Controls[0];
+            pb.WireControl(c);
+
             string[] text_ = new string[7] { "Местонахождение в отделе:", "Количество в отделе:", "Блоков прошедших проверку:", "Всего гермет. блоков", "?:", "Всего не гермет. блоков", "Блоков не прошедших проверку" };
             TextBox[] box_text = new TextBox[7];
             for (int i = 0; i < box_text.Length; i++)
@@ -570,12 +583,7 @@ namespace project_vniia
                 h++;
             }
         }
-
-        //private void Otchet_Click4(object sender, EventArgs e)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
+        
         private void DataGrid_1_DataError1(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.ThrowException = false;
@@ -618,3 +626,4 @@ namespace project_vniia
         }
     }
 }
+// убрать где + букву г

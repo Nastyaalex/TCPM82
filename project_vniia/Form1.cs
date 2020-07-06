@@ -36,7 +36,7 @@ namespace project_vniia
 
         public static string conString;// = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\nasty\\Desktop\\_TCPM82_New.mdb";
 
-        public static string[] F2 = new string[6];
+        public static string[] F2 = new string[7];
 
         public static string Log_ways;
         public static string Log_ways_peremesti;
@@ -192,15 +192,27 @@ namespace project_vniia
 
 
             //ready and work
-            Calibr calibr = new Calibr();
-            calibr.Main_calibr(this);
+            //Calibr calibr = new Calibr();
+            //calibr.Main_calibr(this);
 
-            Zamech_BD zamech_BD = new Zamech_BD();
-            zamech_BD.Main_Zamech_BD(this);
+            //Zamech_BD zamech_BD = new Zamech_BD();
+            //zamech_BD.Main_Zamech_BD(this);
 
             Proverka proverka = new Proverka();
             proverka.Main_Proverka(this, myDBs["[Проверка]"].table);
 
+            if(Proverka.parts.Length==1)
+            {
+                MessageBox.Show("Введите номера блоков входящих в систему:"+ Proverka.parts[0]+ "  в таблице Проверка. Вместо: ?дополнить.");
+            }
+            else
+            {
+                string yy = "";
+                for(int y=0; y< Proverka.parts.Length; y++)
+                { yy = yy +"_"+ Proverka.parts[y]; }
+                MessageBox.Show("Введите номер системы для блоков:" + yy + "  в таблице Проверка. Вместо: ?дополнить.");
+
+            }
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -588,6 +600,28 @@ namespace project_vniia
         private void отчётПоТипамБДToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateForm_otchet();
+        }
+
+        public Form_System CreateForm_Form_System()
+        {
+            // Проверяем существование формы
+            foreach (Form frm in Application.OpenForms)
+                if (frm is Form_System)
+                {
+                    frm.Activate();
+                    return frm as Form_System;
+                }
+            // Создаем новую форму
+            Form_System system = new Form_System();
+            system.myDBs = myDBs;
+
+            system.Show();
+
+            return system;
+        }
+        private void сборСистемыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateForm_Form_System();
         }
     }
     

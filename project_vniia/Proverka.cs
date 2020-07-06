@@ -112,6 +112,8 @@ namespace project_vniia
         }
     }
 
+    
+
     class Item_Prov_Obnarug
     {
         public static float b0 { get; private set; }
@@ -348,6 +350,7 @@ namespace project_vniia
 
     class Item_Prov_LognS
     {
+        
         public static float b0 { get; set; }
         public float b { get; private set; }
         public float b1 { get; private set; }
@@ -368,8 +371,16 @@ namespace project_vniia
                     Form1.Flags = true;
                     break;
                 }
-                if (parts[i].Contains("Количество") && parts[i + 1].Contains("ложных") && parts[i + 2].Contains("срабатываний") && parts[i + 3].Contains("за")
-                    && parts[i + 4].Contains("5000") && parts[i + 5].Contains("измерений") && parts[i + 6].Contains("по") && parts[i + 7].Contains("1с"))
+                if (Form1.Flags == true && parts[i].Contains("Нестабильность") && parts[i + 1].Contains("фона") && parts[i + 2].Contains("Nf1/Nf2"))
+                {
+                    Proverka.Logn = true;
+                    break;
+                }
+                //if (parts[i].Contains("Количество") && parts[i + 1].Contains("ложных") && parts[i + 2].Contains("срабатываний") && parts[i + 3].Contains("за")
+                //    && parts[i + 4].Contains("5000") && parts[i + 5].Contains("измерений") && parts[i + 6].Contains("по") && parts[i + 7].Contains("1с"))
+                //{
+                    if (parts[i].Contains("Количество") && parts[i + 1].Contains("ложных") && parts[i + 2].Contains("срабатываний") && parts[i + 3].Contains("за")
+                     && parts[i + 5].Contains("измерений") && parts[i + 6].Contains("по") && parts[i + 7].Contains("1с"))
                 {
                     Form1.Flags_1 = true;
                     break;
@@ -454,9 +465,10 @@ namespace project_vniia
     class Proverka
     {
         public static int k = 0;
-
+        
+        public static string[] parts;
         public double b { get; private set; }
-
+        public static bool Logn = false;
 
         public int Kolvo(Item_Proverka item_o)
         {
@@ -493,6 +505,8 @@ namespace project_vniia
 
                 string name = Path.GetFileNameWithoutExtension(fil); // returns File
                 int r=8;
+                 parts = name.Split(new char[] {'_'});
+                int rr = parts.Length;
                 for (int i = 0; i < len; i++)
                 {
                     if (k == 4)
@@ -557,15 +571,47 @@ namespace project_vniia
                                 chuvstvit[6] = item_.b6;
                                 chuvstvit[7] = item_.b7;
 
-                                for (int i = 0; i < r; i++)
+                                if (rr != 1)
                                 {
-                                    DataRow mynewrow = table.NewRow();
-                                    mynewrow["Номер БД"] = name;
-                                    mynewrow["Пороги"] = bbb[i];
-                                    mynewrow["S Cs 10 см"] = chuvstvit[i];
-                                    mynewrow["Дата проверки"] = curDate;
-                                    mynewrow["Примечание"] = "В системе" + name;
-                                    table.Rows.Add(mynewrow);
+                                    for (int i = 0; i < r; i++)
+                                    {
+                                        DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = parts[i];
+                                        mynewrow["Пороги"] = bbb[i];
+                                        mynewrow["S Cs 10 см"] = chuvstvit[i];
+                                        mynewrow["Дата проверки"] = curDate;
+                                        mynewrow["Примечание"] = "В системе " + " ?дополнить";
+                                        table.Rows.Add(mynewrow);
+                                        
+                                    }
+                                }
+                                else
+                                {
+                                    if (r == 1)
+                                    {
+                                        for (int i = 0; i < r; i++)
+                                        {
+                                            DataRow mynewrow = table.NewRow();
+                                            mynewrow["Номер БД"] = name;
+                                            mynewrow["Пороги"] = bbb[i];
+                                            mynewrow["S Cs 10 см"] = chuvstvit[i];
+                                            mynewrow["Дата проверки"] = curDate;
+                                            table.Rows.Add(mynewrow);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int i = 0; i < r; i++)
+                                        {
+                                            DataRow mynewrow = table.NewRow();
+                                            mynewrow["Номер БД"] = "?дополнить";
+                                            mynewrow["Пороги"] = bbb[i];
+                                            mynewrow["S Cs 10 см"] = chuvstvit[i];
+                                            mynewrow["Дата проверки"] = curDate;
+                                            mynewrow["Примечание"] = "В системе " + name;
+                                            table.Rows.Add(mynewrow);
+                                        }
+                                    }
                                 }
                                 break;
                             default:
@@ -722,6 +768,7 @@ namespace project_vniia
                 for (int i = 0; i < len; i++)
                 {
                     item_s.Add(new Item_Prov_LognS(allStringFromFile[i], r));
+                    
                     if (Item_Prov_LognS.b0 == 1022)
                     {
                         Item_Prov_LognS item_o = item_s.LastOrDefault();
@@ -734,6 +781,10 @@ namespace project_vniia
                         bbb[6] = item_o.b6;
                         bbb[7] = item_o.b7;
 
+                    }
+                    Item_Prov_LognS.b0 = 0;
+                    if (Logn == true)
+                    {
                         for (int j = 0; j < r; j++)
                         {
                             table.Rows[j]["Ложные срабатывания"] = bbb[j];
