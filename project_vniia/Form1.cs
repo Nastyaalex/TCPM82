@@ -192,11 +192,11 @@ namespace project_vniia
 
 
             //ready and work
-            //Calibr calibr = new Calibr();
-            //calibr.Main_calibr(this);
+            Calibr calibr = new Calibr();
+            calibr.Main_calibr(this);
 
-            //Zamech_BD zamech_BD = new Zamech_BD();
-            //zamech_BD.Main_Zamech_BD(this);
+            Zamech_BD zamech_BD = new Zamech_BD();
+            zamech_BD.Main_Zamech_BD(this);
 
             Proverka proverka = new Proverka();
             proverka.Main_Proverka(this, myDBs["[Проверка]"].table);
@@ -617,11 +617,18 @@ namespace project_vniia
                 }
             // Создаем новую форму
             Form_System system = new Form_System();
-            system.myDBs = myDBs;
+            
+            if (Form_way_system.close_all1 == true)
+            {
+                return null;
+            }
+            else
+            {
+                system.myDBs = myDBs;
+                system.Show();
 
-            system.Show();
-
-            return system;
+                return system;
+            }
         }
         private void сборСистемыToolStripMenuItem_Click(object sender, EventArgs e)
         {

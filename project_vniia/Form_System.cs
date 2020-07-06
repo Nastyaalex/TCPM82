@@ -52,10 +52,17 @@ namespace project_vniia
                 do
                 {
                     Form1.F2[6] = Ways_to_txt(Form1.F2[6]);
+                    if (Form_way_system.close_all1)
+                    {
+                        this.Close();
+                        break;
+                    }
                 } while (Form1.F2[6] == null || Form1.F2[6] == "");
             }
-            Zap(way, Form1.F2[6], flag_sysh);
-
+            if (!Form_way_system.close_all1)
+            {
+                Zap(way, Form1.F2[6], flag_sysh);
+            }
 
             // del old->!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
@@ -226,7 +233,10 @@ namespace project_vniia
             {
                 Form_way_system f = new Form_way_system();
                 f.ShowDialog();
-
+                if (Form_way_system.close_all1 == true)
+                {
+                    return null;
+                }
                 path = Form_way_system.textbox1_;
                 if(path==null || path=="")
                 {
@@ -298,8 +308,6 @@ namespace project_vniia
         {
             string way_ = System_ways + "\\" + dataGrid.Rows[0].Cells[2].Value.ToString() + ".txt";
             Prov_way(way_);
-
-
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -343,11 +351,40 @@ namespace project_vniia
 
         private void button4_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Введите сначала количество столбцов (N) затем количество строк (N)." +
-                "Номер для открытия сохранённого файла -> это номер Блока_1 в первой строке.");
+            MessageBox.Show("Введите сначала количество столбцов (N) затем количество строк (N).\n\t" +
+                "Номер для открытия сохранённого файла -> это номер Блока_1 в первой строке.\n\t После добавления в таблицу-> требуется сохранить таблицы иначе в Access не измениться.");
+        }
+
+        public void V_Table()
+        {
+            try
+            {
+                DataTable data = (DataTable)dataGrid.DataSource;
+                var rows = data.Rows;
+
+                foreach (DataRow row_ in rows)
+                {
+                    var row_new = myDBs["[Системы в сборе]"].table.NewRow();
+                    row_new["Номер системы"] = row_.ItemArray[0];
+                    row_new["Тип системы"] = row_.ItemArray[1];
+                    for (int i = 1; i < row_.ItemArray.Length - 1; i++)
+                    {
+                        row_new["Блок" + i] = row_.ItemArray[i + 1];
+                    }
+                    myDBs["[Системы в сборе]"].table.Rows.Add(row_new);
+                }
+            }
+            catch(Exception p)
+            { Console.WriteLine(p.Message); }
+            
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            V_Table();
         }
     }
 }
-// автомат заносить в таблицу сборка в систему
+
 // как избежать повтора- удалять или добавлять сдан или в
-// нужно ли сразу сохранять или после нажатия кнопки сохранить
+// нужно сохранять после нажатия кнопки сохранить
