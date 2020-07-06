@@ -634,6 +634,11 @@ namespace project_vniia
         {
             CreateForm_Form_System();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("При сложной фильтрации приоритет у значения из первой ячейки.\n\t");
+        }
     }
     
 }

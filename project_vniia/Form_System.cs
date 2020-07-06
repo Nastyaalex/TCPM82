@@ -253,9 +253,9 @@ namespace project_vniia
 
         public void Prov_way(string _ways)
         {
-            if (!File.Exists(System_ways + _ways))
+            if (!File.Exists(_ways))
             {
-                File.Create(System_ways + _ways).Close();
+                File.Create(_ways).Close();
             }
 
             
@@ -263,7 +263,7 @@ namespace project_vniia
             var rows = data.Rows;
             try
             {
-                using (StreamWriter sr = new StreamWriter(System_ways + _ways))
+                using (StreamWriter sr = new StreamWriter(_ways))
                 {
                     foreach (DataRow row in rows)
                     {
@@ -275,19 +275,10 @@ namespace project_vniia
             catch (Exception k)
             {
                 // Let the user know what went wrong.
-                Console.WriteLine("The file could not be read:");
+                MessageBox.Show("The file could not be read:");
                 Console.WriteLine(k.Message);
             }
 
-            using (StreamReader sr = new StreamReader(System_ways + _ways))
-            {
-                string line;
-
-                if ((line = sr.ReadLine()) != null && line != "")
-                {
-                    MessageBox.Show(line);
-                }
-            }
         }
 
         public void Zap(string way, string F, bool flag_sysh)
@@ -314,38 +305,45 @@ namespace project_vniia
         {
             if (textBox1.Text == "" || textBox1.Text == null)
             {
-                MessageBox.Show("Некорректный номер!");
+                MessageBox.Show("Некорректный номер файла!");
             }
             else
             {
                 string way_ = System_ways + "\\" + textBox1.Text + ".txt";
-                Stream fs = new FileStream(way_, FileMode.Open, FileAccess.Read);
-                StreamReader sr = new StreamReader(fs);
-                DataTable dt = new DataTable();
-                dt.Columns.Add("Номер системы");
-                dt.Columns.Add("Тип системы");
-                string s = sr.ReadLine();
-                string[] parts = s.Split(',');
-                for (int i = 1; i < parts.Length - 1; i++)
+                try
                 {
-                    dt.Columns.Add("Блок_" + i);
-                }
-                DataRow row = dt.NewRow();
-                for (int i = 0; i < parts.Length; i++)
-                    row[i] = parts[i];
-                dt.Rows.Add(row);
-
-                while (sr.Peek() != -1)
-                {
-                    s = sr.ReadLine();
-                    parts = s.Split(',');
-                    DataRow row1 = dt.NewRow();
+                    Stream fs = new FileStream(way_, FileMode.Open, FileAccess.Read);
+                    StreamReader sr = new StreamReader(fs);
+                    DataTable dt = new DataTable();
+                    dt.Columns.Add("Номер системы");
+                    dt.Columns.Add("Тип системы");
+                    string s = sr.ReadLine();
+                    string[] parts = s.Split(',');
+                    for (int i = 1; i < parts.Length - 1; i++)
+                    {
+                        dt.Columns.Add("Блок_" + i);
+                    }
+                    DataRow row = dt.NewRow();
                     for (int i = 0; i < parts.Length; i++)
-                        row1[i] = parts[i];
-                    dt.Rows.Add(row1);
+                        row[i] = parts[i];
+                    dt.Rows.Add(row);
+
+                    while (sr.Peek() != -1)
+                    {
+                        s = sr.ReadLine();
+                        parts = s.Split(',');
+                        DataRow row1 = dt.NewRow();
+                        for (int i = 0; i < parts.Length; i++)
+                            row1[i] = parts[i];
+                        dt.Rows.Add(row1);
+                    }
+                    dataGrid.DataSource = dt;
+                    dataGrid.Visible = true;
                 }
-                dataGrid.DataSource = dt;
-                dataGrid.Visible = true;
+                catch(Exception p)
+                { MessageBox.Show("Файл не найден!"); }
+
+                
             }
         }
 
@@ -375,7 +373,7 @@ namespace project_vniia
                 }
             }
             catch(Exception p)
-            { Console.WriteLine(p.Message); }
+            { MessageBox.Show("Возможно вы не нажали на кнопку 'Собрать' или не открыли файл перед добавлением в таблицу."); }
             
         }
 
@@ -387,4 +385,3 @@ namespace project_vniia
 }
 
 // как избежать повтора- удалять или добавлять сдан или в
-// нужно сохранять после нажатия кнопки сохранить
