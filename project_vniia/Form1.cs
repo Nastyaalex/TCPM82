@@ -200,19 +200,23 @@ namespace project_vniia
 
             Proverka proverka = new Proverka();
             proverka.Main_Proverka(this, myDBs["[Проверка]"].table);
-
-            if(Proverka.parts.Length==1)
+            try
             {
-                MessageBox.Show("Введите номера блоков входящих в систему:"+ Proverka.parts[0]+ "  в таблице Проверка. Вместо: ?дополнить.");
-            }
-            else
-            {
-                string yy = "";
-                for(int y=0; y< Proverka.parts.Length; y++)
-                { yy = yy +"_"+ Proverka.parts[y]; }
-                MessageBox.Show("Введите номер системы для блоков:" + yy + "  в таблице Проверка. Вместо: ?дополнить.");
+                if (Proverka.parts.Length == 1)
+                {
+                    MessageBox.Show("Введите номера блоков входящих в систему:" + Proverka.parts[0] + "  в таблице Проверка. Вместо: ?дополнить.");
+                }
+                else
+                {
+                    string yy = "";
+                    for (int y = 0; y < Proverka.parts.Length; y++)
+                    { yy = yy + "_" + Proverka.parts[y]; }
+                    MessageBox.Show("Введите номер системы для блоков:" + yy + "  в таблице Проверка. Вместо: ?дополнить.");
 
+                }
             }
+            catch (Exception h)
+            { Console.WriteLine(h.Message); }
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
