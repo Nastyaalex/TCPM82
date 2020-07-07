@@ -59,7 +59,7 @@ namespace project_vniia
             InitializeComponent();
             //this.KeyPreview = true;
 
-            for (int t = 5; this.Controls[t] != this.Controls[7]; t++)
+            for (int t = 6; this.Controls[t] != this.Controls[8]; t++)
             {
                 Control c = this.Controls[t];
                 pb.WireControl(c);
@@ -487,7 +487,7 @@ namespace project_vniia
         private Dictionary<string, MyDB> myDBs = new Dictionary<string, MyDB>();
 
         private void but_peregruzka_Click(object sender, EventArgs e)
-        {//работает- для замены строк
+        {   //работает- для замены строк
             dataGridView1.DataSource = myDBs["[Блоки]"].table.DefaultView;
             Datagrid_columns_delete_blocks();
         }

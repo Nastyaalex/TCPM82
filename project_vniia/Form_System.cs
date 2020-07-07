@@ -20,6 +20,7 @@ namespace project_vniia
 
         public static string System_ways;
         public static bool flag = true;
+        public int t2;
 
         public Form_System()
         {
@@ -84,7 +85,7 @@ namespace project_vniia
 
 
             var rows = table1.Rows;
-            int t = 0, t1 = 0, t2 = 0;
+            int t = 0, t1 = 0;
             int kolvo = 0;
 
             if (table1.Columns.Contains("Тип БД"))
@@ -359,6 +360,7 @@ namespace project_vniia
             {
                 DataTable data = (DataTable)dataGrid.DataSource;
                 var rows = data.Rows;
+                var rows_ = myDBs["[Блоки]"].table.Rows;
 
                 foreach (DataRow row_ in rows)
                 {
@@ -368,11 +370,42 @@ namespace project_vniia
                     for (int i = 1; i < row_.ItemArray.Length - 1; i++)
                     {
                         row_new["Блок" + i] = row_.ItemArray[i + 1];
+                        foreach (DataRow r in rows_)
+                        {
+                            if (r.ItemArray[0] == row_.ItemArray[i + 1])
+                            {
+                                var ttt = r[t2].ToString();
+                                string rr;
+                                char ch = ttt.Contains("Г") ? 'a' :
+                                    ttt.Contains("г") ? 'b' :
+                                    'c';
+                                switch(ch)
+                                {
+                                    case 'a':
+                                        rr = r[t2].ToString();
+                                        rr = rr.Replace("Г", "в");
+                                        r[t2] = rr;
+                                        break;
+                                    case 'b':
+                                        rr = r[t2].ToString();
+                                        rr = rr.Replace("г", "в");
+                                        r[t2] = rr;
+                                        break;
+                                    case 'c':
+                                        break;
+                                }
+                                    
+                                
+                            }
+                        }
                     }
                     myDBs["[Системы в сборе]"].table.Rows.Add(row_new);
                 }
+
+               
+                
             }
-            catch(Exception p)
+            catch (Exception p)
             { MessageBox.Show("Возможно вы не нажали на кнопку 'Собрать' или не открыли файл перед добавлением в таблицу."); }
             
         }
@@ -383,5 +416,3 @@ namespace project_vniia
         }
     }
 }
-
-// как избежать повтора- удалять или добавлять сдан или в
