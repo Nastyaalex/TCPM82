@@ -27,6 +27,7 @@ namespace project_vniia
 
         public static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "change_2_rows.txt");
         public static string filePath_calibr = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "calibration_check.txt");
+        
         Button button_filtr = new Button();
 
         //
@@ -56,14 +57,31 @@ namespace project_vniia
         
         public Form1()
         {
-            InitializeComponent();
-            //this.KeyPreview = true;
 
-            for (int t = 6; this.Controls[t] != this.Controls[8]; t++)
+            Form4_splash.ShowSplashScreen();
+            InitializeComponent();
+
+            
+            //this.KeyPreview = true;
+            try
             {
-                Control c = this.Controls[t];
-                pb.WireControl(c);
+                if (!File.Exists(filePath))
+                {
+                    File.Create(filePath).Close();
+                }
+                if (!File.Exists(filePath_calibr))
+                {
+                    File.Create(filePath_calibr).Close();
+                }
             }
+            catch(Exception k)
+            { MessageBox.Show(k.ToString()); }
+
+            //for (int t = 6; this.Controls[t] != this.Controls[8]; t++)
+            //{
+            //    Control c = this.Controls[t];
+            //    pb.WireControl(c);
+            //}
 
             dataGridView1.DataError += new DataGridViewDataErrorEventHandler(DataGridView1_DataError);
             dataGridView2.DataError += new DataGridViewDataErrorEventHandler(DataGridView2_DataError);
@@ -72,12 +90,12 @@ namespace project_vniia
             textBox1.KeyUp += TextBox1_KeyUp;
 
             textBox2.KeyUp += TextBox2_KeyUp;
-            
+
             //резервное копирование
             //File.Copy(openFileDialog1.FileName, "C:\\Users\\APM\\Desktop\\2.mdb", true);
-
+            
         }
-        
+       
         private void TextBox2_KeyUp(object sender, KeyEventArgs e)
         {
             Filtr_2.Tabl2(myDBs, comboBox1, textBox1,textBox2, dataGridView1, dataGridView2);
@@ -178,7 +196,15 @@ namespace project_vniia
             }
 
             Class_ways.Zap_(_ways_, F2, k_tr);
-            
+            //
+            //ready and work
+            Calibr calibr = new Calibr();
+            calibr.Main_calibr(this);
+
+            Zamech_BD zamech_BD = new Zamech_BD();
+            zamech_BD.Main_Zamech_BD(this);
+
+            Proverka proverka = new Proverka();
             //
             MyDB myDB = new MyDB();
 
@@ -190,15 +216,6 @@ namespace project_vniia
             Datagrid_columns_delete_blocks();
             Datagrid_columns_delete();
 
-
-            //ready and work
-            Calibr calibr = new Calibr();
-            calibr.Main_calibr(this);
-
-            Zamech_BD zamech_BD = new Zamech_BD();
-            zamech_BD.Main_Zamech_BD(this);
-
-            Proverka proverka = new Proverka();
             proverka.Main_Proverka(this, myDBs["[Проверка]"].table);
             try
             {
@@ -217,6 +234,10 @@ namespace project_vniia
             }
             catch (Exception h)
             { Console.WriteLine(h.Message); }
+
+            Class_zagruz.Combobox_(conString, comboBox1, ds, myDB, myDBs);
+
+            Form4_splash.CloseForm();
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -638,6 +659,29 @@ namespace project_vniia
         private void button1_Click(object sender, EventArgs e)
         {
             MessageBox.Show("При сложной фильтрации приоритет у значения из первой ячейки.\n\t");
+        }
+
+        public Form4_func_new CreateForm_Form4()
+        {
+            // Проверяем существование формы
+            foreach (Form frm in Application.OpenForms)
+                if (frm is Form4_func_new)
+                {
+                    frm.Activate();
+                    return frm as Form4_func_new;
+                }
+            // Создаем новую форму
+            Form4_func_new system = new Form4_func_new();
+            
+                system.myDBs = myDBs;
+                system.Show();
+
+                return system;
+        }
+
+        private void переместитьМеждуПодразделениямиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateForm_Form4();
         }
     }
     

@@ -53,27 +53,31 @@ namespace PickBoxTest
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////
-	// PUBLIC METHODS
-	//////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////
+        // PUBLIC METHODS
+        //////////////////////////////////////////////////////////////////
 
-	//
-	// Wires a Click event handler to the passed Control
-	// that attaches a pick box to the control when it is clicked
-	//
-	public void WireControl(Control ctl) {
-		ctl.Click += new EventHandler(this.SelectControl);
-	}
+        //
+        // Wires a Click event handler to the passed Control
+        // that attaches a pick box to the control when it is clicked
+        //
+        public void WireControl(Control ctl)
+        {
+           
+                ctl.Click += new EventHandler(this.SelectControl);
+        }
+        public void WireControl1(Control ctl1)
+        {
+            ctl1.Click -= new EventHandler(this.SelectControl);
+        }
+        /////////////////////////////////////////////////////////////////
+        // PRIVATE METHODS
+        /////////////////////////////////////////////////////////////////
 
-
-	/////////////////////////////////////////////////////////////////
-	// PRIVATE METHODS
-	/////////////////////////////////////////////////////////////////
-
-	//
-	// Attaches a pick box to the sender Control
-	//
-	private void SelectControl(object sender, EventArgs e) {
+        //
+        // Attaches a pick box to the sender Control
+        //
+        private void SelectControl(object sender, EventArgs e) {
 
 		if (m_control is Control) {
 			m_control.Cursor = oldCursor;

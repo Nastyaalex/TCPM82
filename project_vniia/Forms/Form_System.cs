@@ -33,15 +33,15 @@ namespace project_vniia
             this.Controls.Add(dataGrid);
             dataGrid.DataError += DataGrid_DataError;
 
-            for (int i=0; i< Controls.Count; i++)
-            {
-                if(Controls[i].Name == "datagr")
-                {
-                    Control c = Controls[i];
-                    pb.WireControl(c);
-                    break;
-                } 
-            }
+            //for (int i=0; i< Controls.Count; i++)
+            //{
+            //    if(Controls[i].Name == "datagr")
+            //    {
+            //        Control c = Controls[i];
+            //        pb.WireControl(c);
+            //        break;
+            //    } 
+            //}
 
             //System_ways= Ways_to_txt(System_ways);
 
@@ -254,6 +254,8 @@ namespace project_vniia
 
         public void Prov_way(string _ways)
         {
+            if (!Directory.Exists(System_ways))
+                Directory.CreateDirectory(System_ways);
             if (!File.Exists(_ways))
             {
                 File.Create(_ways).Close();
@@ -414,5 +416,16 @@ namespace project_vniia
         {
             V_Table();
         }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
+// не обновляет таблицу  блоки после добавления сборки в табл 

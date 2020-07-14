@@ -115,9 +115,15 @@ namespace project_vniia
                 }
                 else
                 {
-                    F2[g] = null;
-                    g++;
-
+                    if (t.Contains("\\Done"))
+                    {
+                      Directory.CreateDirectory(t);
+                    }
+                    else
+                    {
+                        F2[g] = null;
+                        g++;
+                    }
                 }
             }
 

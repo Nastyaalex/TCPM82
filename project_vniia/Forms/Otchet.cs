@@ -26,6 +26,7 @@ namespace project_vniia
         static int kolvo, kolvo1;
 
         private PickBox pb = new PickBox();
+        
 
         public Otchet()
         {
@@ -38,12 +39,14 @@ namespace project_vniia
             tabPage1.Controls.Add(dataGrid);
 
             dataGrid.DataError += DataGrid_DataError;
-
-            Control c = tabPage1.Controls[0];
+            
+            Control c = tabPage1.Controls[1];
             pb.WireControl(c);
             
         }
+
         
+
         private void DataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.ThrowException = false;
@@ -377,7 +380,7 @@ namespace project_vniia
                 int k = 0;
                 foreach (var p in rows_Type_obj)
                 {
-                    if (rt.Contains(p.ToString()))
+                    if (p.ToString().Contains(rt))
                     {
                         ds.Tables[k].LoadDataRow(r.ItemArray, true);
                         break;
@@ -504,8 +507,8 @@ namespace project_vniia
             dataGrid_1.DataError += DataGrid_1_DataError1;
             tabPage2.Controls.Add(dataGrid_1);
 
-            Control c = tabPage2.Controls[0];
-            pb.WireControl(c);
+            //Control c = tabPage2.Controls[0];
+            //pb.WireControl(c);
 
             string[] text_ = new string[7] { "Местонахождение в отделе:", "Количество в отделе:", "Блоков прошедших проверку:", "Всего гермет. блоков", "?:", "Всего не гермет. блоков", "Блоков не прошедших проверку" };
             TextBox[] box_text = new TextBox[7];
@@ -587,6 +590,15 @@ namespace project_vniia
         private void DataGrid_1_DataError1(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.ThrowException = false;
+        }
+        
+        private void button1_Click(object sender, EventArgs e)
+        {//no way
+            Control c = tabPage1.Controls[9];
+            pb.WireControl1(c);
+            //var methodinfo = typeof(PickBox).GetMethod("SelectControl", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            //var eventinfo = typeof(Otchet).GetEvent("c.Click");
+            //eventinfo.RemoveEventHandler(this, Delegate.CreateDelegate(eventinfo.EventHandlerType, this, methodinfo));
         }
 
         private void Otchet_Click3(object sender, EventArgs e)

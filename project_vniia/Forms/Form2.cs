@@ -16,8 +16,27 @@ namespace project_vniia
         {
             InitializeComponent();
             FormClosing += Form2_FormClosing1;
+           
+            textBox1.TextChanged += TextBox1_TextChanged;
+            textBox3.TextChanged += TextBox3_TextChanged;
+            textBox5.TextChanged += TextBox5_TextChanged;
         }
 
+        private void TextBox5_TextChanged(object sender, EventArgs e)
+        {
+            textBox6.Text = textBox5.Text + "\\Done";
+        }
+
+        private void TextBox3_TextChanged(object sender, EventArgs e)
+        {
+            textBox4.Text = textBox3.Text + "\\Done";
+        }
+
+        private void TextBox1_TextChanged(object sender, EventArgs e)
+        {
+            textBox2.Text = textBox1.Text + "\\Done";
+        }
+        
         private void Form2_FormClosing1(object sender, FormClosingEventArgs e)
         {
             if(!knopka)
@@ -72,6 +91,31 @@ namespace project_vniia
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                textBox1.Text = folderBrowserDialog1.SelectedPath;  
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                textBox3.Text = folderBrowserDialog1.SelectedPath;
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                textBox5.Text = folderBrowserDialog1.SelectedPath;
+            }
         }
     }
     }

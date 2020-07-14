@@ -38,5 +38,13 @@ namespace project_vniia
             knopka1 = true;
             Close();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                textBox1.Text = folderBrowserDialog1.SelectedPath;
+            }
+        }
     }
 }

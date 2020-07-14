@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace project_vniia
 {
@@ -43,7 +44,11 @@ namespace project_vniia
                                 try
                                 {
                                     string pp = p.Replace('.', ',');
-                                    bool no = float.TryParse(pp, out num);
+                                if (pp.Contains(":"))
+                                {
+                                    pp = pp.Substring(pp.IndexOf(':') + 1);
+                                }
+                                bool no = float.TryParse(pp, out num);
 
                                     if (no)
                                     {
@@ -111,9 +116,7 @@ namespace project_vniia
              
         }
     }
-
     
-
     class Item_Prov_Obnarug
     {
         public static float b0 { get; private set; }
@@ -158,6 +161,10 @@ namespace project_vniia
                             try
                             {
                                 string pp = p.Replace('.', ',');
+                                if (pp.Contains(":"))
+                                {
+                                    pp = pp.Substring(pp.IndexOf(':') + 1);
+                                }
                                 bool no = float.TryParse(pp, out num);
 
                                 if (no)
@@ -519,6 +526,7 @@ namespace project_vniia
                         if (k == 0)
                         {
                             Item_Proverka item_o = items.LastOrDefault();
+                            if(rr!=1)
                             r = Kolvo(item_o);
                             Form1.Flags = true;
                         }
@@ -647,11 +655,54 @@ namespace project_vniia
                             chuvstvit[5] = item_.b5;
                             chuvstvit[6] = item_.b6;
                             chuvstvit[7] = item_.b7;
-
-                            for (int i = 0; i < r; i++)
+                            if (rr != 1)
                             {
-                                table.Rows[i]["Q"] = bbb[i];
-                                table.Rows[i]["Колличество срабатываний"] = chuvstvit[i];
+                                for (int i = 0; i < r; i++)
+                                {
+                                    if (table.Rows.Count == 0 || table.Rows.Count < r && table.Rows.Count == i)
+                                    {
+                                        DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = parts[i];
+                                        mynewrow["Q"] = bbb[i];
+                                        mynewrow["Колличество срабатываний"] = chuvstvit[i];
+                                        mynewrow["Дата проверки"] = curDate;
+                                        mynewrow["Примечание"] = "В системе " + " ?дополнить";
+                                        table.Rows.Add(mynewrow);
+                                    }
+                                    else
+                                    {
+                                        table.Rows[i]["Q"] = bbb[i];
+                                        table.Rows[i]["Колличество срабатываний"] = chuvstvit[i];
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (r == 1)
+                                {
+                                    for (int i = 0; i < r; i++)
+                                    {
+                                        DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = name;
+                                        mynewrow["Q"] = bbb[i];
+                                        mynewrow["Колличество срабатываний"] = chuvstvit[i];
+                                        mynewrow["Дата проверки"] = curDate;
+                                        table.Rows.Add(mynewrow);
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < r; i++)
+                                    {
+                                        DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = "?дополнить";
+                                        mynewrow["Q"] = bbb[i];
+                                        mynewrow["Колличество срабатываний"] = chuvstvit[i];
+                                        mynewrow["Дата проверки"] = curDate;
+                                        mynewrow["Примечание"] = "В системе " + name;
+                                        table.Rows.Add(mynewrow);
+                                    }
+                                }
                             }
                         }
                         else
@@ -685,39 +736,63 @@ namespace project_vniia
                     {
                         Item_Prov_Chuvstv item_o = items_.LastOrDefault();
 
-                        if (Item_Prov_Chuvstv.istochnik.Contains("Cs") && item_o.b!=0 && (item_o.b == Item_Prov_Chuvstv.b0))
+                        if (Item_Prov_Chuvstv.istochnik.Contains("Cs") && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
+                        {
+                            bbb[0] = item_o.b;
+                            bbb[1] = item_o.b1;
+                            bbb[2] = item_o.b2;
+                            bbb[3] = item_o.b3;
+                            bbb[4] = item_o.b4;
+                            bbb[5] = item_o.b5;
+                            bbb[6] = item_o.b6;
+                            bbb[7] = item_o.b7;
+                            if (rr != 1)
                             {
-                                bbb[0] = item_o.b;
-                                bbb[1] = item_o.b1;
-                                bbb[2] = item_o.b2;
-                                bbb[3] = item_o.b3;
-                                bbb[4] = item_o.b4;
-                                bbb[5] = item_o.b5;
-                                bbb[6] = item_o.b6;
-                                bbb[7] = item_o.b7;
-
-                                for ( int j = 0; j < r; j++)
-                                {
-                                    table.Rows[j]["S Cs 50 см"] = bbb[j];
-                                }
-                            }
-                            if (Item_Prov_Chuvstv.istochnik.Contains("U") && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
-                            {
-                                bbb[0] = item_o.b;
-                                bbb[1] = item_o.b1;
-                                bbb[2] = item_o.b2;
-                                bbb[3] = item_o.b3;
-                                bbb[4] = item_o.b4;
-                                bbb[5] = item_o.b5;
-                                bbb[6] = item_o.b6;
-                                bbb[7] = item_o.b7;
-
                                 for (int j = 0; j < r; j++)
                                 {
-                                    table.Rows[j]["S U 50 см"] = bbb[j];
+                                    if (table.Rows.Count == 0 || table.Rows.Count < r && table.Rows.Count == i)
+                                    {
+                                        DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = parts[j];
+                                        mynewrow["S Cs 50 см"] = bbb[j];
+                                        mynewrow["Дата проверки"] = curDate;
+                                        mynewrow["Примечание"] = "В системе " + " ?дополнить";
+                                        table.Rows.Add(mynewrow);
+                                    }
+                                    else
+                                    {
+                                        table.Rows[j]["S Cs 50 см"] = bbb[j];
+                                    }
                                 }
                             }
-                            if (Item_Prov_Chuvstv.istochnik.Contains("Pu") && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
+                            else
+                            {
+                                if (r == 1)
+                                {
+                                    for (int j = 0; j < r; j++)
+                                    {
+                                        DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = name;
+                                        mynewrow["S Cs 50 см"] = bbb[j];
+                                        mynewrow["Дата проверки"] = curDate;
+                                        table.Rows.Add(mynewrow);
+                                    }
+                                }
+                                else
+                                {
+                                    for (int j = 0; j < r; j++)
+                                    {
+                                        DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = "?дополнить";
+                                        mynewrow["S Cs 50 см"] = bbb[j];
+                                        mynewrow["Дата проверки"] = curDate;
+                                        mynewrow["Примечание"] = "В системе " + name;
+                                        table.Rows.Add(mynewrow);
+                                    }
+                                }
+                            }
+                        }
+                        if (Item_Prov_Chuvstv.istochnik.Contains("U") && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
                             {
                                 bbb[0] = item_o.b;
                                 bbb[1] = item_o.b1;
@@ -727,15 +802,113 @@ namespace project_vniia
                                 bbb[5] = item_o.b5;
                                 bbb[6] = item_o.b6;
                                 bbb[7] = item_o.b7;
+                                if (rr != 1)
+                                {
+                                    for (int j = 0; j < r; j++)
+                                    {
+                                        if (table.Rows.Count == 0 || table.Rows.Count < r && table.Rows.Count == i)
+                                        {
+                                            DataRow mynewrow = table.NewRow();
+                                            mynewrow["Номер БД"] = parts[j];
+                                            mynewrow["S U 50 см"] = bbb[j];
+                                            mynewrow["Дата проверки"] = curDate;
+                                            mynewrow["Примечание"] = "В системе " + " ?дополнить";
+                                            table.Rows.Add(mynewrow);
+                                        }
+                                        else
+                                        {
+                                            table.Rows[j]["S U 50 см"] = bbb[j];
+                                        }
 
-                                for (int j = 0; j < r; j++)
+                                    }
+                                }
+                                else
+                                {
+                                    if (r == 1)
+                                    {
+                                        for (int j = 0; j < r; j++)
+                                        {
+                                            DataRow mynewrow = table.NewRow();
+                                            mynewrow["Номер БД"] = name;
+                                            mynewrow["S U 50 см"] = bbb[j];
+                                            mynewrow["Дата проверки"] = curDate;
+                                            table.Rows.Add(mynewrow);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int j = 0; j < r; j++)
+                                        {
+                                            DataRow mynewrow = table.NewRow();
+                                            mynewrow["Номер БД"] = "?дополнить";
+                                            mynewrow["S U 50 см"] = bbb[j];
+                                            mynewrow["Дата проверки"] = curDate;
+                                            mynewrow["Примечание"] = "В системе " + name;
+                                            table.Rows.Add(mynewrow);
+                                        }
+                                    }
+                                }
+                            }
+                        if (Item_Prov_Chuvstv.istochnik.Contains("Pu") && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
+                        {
+                                bbb[0] = item_o.b;
+                                bbb[1] = item_o.b1;
+                                bbb[2] = item_o.b2;
+                                bbb[3] = item_o.b3;
+                                bbb[4] = item_o.b4;
+                                bbb[5] = item_o.b5;
+                                bbb[6] = item_o.b6;
+                                bbb[7] = item_o.b7;
+                          if (rr != 1)
+                           {
+                             for (int j = 0; j < r; j++)
+                           {
+                                if (table.Rows.Count == 0 || table.Rows.Count < r && table.Rows.Count == i)
+                                {
+                                    DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = parts[j];
+                                        mynewrow["S Pu 50 см"] = bbb[j];
+                                    mynewrow["Дата проверки"] = curDate;
+                                    mynewrow["Примечание"] = "В системе " + " ?дополнить";
+                                    table.Rows.Add(mynewrow);
+                                }
+                                else
                                 {
                                     table.Rows[j]["S Pu 50 см"] = bbb[j];
                                 }
+                                
+                           }
                             }
-
-                            if (Item_Prov_Chuvstv.istochnik.Contains("Нестабильность") && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
+                            else
                             {
+                                if (r == 1)
+                                {
+                                    for (int j = 0; j < r; j++)
+                                    {
+                                        DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = name;
+                                        mynewrow["S Pu 50 см"] = bbb[j];
+                                        mynewrow["Дата проверки"] = curDate;
+                                        table.Rows.Add(mynewrow);
+                                    }
+                                }
+                                else
+                                {
+                                    for (int j = 0; j < r; j++)
+                                    {
+                                        DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = "?дополнить";
+                                        mynewrow["S Pu 50 см"] = bbb[j];
+                                        mynewrow["Дата проверки"] = curDate;
+                                        mynewrow["Примечание"] = "В системе " + name;
+                                        table.Rows.Add(mynewrow);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (Item_Prov_Chuvstv.istochnik.Contains("Нестабильность") && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
+                        {
                                 bbb[0] = item_o.b;
                                 bbb[1] = item_o.b1;
                                 bbb[2] = item_o.b2;
@@ -744,13 +917,54 @@ namespace project_vniia
                                 bbb[5] = item_o.b5;
                                 bbb[6] = item_o.b6;
                                 bbb[7] = item_o.b7;
-
+                            if (rr != 1)
+                            {
                                 for (int j = 0; j < r; j++)
+                                {
+                                if (table.Rows.Count == 0 || table.Rows.Count < r && table.Rows.Count == i)
+                                {
+                                    DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = parts[j];
+                                        mynewrow["Нестабильность фона"] = bbb[j];
+                                    mynewrow["Дата проверки"] = curDate;
+                                    mynewrow["Примечание"] = "В системе " + " ?дополнить";
+                                    table.Rows.Add(mynewrow);
+                                }
+                                else
                                 {
                                     table.Rows[j]["Нестабильность фона"] = bbb[j];
                                 }
-                                break;
+                                
+                                }
                             }
+                            else
+                            {
+                                if (r == 1)
+                                {
+                                    for (int j = 0; j < r; j++)
+                                    {
+                                        DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = name;
+                                        mynewrow["Нестабильность фона"] = bbb[j];
+                                        mynewrow["Дата проверки"] = curDate;
+                                        table.Rows.Add(mynewrow);
+                                    }
+                                }
+                                else
+                                {
+                                    for (int j = 0; j < r; j++)
+                                    {
+                                        DataRow mynewrow = table.NewRow();
+                                        mynewrow["Номер БД"] = "?дополнить";
+                                        mynewrow["Нестабильность фона"] = bbb[j];
+                                        mynewrow["Дата проверки"] = curDate;
+                                        mynewrow["Примечание"] = "В системе " + name;
+                                        table.Rows.Add(mynewrow);
+                                    }
+                                }
+                            }
+                            break;
+                        }
                         
                         Item_Prov_Chuvstv.b0 = 0;
                         
@@ -785,53 +999,99 @@ namespace project_vniia
                     Item_Prov_LognS.b0 = 0;
                     if (Logn == true)
                     {
-                        for (int j = 0; j < r; j++)
+                        if (rr != 1)
                         {
-                            table.Rows[j]["Ложные срабатывания"] = bbb[j];
+                            for (int j = 0; j < r; j++)
+                        {
+                            if (table.Rows.Count == 0 || table.Rows.Count < r && table.Rows.Count == i)
+                            {
+                                DataRow mynewrow = table.NewRow();
+                                mynewrow["Номер БД"] = parts[j];
+                                mynewrow["Ложные срабатывания"] = bbb[j];
+                                mynewrow["Дата проверки"] = curDate;
+                                mynewrow["Примечание"] = "В системе " + " ?дополнить";
+                                table.Rows.Add(mynewrow);
+                            }
+                            else
+                            {
+                                table.Rows[j]["Ложные срабатывания"] = bbb[j];
+                            }
+                            
+                        }
+                        }
+                        else
+                        {
+                            if (r == 1)
+                            {
+                                for (int j = 0; j < r; j++)
+                                {
+                                    DataRow mynewrow = table.NewRow();
+                                    mynewrow["Номер БД"] = name;
+                                    mynewrow["Ложные срабатывания"] = bbb[j];
+                                    mynewrow["Дата проверки"] = curDate;
+                                    table.Rows.Add(mynewrow);
+                                }
+                            }
+                            else
+                            {
+                                for (int j = 0; j < r; j++)
+                                {
+                                    DataRow mynewrow = table.NewRow();
+                                    mynewrow["Номер БД"] = "?дополнить";
+                                    mynewrow["Ложные срабатывания"] = bbb[j];
+                                    mynewrow["Дата проверки"] = curDate;
+                                    mynewrow["Примечание"] = "В системе " + name;
+                                    table.Rows.Add(mynewrow);
+                                }
+                            }
                         }
                     }
                 }
                 ////////////////////////////////////////
                 var conn_tabl = new OleDbConnection(Form1.conString);
                 conn_tabl.Open();
-
-                foreach (DataRow row_ in table.Rows)
+                try
                 {
-                    var array1 = row_.ItemArray;
-                    OleDbCommand cmd = new OleDbCommand();
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "INSERT INTO `Проверка` (`Номер БД`, `Тип проверки`, `Дата проверки`, " +
-                    "`Канал Cs`, `Канал Св`, `Пороги`, `S Cs 10 см`, `S Cs 50 см`, `S U 50 см`," +
-                    " `S Pu 50 см`, `Нестабильность фона`, `Колличество срабатываний`, `Q`," +
-                    " `Ложные срабатывания`, `Примечание`, `s_ColLineage`," +
-                    " `s_Generation`, `s_GUID`, `s_Lineage`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    foreach (DataRow row_ in table.Rows)
+                    {
+                        var array1 = row_.ItemArray;
+                        OleDbCommand cmd = new OleDbCommand();
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = "INSERT INTO `Проверка` (`Номер БД`, `Тип проверки`, `Дата проверки`, " +
+                        "`Канал Cs`, `Канал Св`, `Пороги`, `S Cs 10 см`, `S Cs 50 см`, `S U 50 см`," +
+                        " `S Pu 50 см`, `Нестабильность фона`, `Колличество срабатываний`, `Q`," +
+                        " `Ложные срабатывания`, `Примечание`, `s_ColLineage`," +
+                        " `s_Generation`, `s_GUID`, `s_Lineage`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                    cmd.Parameters.AddWithValue("@NumberB", array1[1]);
-                    cmd.Parameters.AddWithValue("@Type", array1[2]);
-                    cmd.Parameters.AddWithValue("@Data", array1[3]);
-                    cmd.Parameters.AddWithValue("@Cs", array1[4]);
-                    cmd.Parameters.AddWithValue("@Cv", array1[5]);
-                    cmd.Parameters.AddWithValue("@Porog", array1[6]);
-                    cmd.Parameters.AddWithValue("@S_Cs", array1[7]);
-                    cmd.Parameters.AddWithValue("@S_Cs_5", array1[8]);
-                    cmd.Parameters.AddWithValue("@S_U", array1[9]);
-                    cmd.Parameters.AddWithValue("@S_Pu", array1[10]);
-                    cmd.Parameters.AddWithValue("@Fon", array1[11]);
-                    cmd.Parameters.AddWithValue("@Kolvo", array1[12]);
-                    cmd.Parameters.AddWithValue("@Q", array1[13]);
-                    cmd.Parameters.AddWithValue("@L_srab", array1[14]);
-                    cmd.Parameters.AddWithValue("@Prim", array1[15]);
-                    cmd.Parameters.AddWithValue("@s_C", array1[16]);
-                    cmd.Parameters.AddWithValue("@s_G", array1[17]);
-                    cmd.Parameters.AddWithValue("@s_GUID", array1[18]);
-                    cmd.Parameters.AddWithValue("@s_L", array1[19]);
-                    
-                    cmd.Connection = conn_tabl;
-                    cmd.ExecuteNonQuery();
+                        cmd.Parameters.AddWithValue("@NumberB", array1[1]);
+                        cmd.Parameters.AddWithValue("@Type", array1[2]);
+                        cmd.Parameters.AddWithValue("@Data", array1[3]);
+                        cmd.Parameters.AddWithValue("@Cs", array1[4]);
+                        cmd.Parameters.AddWithValue("@Cv", array1[5]);
+                        cmd.Parameters.AddWithValue("@Porog", array1[6]);
+                        cmd.Parameters.AddWithValue("@S_Cs", array1[7]);
+                        cmd.Parameters.AddWithValue("@S_Cs_5", array1[8]);
+                        cmd.Parameters.AddWithValue("@S_U", array1[9]);
+                        cmd.Parameters.AddWithValue("@S_Pu", array1[10]);
+                        cmd.Parameters.AddWithValue("@Fon", array1[11]);
+                        cmd.Parameters.AddWithValue("@Kolvo", array1[12]);
+                        cmd.Parameters.AddWithValue("@Q", array1[13]);
+                        cmd.Parameters.AddWithValue("@L_srab", array1[14]);
+                        cmd.Parameters.AddWithValue("@Prim", array1[15]);
+                        cmd.Parameters.AddWithValue("@s_C", array1[16]);
+                        cmd.Parameters.AddWithValue("@s_G", array1[17]);
+                        cmd.Parameters.AddWithValue("@s_GUID", array1[18]);
+                        cmd.Parameters.AddWithValue("@s_L", array1[19]);
 
+                        cmd.Connection = conn_tabl;
+                        cmd.ExecuteNonQuery();
+
+                    }
+
+                    conn_tabl.Close();
                 }
-
-                conn_tabl.Close();
+                catch(Exception p)
+                { MessageBox.Show(p.ToString()); }
 
                 string file = Path.GetFileName(fil);
                 string newPath = Path.Combine(Form1.Proverka_ways_perem, file);

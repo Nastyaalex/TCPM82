@@ -17,9 +17,8 @@ namespace project_vniia
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            Form1 f1 = new Form1();
-            Application.Run(f1);
+            
+            Application.Run(new Form1());
         }
     }
 }

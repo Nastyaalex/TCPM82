@@ -45,6 +45,12 @@ namespace project_vniia
             name.Text = "Введите номера блоков (сначала КАКОЙ заменить, далее НА какой):";
             Controls.Add(name);
 
+            FormClosing += Form_cod_FormClosing;
+        }
+
+        private void Form_cod_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Form1.zam = false;
         }
 
         public int[] vs = new int[8] {2,3,5,6,7,9,10,12 };
@@ -58,7 +64,6 @@ namespace project_vniia
             if (Form1.zam == true)
             {
                 Change_BD_();
-                Form1.zam = false;
             }
             else
             {
@@ -102,20 +107,7 @@ namespace project_vniia
                     dataTables[0].Rows[one][i] = mass1[i];
                     dataTables[0].Rows[two][i] = mass[i];
                 }
-                using (StreamWriter writer = new StreamWriter(Form1.filePath, true, Encoding.Default))
-                {
-                    writer.WriteLine("Замена значений номера блока:" + zamena.Text + "  На номер блока:" + zamena_1.Text);
-                    foreach (string str in mass)
-                    {
-                        writer.WriteLine(str);
-                    }
-
-                    foreach (string str in mass1)
-                    {
-                        writer.WriteLine(str);
-                    }
-                }
-
+                
                 ////////////////////////////
 
                 int k = 0, g = 0, m = 0;
@@ -165,24 +157,55 @@ namespace project_vniia
                                 }
                             }
                         }
-                        using (StreamWriter writer_sv = new StreamWriter(Form1.filePath, true, Encoding.Default))
+                        //using (StreamWriter writer_sv = new StreamWriter(Form1.filePath, true, Encoding.Default))
+                        //{
+                        //    writer_sv.WriteLine("Замена номера блока в связной табл. " + vs[v] + ":"
+                        //        + zamena.Text + "  На номер блока:" + zamena_1.Text + "   В строках номер:");
+
+                        //    foreach (string str in mass_sv)
+                        //    {
+                        //        writer_sv.WriteLine(str);
+                        //    }
+                        //    writer_sv.WriteLine("////////////////////////////////");
+                        //    foreach (string str in items)
+                        //    {
+                        //        writer_sv.WriteLine(str);
+                        //    }
+                        //    writer_sv.WriteLine("////////////////////////////////");
+                        //    writer_sv.WriteLine("////////////////////////////////");
+                        //}
+                        //////////////////////
+                        string datanow = DateTime.Now.ToString("dd MMMM yyyy");
+
+                        string prim = "Заменён на " + zamena_1.Text + ". Был ФЭУ " + mass[2] + " U = " + mass[3] + ".(Блок " + zamena.Text + ")";
+
+                        string prim1 = "Заменён на " + zamena.Text + ". Был ФЭУ " + mass1[2] + " U = " + mass1[3] + ".(Блок " + zamena_1.Text + ")";
+
+                        try
                         {
-                            writer_sv.WriteLine("Замена номера блока в связной табл. " + vs[v] + ":"
-                                + zamena.Text + "  На номер блока:" + zamena_1.Text + "   В строках номер:");
 
-                            foreach (string str in mass_sv)
+                            foreach (var r in dataTables)
                             {
-                                writer_sv.WriteLine(str);
+                                if (r.TableName == "Замечания по БД")
+                                {
+                                    DataRow row = r.NewRow();
+                                    row["Номер блока"] = zamena_1.Text;
+                                    row["Дата заметки"] = datanow;
+                                    row["Заметка"] = prim;
+                                    r.Rows.Add(row);
+
+                                    var rorr = r.NewRow();
+                                    rorr["Номер блока"] = zamena.Text;
+                                    rorr["Дата заметки"] = datanow;
+                                    rorr["Заметка"] = prim1;
+                                    r.Rows.Add(rorr);
+                                }
                             }
-                            writer_sv.WriteLine("////////////////////////////////");
-                            foreach (string str in items)
-                            {
-                                writer_sv.WriteLine(str);
-                            }
-                            writer_sv.WriteLine("////////////////////////////////");
-                            writer_sv.WriteLine("////////////////////////////////");
                         }
-
+                        catch (Exception Ex)
+                        {
+                            MessageBox.Show(Ex.ToString());
+                        }
                         items.Clear();
                         g = 0;
                     }
@@ -218,14 +241,6 @@ namespace project_vniia
         public void number_filtr(TextBox box)
         {
             var table1 = dataTables[vs[v]];
-            //if (table1.Columns.Contains("s_ColLineage") == true)
-            //    table1.Columns.Remove("s_ColLineage");
-            //if (table1.Columns.Contains("s_Generation") == true)
-            //    table1.Columns.Remove("s_Generation");
-            //if (table1.Columns.Contains("s_GUID") == true)
-            //    table1.Columns.Remove("s_GUID");
-            //if (table1.Columns.Contains("s_Lineage") == true)
-            //    table1.Columns.Remove("s_Lineage");
             var table2 = table1.Copy();
 
             //переписать t1 -> t2 С учетом фильтра
@@ -302,14 +317,40 @@ namespace project_vniia
 
             dataTables[0].Rows[one][0] = zamena_1.Text;
 
-            using (StreamWriter writer = new StreamWriter(Form1.filePath, true, Encoding.Default))
+            ////////////////
+            ///просто добавить в табл - без сохранения
+            string datanow = DateTime.Now.ToString("dd MMMM yyyy");
+
+            string prim = "Заменён на " + zamena_1.Text + ". Был ФЭУ " + mass[2] + " U = " + mass[3] + ".(Блок " + zamena.Text + ")";
+
+
+            try
             {
-                writer.WriteLine("Замена номера блока:" + zamena.Text + "  На номер блока:" + zamena_1.Text);
-                foreach (string str in mass)
+                
+                foreach (var r in dataTables)
                 {
-                    writer.WriteLine(str);
+                    if (r.TableName == "Замечания по БД")
+                    {
+                        DataRow row = r.NewRow();
+                        row["Номер блока"] = zamena_1.Text;
+                        row["Дата заметки"] = datanow;
+                        row["Заметка"] = prim;
+                        r.Rows.Add(row);
+                    }
                 }
             }
+            catch (Exception Ex)
+            {
+                MessageBox.Show(Ex.ToString());
+            }
+            //using (StreamWriter writer = new StreamWriter(Form1.filePath, true, Encoding.Default))
+            //{
+            //    writer.WriteLine("Замена номера блока:" + zamena.Text + "  На номер блока:" + zamena_1.Text);
+            //    foreach (string str in mass)
+            //    {
+            //        writer.WriteLine(str);
+            //    }
+            //}
 
             ////////////////////////////
 

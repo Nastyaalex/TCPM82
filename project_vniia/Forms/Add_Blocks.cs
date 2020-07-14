@@ -54,23 +54,25 @@ namespace project_vniia
             }
             else
             {
-                for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+                try
                 {
-                    DataRow newrow = blocks_T.NewRow();
-                    newrow["Номер БД"] = dataGridView1.Rows[i].Cells[0].Value;
-                    newrow["Тип БД"] = dataGridView1.Rows[i].Cells[1].Value;
-                    newrow["Номер ФЭУ"] = dataGridView1.Rows[i].Cells[2].Value;
-                    newrow["Номинальное U"] = dataGridView1.Rows[i].Cells[3].Value;
+                    for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+                    {
+                        DataRow newrow = blocks_T.NewRow();
+                        newrow["Номер БД"] = dataGridView1.Rows[i].Cells[0].Value;
+                        newrow["Тип БД"] = dataGridView1.Rows[i].Cells[1].Value;
+                        newrow["Номер ФЭУ"] = dataGridView1.Rows[i].Cells[2].Value;
+                        newrow["Номинальное U"] = dataGridView1.Rows[i].Cells[3].Value;
 
-                    newrow["Примечания"] = " ";
-                    newrow["Местоположение"] = "п.561";
-                    newrow["Отметка выполнения"] = "?";
+                        newrow["Примечания"] = " ";
+                        newrow["Местоположение"] = "п.561";
+                        newrow["Отметка выполнения"] = "?";
 
-                    blocks_T.Rows.Add(newrow);
-                }
-                
-                for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
-                {
+                        blocks_T.Rows.Add(newrow);
+                    }
+
+                    for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+                    {
                         DataRow newrow = zamech_T.NewRow();
                         var ppp = zamech_T.Rows[zamech_T.Rows.Count - 1].ItemArray;
                         var pp = Convert.ToUInt32(ppp[0]) + 1;
@@ -81,7 +83,10 @@ namespace project_vniia
                         newrow["Заметка"] = "ЭЭСШ = " + dataGridView1.Rows[i].Cells[5].Value;
                         newrow["Номер записи"] = pp;
                         zamech_T.Rows.Add(newrow);
+                    }
                 }
+                catch(Exception p)
+                { MessageBox.Show(p.ToString()); }
                 peregr.PerformClick();
             }
             // доработать таймер
