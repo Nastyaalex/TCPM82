@@ -1,11 +1,12 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.OleDb;
 
 namespace project_vniia
 {
     class Class_Save_provTCPM
     {
-        static void CompareRows_provTCPM(DataTable table_del, DataTable table_in, OleDbDataAdapter adapter, DataTable table_up)
+        static void CompareRows_provTCPM(DataTable table_del, DataTable table_in, OleDbDataAdapter adapter, DataTable table_up, Dictionary<string, Form1.MyEnd> myEnds)
         {
 
             foreach (DataRow row1 in table_del.Rows)
@@ -32,6 +33,12 @@ namespace project_vniia
 
             }
             table_del.AcceptChanges();
+
+            Form1.MyEnd myEnd = new Form1.MyEnd();
+            myEnds["ПроверкаТСРМ61"] = myEnd;
+            myEnd.del = table_del.Rows.Count;
+            myEnd.dob = table_in.Rows.Count;
+            myEnd.izm = table_up.Rows.Count;
 
             OleDbConnection dbCon = new OleDbConnection(Form1.conString);
             dbCon.Open();
@@ -115,7 +122,7 @@ namespace project_vniia
 
         }
 
-        public static void AnalizTable(DataTable First, DataTable Second, OleDbDataAdapter adapter)
+        public static void AnalizTable(DataTable First, DataTable Second, OleDbDataAdapter adapter, Dictionary<string, Form1.MyEnd> myEnds)
         {//сравнение 2-х таблиц
             DataTable table = new DataTable("Различия");
             DataTable table1 = new DataTable("Различия1");
@@ -175,7 +182,7 @@ namespace project_vniia
                 table.EndLoadData();
                 table1.EndLoadData();
             }
-            CompareRows_provTCPM(table, table1, adapter, table_up);
+            CompareRows_provTCPM(table, table1, adapter, table_up, myEnds);
            
         }
     }

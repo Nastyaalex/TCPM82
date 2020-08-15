@@ -15,7 +15,9 @@ namespace project_vniia
     {
         TabPage tabPage2;
         DataGridView dataGrid = new DataGridView();
+        CheckBox checkBox = new CheckBox();
         DataGridView dataGrid_1; //new DataGridView[kolvo];
+        CheckBox checkBox1;
         List<Object> rows_Type_obj = new List<Object>();
         DataSet ds = new DataSet();
         Button[] buttons;
@@ -35,17 +37,50 @@ namespace project_vniia
             dataGrid.Location = new Point(20, 70 + 90 + 90+ 120);
             dataGrid.Size = new Size(900,200);
             dataGrid.Anchor = (AnchorStyles)(AnchorStyles.Top|AnchorStyles.Bottom | AnchorStyles.Left);
+            dataGrid.Name = "dataGrid";
             dataGrid.Visible = false;
             tabPage1.Controls.Add(dataGrid);
 
             dataGrid.DataError += DataGrid_DataError;
-            
-            Control c = tabPage1.Controls[1];
+            Control c = tabPage1.Controls[0];
             pb.WireControl(c);
-            
+
+            checkBox.Location = new Point(20, 70 + 90 + 90 + 85);
+            checkBox.Size = new Size(110,23);
+            checkBox.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left);
+            checkBox.Text = "Зафиксировать";
+            tabPage1.Controls.Add(checkBox);
+            Control c1 = tabPage1.Controls[1];
+            pb.WireControl(c1);
+
+            checkBox.CheckedChanged += CheckBox_CheckedChanged;
         }
 
-        
+        private void CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox.Checked == true)
+            {
+                for (int i = 0; i < tabPage1.Controls.Count; i++)
+                {
+                    if (tabPage1.Controls[i].Name == "dataGrid")
+                    {
+                        Control c = tabPage1.Controls[i];
+                        pb.WireControl1(c);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < tabPage1.Controls.Count; i++)
+                {
+                    if (tabPage1.Controls[i].Name == "dataGrid")
+                    {
+                        Control c = tabPage1.Controls[i];
+                        pb.WireControl(c);
+                    }
+                }
+            }
+        }
 
         private void DataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
@@ -499,7 +534,7 @@ namespace project_vniia
 
             dataGrid_1 = new DataGridView();
 
-            dataGrid_1.Location = new Point(20, 70 + 90+90);
+            dataGrid_1.Location = new Point(20, 70 + 90+120);
             dataGrid_1.Size = new Size(900, 300);
             dataGrid_1.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left);
             dataGrid_1.Name = "data_" + (j+2);
@@ -507,8 +542,21 @@ namespace project_vniia
             dataGrid_1.DataError += DataGrid_1_DataError1;
             tabPage2.Controls.Add(dataGrid_1);
 
-            //Control c = tabPage2.Controls[0];
-            //pb.WireControl(c);
+            Control c = tabPage2.Controls[0];
+            pb.WireControl(c);
+
+            checkBox1 = new CheckBox();
+            checkBox1.Location = new Point(20, 70 + 90 + 90);
+            checkBox1.Size = new Size(110, 23);
+            checkBox1.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left);
+            checkBox1.Name = "check_" + (j + 2);
+            checkBox1.Text = "Зафиксировать";
+            tabPage2.Controls.Add(checkBox1);
+            Control c1 = tabPage2.Controls[1];
+            pb.WireControl(c1);
+
+            checkBox1.CheckedChanged += CheckBox1_CheckedChanged;
+
 
             string[] text_ = new string[7] { "Местонахождение в отделе:", "Количество в отделе:", "Блоков прошедших проверку:", "Всего гермет. блоков", "?:", "Всего не гермет. блоков", "Блоков не прошедших проверку" };
             TextBox[] box_text = new TextBox[7];
@@ -586,21 +634,48 @@ namespace project_vniia
                 h++;
             }
         }
-        
+
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            string name = ((CheckBox)sender).Name;
+            bool change = ((CheckBox)sender).Checked;
+            int value;
+            int.TryParse(string.Join("", name.Where(c => char.IsDigit(c))), out value);
+            
+            string prom = "tabPage" + (value);
+            string rom = "data_" + (value);
+            bool end = false;
+            for (int i = 0; i < tabControl1.Controls.Count; i++)
+            {
+                if (tabControl1.Controls[i].Name == prom)
+                {
+                    TabPage tab = tabControl1.Controls[i] as TabPage;
+
+                    for (int h = 0; h < tab.Controls.Count; h++)
+                    {
+                        if (tab.Controls[h].Name == rom)
+                        {
+                            Control c = tab.Controls[h];
+                            if (change)
+                                pb.WireControl1(c);
+                            else
+                                pb.WireControl(c);
+                            end = true;
+                            break;
+                        }
+                    }
+                }
+                if (end)
+                    break;
+            }
+            
+        }
+
         private void DataGrid_1_DataError1(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.ThrowException = false;
         }
-        
-        private void button1_Click(object sender, EventArgs e)
-        {//no way
-            Control c = tabPage1.Controls[9];
-            pb.WireControl1(c);
-            //var methodinfo = typeof(PickBox).GetMethod("SelectControl", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            //var eventinfo = typeof(Otchet).GetEvent("c.Click");
-            //eventinfo.RemoveEventHandler(this, Delegate.CreateDelegate(eventinfo.EventHandlerType, this, methodinfo));
-        }
-
+       
         private void Otchet_Click3(object sender, EventArgs e)
         {
             string name = ((Button)sender).Name;

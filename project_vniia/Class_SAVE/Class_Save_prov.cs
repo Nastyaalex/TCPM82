@@ -1,11 +1,12 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.OleDb;
 
 namespace project_vniia
 {
     class Class_Save_prov
     {
-        static void CompareRows_prov(DataTable table_del, DataTable table_in, OleDbDataAdapter adapter, DataTable table_up)
+        static void CompareRows_prov(DataTable table_del, DataTable table_in, OleDbDataAdapter adapter, DataTable table_up, Dictionary<string, Form1.MyEnd> myEnds)
         {
 
             foreach (DataRow row1 in table_del.Rows)
@@ -32,6 +33,11 @@ namespace project_vniia
 
             }
             table_del.AcceptChanges();
+            Form1.MyEnd myEnd = new Form1.MyEnd();
+            myEnds["Проверка"] = myEnd;
+            myEnd.del = table_del.Rows.Count;
+            myEnd.dob = table_in.Rows.Count;
+            myEnd.izm = table_up.Rows.Count;
 
             OleDbConnection dbCon = new OleDbConnection(Form1.conString);
             dbCon.Open();
@@ -43,7 +49,7 @@ namespace project_vniia
 
                 cmd.CommandText = "UPDATE `Проверка` SET `Номер БД` = ?, `Тип проверки` = ?, `Дата проверки` = ?, " +
                 "`Канал Cs` = ?, `Канал Св` = ?, `Пороги` = ?, `S Cs 10 см` = ?, `S Cs 50 см` = ?, `S U 50 см` = ?," +
-                " `S Pu 50 см` = ?, `Нестабильность фона` = ?, `Колличество срабатываний` = ?, `Q` = ?," +
+                " `S Pu/Cf 50 см` = ?, `Нестабильность фона` = ?, `Колличество срабатываний` = ?, `Q` = ?," +
                 " `Ложные срабатывания` = ?, `Примечание` = ?, `s_ColLineage` = ?, `s_Generation` = ?, `s_GUID` = ?," +
                 " `s_Lineage` = ? WHERE ((`Номер записи` = ?) AND (`Номер БД` = ?)) ";
 
@@ -95,7 +101,7 @@ namespace project_vniia
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandText = "INSERT INTO `Проверка` (`Номер БД`, `Тип проверки`, `Дата проверки`, " +
                 "`Канал Cs`, `Канал Св`, `Пороги`, `S Cs 10 см`, `S Cs 50 см`, `S U 50 см`," +
-                " `S Pu 50 см`, `Нестабильность фона`, `Колличество срабатываний`, `Q`," +
+                " `S Pu/Cf 50 см`, `Нестабильность фона`, `Колличество срабатываний`, `Q`," +
                 " `Ложные срабатывания`, `Примечание`, `s_ColLineage`," +
                 " `s_Generation`, `s_GUID`, `s_Lineage`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -128,7 +134,7 @@ namespace project_vniia
 
         }
 
-        public static void AnalizTable(DataTable First, DataTable Second, OleDbDataAdapter adapter)
+        public static void AnalizTable(DataTable First, DataTable Second, OleDbDataAdapter adapter, Dictionary<string, Form1.MyEnd> myEnds)
         {//сравнение 2-х таблиц
             DataTable table = new DataTable("Различия");
             DataTable table1 = new DataTable("Различия1");
@@ -188,7 +194,7 @@ namespace project_vniia
                 table.EndLoadData();
                 table1.EndLoadData();
             }
-            CompareRows_prov(table, table1, adapter, table_up);
+            CompareRows_prov(table, table1, adapter, table_up, myEnds);
             
         }
     }

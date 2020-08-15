@@ -54,7 +54,7 @@
             this.Column5,
             this.Column6});
             this.dataGridView1.Location = new System.Drawing.Point(16, 15);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(891, 498);
             this.dataGridView1.TabIndex = 0;
@@ -93,7 +93,7 @@
             // 
             this.button_add_blocks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_add_blocks.Location = new System.Drawing.Point(784, 522);
-            this.button_add_blocks.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_add_blocks.Margin = new System.Windows.Forms.Padding(4);
             this.button_add_blocks.Name = "button_add_blocks";
             this.button_add_blocks.Size = new System.Drawing.Size(100, 28);
             this.button_add_blocks.TabIndex = 1;
@@ -109,7 +109,7 @@
             this.Controls.Add(this.button_add_blocks);
             this.Controls.Add(this.dataGridView1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Add_Blocks";
             this.Text = "Добавить новые блоки";
             this.Load += new System.EventHandler(this.Add_Blocks_Load);

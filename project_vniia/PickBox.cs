@@ -63,12 +63,13 @@ namespace PickBoxTest
         //
         public void WireControl(Control ctl)
         {
-           
-                ctl.Click += new EventHandler(this.SelectControl);
+            ctl.Click += this.SelectControl;
+            
+            //ctl.Click += new EventHandler(this.SelectControl);
         }
         public void WireControl1(Control ctl1)
         {
-            ctl1.Click -= new EventHandler(this.SelectControl);
+            ctl1.Click -= SelectControl;
         }
         /////////////////////////////////////////////////////////////////
         // PRIVATE METHODS

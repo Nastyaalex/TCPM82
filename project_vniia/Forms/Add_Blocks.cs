@@ -88,6 +88,7 @@ namespace project_vniia
                 catch(Exception p)
                 { MessageBox.Show(p.ToString()); }
                 peregr.PerformClick();
+                dataGridView1.Rows.Clear();
             }
             // доработать таймер
             timer.Interval = 500;

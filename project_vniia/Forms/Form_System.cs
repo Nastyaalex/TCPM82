@@ -14,35 +14,38 @@ namespace project_vniia
         DataSet ds = new DataSet();
         public Dictionary<string, Form1.MyDB> myDBs;
         DataGridView dataGrid = new DataGridView();
+        DataTable dt = new DataTable();
 
         List<Object> rows_Type_obj = new List<Object>();
         private PickBox pb = new PickBox();
 
         public static string System_ways;
         public static bool flag = true;
-        public int t2;
+        public int t2,t3;
 
         public Form_System()
         {
             InitializeComponent();
-            dataGrid.Location = new Point(20, 150);
+            dataGrid.Location = new Point(20, 180);
             dataGrid.Size = new Size(300, 200);
             dataGrid.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left);
             dataGrid.Visible = false;
             dataGrid.Name = "datagr";
             this.Controls.Add(dataGrid);
             dataGrid.DataError += DataGrid_DataError;
+            
+            dataGridViewLeft.DataError += DataGridViewLeft_DataError; ;
+            dataGridViewRight.DataError += DataGridViewRight_DataError; ;
 
-            //for (int i=0; i< Controls.Count; i++)
-            //{
-            //    if(Controls[i].Name == "datagr")
-            //    {
-            //        Control c = Controls[i];
-            //        pb.WireControl(c);
-            //        break;
-            //    } 
-            //}
-
+            for (int i = 0; i < Controls.Count; i++)
+            {
+                if (Controls[i].Name == "checkBox1" || Controls[i].Name == "dataGridViewLeft" || Controls[i].Name == "dataGridViewRight" || Controls[i].Name == "datagr")
+                {
+                    Control c = Controls[i];
+                    pb.WireControl(c);
+                }
+            }
+            
             //System_ways= Ways_to_txt(System_ways);
 
             string way = "\\build_systems.txt";
@@ -60,14 +63,29 @@ namespace project_vniia
                     }
                 } while (Form1.F2[6] == null || Form1.F2[6] == "");
             }
-            if (!Form_way_system.close_all1)
+            try
             {
-                Zap(way, Form1.F2[6], flag_sysh);
+                if (!Form_way_system.close_all1)
+                {
+                    Zap(way, Form1.F2[6], flag_sysh);
+                }
             }
-
+            catch(Exception p)
+            { }
             // del old->!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
 
+        private void DataGridViewRight_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.ThrowException = false;
+        }
+
+        private void DataGridViewLeft_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.ThrowException = false;
+        }
+
+       
         private void DataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.ThrowException = false;
@@ -76,6 +94,11 @@ namespace project_vniia
         private void Form_System_Load(object sender, EventArgs e)
         {
             Otrchet_BD(myDBs);
+           
+            dt.Clear();
+            dt.Columns.Add("Номер системы");
+            dt.Columns.Add("Тип системы");
+            dt.Columns.Add("Тип БД");
         }
         public void Otrchet_BD(Dictionary<string, Form1.MyDB> myDBs)
         {
@@ -100,7 +123,10 @@ namespace project_vniia
             {
                 t2 = table1.Columns["Отметка выполнения"].Ordinal;
             }
-
+            if (table1.Columns.Contains("Примечания"))
+            {
+                t3 = table1.Columns["Примечания"].Ordinal;
+            }
             DataTable table = new DataTable();
 
             foreach (DataRow r in rows)
@@ -129,7 +155,7 @@ namespace project_vniia
                 int value;
                 int.TryParse(string.Join("", tr.Where(c => char.IsDigit(c))), out value);
 
-                if ((value != 56 && value != 561) || (!ttt.Contains("Г") && !ttt.Contains("г")) || ttt.Contains("в") || ttt.Contains("В") || tr.Contains("сдан") || tr.Contains("Сдан"))
+                if ((value != 56 && value != 561) || (!ttt.Contains("Г") && !ttt.Contains("г")) || ttt.Contains("в") || ttt.Contains("В") || ttt.Contains(".сохранено в файле") || tr.Contains("сдан") || tr.Contains("Сдан"))
                 {
                     f = true;
                 }
@@ -153,16 +179,12 @@ namespace project_vniia
             foreach (var obj in rows_Type_obj)
             {
                 comboBox1.Items.Add(obj);
+                comboBox2.Items.Add(obj);
             }
 
             comboBox1.SelectedItem = comboBox1.Items[0];
-            for (int i = 1; i < 9; i++)
-            {
-                comboBox2.Items.Add(i);
-                comboBox3.Items.Add(i);
-            }
+            
             comboBox2.SelectedItem = comboBox2.Items[0];
-            comboBox3.SelectedItem = comboBox3.Items[0];
         }
         public void Razsortirovka(DataTable table, DataSet ds, int t, List<Object> rows_Type_obj)
         {
@@ -173,7 +195,7 @@ namespace project_vniia
                 int k = 0;
                 foreach (var p in rows_Type_obj)
                 {
-                    if (rt.Contains(p.ToString()))
+                    if (p.ToString().Contains(rt))
                     {
                         ds.Tables[k].LoadDataRow(r.ItemArray, true);
                         break;
@@ -186,43 +208,115 @@ namespace project_vniia
         public void Sobr_system()
         {
             string comb = comboBox1.Text;
-            int one = Convert.ToInt32(comboBox2.Text);
-            int two = Convert.ToInt32(comboBox3.Text);
+            string comb1 = comboBox2.Text;
+            List<string> myStr = new List<string>();
+            List<string> myStr_1 = new List<string>();
 
-            DataView dv = ds.Tables[comb].DefaultView;
-            dv.Sort = "Номер БД asc";
-            DataTable sortedDT = dv.ToTable();
-
-            DataTable dt = new DataTable();
-            dt.Clear();
-            dt.Columns.Add("Номер системы");
-            dt.Columns.Add("Тип системы");
-            dt.Columns["Тип системы"].DefaultValue = comb;
-
-            for (int i = 1; i < one + 1; i++)
+            for (int i = dataGridViewLeft.RowCount - 1; i >= 0; i--)
             {
-                dt.Columns.Add("Блок_" + i);
-            }
-            
-            int k = 0;
-            try
-            {
-                for (int i = 1; i < two + 1; i++)
+                DataGridViewRow row = dataGridViewLeft.Rows[i];
+                if (Convert.ToBoolean(row.Cells["Выбрать"].Value))
                 {
-                    DataRow _ravi = dt.NewRow();
-                    for (int j = 1; j < one + 1; j++)
+                    myStr.Add(row.Cells["Номер БД"].Value.ToString());
+                    row.Cells["Выбрать"].Value = false;
+
+                    bool arrl = false;
+                    foreach (DataRow r in dt.Rows)
                     {
-                        _ravi["Блок_" + j] = sortedDT.Rows[k][0];
-                        k++;
+                        var arr = r.ItemArray;
+                        arrl = arr.Contains(row.Cells["Номер БД"].Value.ToString());
+                            if (arrl)
+                            {
+                                MessageBox.Show("Выбранный блок входит в другую систему! "+ row.Cells["Номер БД"].Value.ToString());
+                            return;
+                            }
+                        
                     }
-                    dt.Rows.Add(_ravi);
                 }
             }
-            catch(Exception p)
+            
+            for (int i = dataGridViewRight.RowCount - 1; i >= 0; i--)
+            {
+                DataGridViewRow row = dataGridViewRight.Rows[i];
+                if (Convert.ToBoolean(row.Cells["Выбрать"].Value))
+                {
+                    myStr_1.Add(row.Cells["Номер БД"].Value.ToString());
+                    row.Cells["Выбрать"].Value = false;
+
+                    bool arrl = false;
+                    foreach (DataRow r in dt.Rows)
+                    {
+                        var arr = r.ItemArray;
+                        arrl = arr.Contains(row.Cells["Номер БД"].Value.ToString());
+                        if (arrl)
+                        {
+                            MessageBox.Show("Выбранный блок входит в другую систему! " + row.Cells["Номер БД"].Value.ToString());
+                            return;
+                        }
+
+                    }
+                }
+            }
+            ///////////////
+
+
+            //dt.Columns["Тип БД"].DefaultValue = comb + ","+comb1;
+            if (myStr.Count + myStr_1.Count + 3 > dt.Columns.Count)
+            {
+                for (int i = dt.Columns.Count-2; i < myStr.Count + myStr_1.Count + 1; i++)
+                {
+                    dt.Columns.Add("Блок_" + i);
+                }
+            }
+            int k = 0, jjj=0;
+            try
+            {
+               DataRow _ravi = dt.NewRow();
+                string[] l = new string[myStr.Count];
+                l = myStr.ToArray();
+                
+                string[] l_1 = new string[myStr_1.Count];
+                l_1 = myStr_1.ToArray();
+
+                char nim1 = (l.Length == 0)&& (l_1.Length == 0) ? 'a' :
+                                       (l.Length == 0) ? 'b' :
+                                       (l_1.Length == 0) ? 'c' :
+                                      'd';
+                switch (nim1)
+                {
+                    case 'a':
+                        MessageBox.Show("Выберите блоки!");
+                        break;
+                    case 'b':
+                        _ravi["Тип БД"] = comb1;
+                        break;
+                    case 'c':
+                        _ravi["Тип БД"] = comb;
+                        break;
+                    case 'd':
+                        _ravi["Тип БД"] = comb + "/" + comb1;
+                        break;
+                }
+
+               for (int j = 1; j < myStr.Count + 1; j++)
+               {
+                  _ravi["Блок_" + j] = l[k];
+                  k++;
+                    jjj = j;
+               }
+                k = 0;
+                for (int j = jjj+1; j < myStr_1.Count + 1+jjj; j++)
+                {
+                    _ravi["Блок_" + j] = l_1[k];
+                    k++;
+                }
+                dt.Rows.Add(_ravi);
+            }
+            catch (Exception p)
             {
                 MessageBox.Show(p.Message);
             }
-            
+
             dataGrid.DataSource = dt;
             dataGrid.Visible = true;
 
@@ -246,13 +340,13 @@ namespace project_vniia
             }
             return path;
         }
-
+        
         private void button1_Click(object sender, EventArgs e)
         {
             Sobr_system();
         }
 
-        public void Prov_way(string _ways)
+        public void Prov_way(string _ways, DataRow row)
         {
             if (!Directory.Exists(System_ways))
                 Directory.CreateDirectory(System_ways);
@@ -260,20 +354,13 @@ namespace project_vniia
             {
                 File.Create(_ways).Close();
             }
-
             
-            DataTable data = (DataTable)dataGrid.DataSource;
-            var rows = data.Rows;
             try
             {
                 using (StreamWriter sr = new StreamWriter(_ways))
                 {
-                    foreach (DataRow row in rows)
-                    {
-                        sr.WriteLine(String.Join(",", row.ItemArray));
-                    }
+                  sr.WriteLine(String.Join(",", row.ItemArray));   
                 }
-
             }
             catch (Exception k)
             {
@@ -281,7 +368,6 @@ namespace project_vniia
                 MessageBox.Show("The file could not be read:");
                 Console.WriteLine(k.Message);
             }
-
         }
 
         public void Zap(string way, string F, bool flag_sysh)
@@ -293,15 +379,130 @@ namespace project_vniia
                 {
                   sw.WriteLine("{0}", F);
                 }
-             
             }
             System_ways = F;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string way_ = System_ways + "\\" + dataGrid.Rows[0].Cells[2].Value.ToString() + ".txt";
-            Prov_way(way_);
+            string way_ = "";
+            DataTable data = (DataTable)dataGrid.DataSource;
+            var rows = data.Rows;
+            foreach (DataRow row in rows)
+            {
+                if (row[0].ToString() == "")
+                {
+                    way_ = System_ways + "\\" + row[3].ToString() + ".txt";
+                }
+                else
+                {
+                    way_ = System_ways + "\\" + row[0].ToString() + ".txt";
+                }
+                Prov_way(way_, row);
+            }
+            string msg = ((Button)sender).Text;
+            Prov(rows, msg);
+            dt.Clear();
+        }
+        public void Prov(DataRowCollection rows, string msg)
+        {
+            List<DataRow> kkk = new List<DataRow>();
+            try
+            {
+                var rows_ = myDBs["[Блоки]"].table.Rows;
+
+                int k = 0;
+                int k1 = 0;
+                int length = 2;
+                foreach (DataRow row_ in rows)
+                {
+                    length = row_.ItemArray.Length;
+                    for (int i = row_.ItemArray.Length; i > 2; i--)
+                    {
+                        if (row_[i - 1] == null || row_[i - 1].ToString() == "")
+                        {
+                            length = length - 1;
+                        }
+                        else
+                            break;
+                    }
+                    if (length > 19)
+                    {
+                        MessageBox.Show("Строка превышает лимит в 16 блоков!");
+                        return;
+                    }
+                    
+                    for (int i = 3; i < length; i++)
+                    {
+                        if (msg == "Добавить в таблицу")
+                        {
+                            
+                            foreach (DataRow r in rows_)
+                            {
+                                if (r.ItemArray[0].ToString() == row_.ItemArray[i].ToString())
+                                {
+                                    k++;
+                                    k1 = length;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (DataRow r in rows_)
+                            {
+                                if (r.ItemArray[0].ToString() == row_.ItemArray[i].ToString())
+                                {
+                                    var ttt = r[t2].ToString();
+                                    if (ttt.Contains(".сохранено в файле"))
+                                    {
+                                        MessageBox.Show("Блок уже сохранён в другой системе!");
+                                        return;
+                                    }
+                                    else
+                                        ttt = ttt + ".сохранено в файле";
+                                    r[t2] = ttt;
+                                }
+                            }
+                        }
+                            //nameds = row_[2].ToString();
+                            string[] nameds = row_[2].ToString().Split('/');
+                            foreach (var name_ in nameds)
+                            {
+                                foreach (DataRow r in ds.Tables[name_].Rows)
+                                {
+                                    if (r.ItemArray[0].ToString() == row_.ItemArray[i].ToString())
+                                    {
+                                        kkk.Add(r);
+                                    }
+                                }
+
+                            }
+                        
+                    }
+                   
+                }
+                if ( k < k1 - 3)
+                {
+                    MessageBox.Show("Не все блоки существуют!");
+                    return;
+                }
+                try
+                {
+                    foreach (var r in kkk)
+                    {
+                        ds.Tables[r[1].ToString()].Rows.Remove(r);
+                    }
+                }
+                catch(Exception l)
+                {
+                    MessageBox.Show("Файл записан, НО! Выбирайте блоки одного типа в одной таблице, для правильного их удаления, во избежание последующего выбора!");
+                }
+   
+                   kkk.Clear();
+            }
+            catch (Exception p)
+            { MessageBox.Show("Возможно вы не нажали на кнопку 'Собрать' или не открыли файл перед добавлением в таблицу." + p.ToString()); }
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -320,9 +521,10 @@ namespace project_vniia
                     DataTable dt = new DataTable();
                     dt.Columns.Add("Номер системы");
                     dt.Columns.Add("Тип системы");
+                    dt.Columns.Add("Тип БД");
                     string s = sr.ReadLine();
                     string[] parts = s.Split(',');
-                    for (int i = 1; i < parts.Length - 1; i++)
+                    for (int i = 1; i < parts.Length - 2; i++)
                     {
                         dt.Columns.Add("Блок_" + i);
                     }
@@ -340,6 +542,8 @@ namespace project_vniia
                             row1[i] = parts[i];
                         dt.Rows.Add(row1);
                     }
+                    sr.Close();
+                    fs.Close();
                     dataGrid.DataSource = dt;
                     dataGrid.Visible = true;
                 }
@@ -352,80 +556,407 @@ namespace project_vniia
 
         private void button4_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Введите сначала количество столбцов (N) затем количество строк (N).\n\t" +
-                "Номер для открытия сохранённого файла -> это номер Блока_1 в первой строке.\n\t После добавления в таблицу-> требуется сохранить таблицы иначе в Access не измениться.");
+            MessageBox.Show("Номер для открытия сохранённого файла -> это номер системы либо номер Блока_1 в первой строке.\n\t " +
+                "После добавления в таблицу-> требуется сохранить таблицы иначе в Access не измениться.");
         }
+        
+        public void S_prov(DataRowCollection rows)
+        {
+            var rows_ = myDBs["[Системы в сборе]"].table.Rows;
+            //var row_new = myDBs["[Системы в сборе]"].table.NewRow();
+            DataTable dataTable = new DataTable();
+            dataTable = myDBs["[Системы в сборе]"].table.Clone();
+            
+            int length = 2;
+            foreach (DataRow row_ in rows)
+            {
+                var row_new = dataTable.NewRow();
+                var row_new1 = dataTable.NewRow();
+                length = row_.ItemArray.Length;
+                for (int i = row_.ItemArray.Length; i > 2; i--)
+                {
+                    if (row_[i - 1] == null || row_[i - 1].ToString() == "")
+                    {
+                        length = length - 1;
+                    }
+                    else
+                        break;
+                }
 
-        public void V_Table()
+                if (length > 19)
+                {
+                    return;
+                }
+                if (length > 11)
+                {
+                    row_new["Номер системы"] = row_.ItemArray[0];
+                    row_new["Тип системы"] = row_.ItemArray[1];
+
+                    for (int i = 1; i < 9; i++)
+                    {
+                        row_new["Блок" + i] = row_.ItemArray[i + 2];
+                    }
+                    row_new1["Номер системы"] = row_.ItemArray[0] + "(н)";
+                    row_new1["Тип системы"] = row_.ItemArray[1];
+                    int g = 1;
+                    for (int i = 9; i < length - 2; i++)
+                    {
+                        row_new1["Блок" + g] = row_.ItemArray[i + 2];
+                        g++;
+                    }
+                }
+                else
+                {
+                    row_new["Номер системы"] = row_.ItemArray[0];
+                    row_new["Тип системы"] = row_.ItemArray[1];
+
+                    for (int i = 1; i < length - 2; i++)
+                    {
+                        row_new["Блок" + i] = row_.ItemArray[i + 2];
+                    }
+                }
+
+                dataTable.Rows.Add(row_new);
+                if (length > 11)
+                {
+                    dataTable.Rows.Add(row_new1);
+                }
+            }   
+            foreach(DataRow r in rows_)
+            {
+                foreach(DataRow rr in dataTable.Rows)
+                {
+                    var array1 = r.ItemArray;
+                    var array2 = rr.ItemArray;
+                   
+                    array1[16] = DBNull.Value;
+                    array1[17]=DBNull.Value;
+                    array1[18] = DBNull.Value;
+                    array1[19] = DBNull.Value;
+                    if (array1.SequenceEqual(array2))
+                    {
+                        MessageBox.Show("Строка существует в таблице - Системы в сборе");
+                        return;
+                    }
+                   
+                }
+            }
+            
+        }
+        public void V_Table(string msg)
         {
             try
             {
+                string curDate = DateTime.Now.ToShortDateString();
                 DataTable data = (DataTable)dataGrid.DataSource;
                 var rows = data.Rows;
                 var rows_ = myDBs["[Блоки]"].table.Rows;
-
+                try
+                {
+                    Prov(rows,msg);
+                    S_prov(rows);
+                }
+                catch (Exception p1)
+                {
+                    MessageBox.Show(p1.ToString());
+                    return;
+                }
+                int length = 2;
                 foreach (DataRow row_ in rows)
                 {
+                    length = row_.ItemArray.Length;
+                    for (int i= row_.ItemArray.Length; i>2;i--)
+                    {
+                        if (row_[i-1] == null || row_[i-1].ToString() == "")
+                        {
+                            length = length - 1;
+                        }
+                        else
+                            break;
+                    }
                     var row_new = myDBs["[Системы в сборе]"].table.NewRow();
+                    var row_new1 = myDBs["[Системы в сборе]"].table.NewRow();
                     row_new["Номер системы"] = row_.ItemArray[0];
                     row_new["Тип системы"] = row_.ItemArray[1];
-                    for (int i = 1; i < row_.ItemArray.Length - 1; i++)
+                    row_new["Дата проверки"] = curDate;
+                    
+                    if (length > 19)
                     {
-                        row_new["Блок" + i] = row_.ItemArray[i + 1];
-                        foreach (DataRow r in rows_)
+                        return;
+                    }
+                    if (length > 11)
+                    {
+                        row_new1["Номер системы"] = row_.ItemArray[0] + "(н)";
+                        row_new1["Тип системы"] = row_.ItemArray[1];
+                        row_new1["Дата проверки"] = curDate;
+                        for (int i = 1; i < 9; i++)
                         {
-                            if (r.ItemArray[0] == row_.ItemArray[i + 1])
+                            row_new["Блок" + i] = row_.ItemArray[i + 2];
+                            foreach (DataRow r in rows_)
                             {
-                                var ttt = r[t2].ToString();
-                                string rr;
-                                char ch = ttt.Contains("Г") ? 'a' :
-                                    ttt.Contains("г") ? 'b' :
-                                    'c';
-                                switch(ch)
+                                if (r.ItemArray[0].ToString() == row_.ItemArray[i + 2].ToString())
                                 {
-                                    case 'a':
-                                        rr = r[t2].ToString();
-                                        rr = rr.Replace("Г", "в");
+                                    var ttt = r[t2].ToString();
+                                    string rr;
+                                    rr = r[t3].ToString();
+                                    rr = rr + "Выпущен в составе системы " + row_.ItemArray[0];
+                                    r[t3] = rr;
+                                    rr = "";
+                                    char ch = ttt.Contains("Г") ? 'a' :
+                                        ttt.Contains("г") ? 'b' :
+                                        'c';
+                                    switch (ch)
+                                    {
+                                        case 'a':
+                                            rr = r[t2].ToString();
+                                            rr = rr.Replace("Г", "в");
+                                            r[t2] = rr;
+                                            break;
+                                        case 'b':
+                                            rr = r[t2].ToString();
+                                            rr = rr.Replace("г", "в");
+                                            r[t2] = rr;
+                                            break;
+                                        case 'c':
+                                            rr = r[t2].ToString();
+                                            rr = rr+"в";
+                                            r[t2] = rr;
+                                            break;
+                                    }
+                                    if (rr.Contains(".сохранено в файле"))
+                                    {
+                                        char[] Mychar = { '_', 'с', 'о', 'х', 'р', 'а', 'н', 'е', 'в', 'ф', 'й', 'л', ' ' };
+                                        rr = rr.TrimEnd(Mychar);
                                         r[t2] = rr;
-                                        break;
-                                    case 'b':
-                                        rr = r[t2].ToString();
-                                        rr = rr.Replace("г", "в");
-                                        r[t2] = rr;
-                                        break;
-                                    case 'c':
-                                        break;
+                                    }
+                                    break;
+
                                 }
-                                    
-                                
+                            }
+                        }
+                        int g = 1;
+                        for (int i = 9; i < length - 2; i++)
+                        {
+                            row_new1["Блок" + g] = row_.ItemArray[i + 2];
+                            g++;
+                            foreach (DataRow r in rows_)
+                            {
+                                if (r.ItemArray[0].ToString() == row_.ItemArray[i + 2].ToString())
+                                {
+                                    var ttt = r[t2].ToString();
+                                    string rr;
+                                    rr = r[t3].ToString();
+                                    rr = rr + "Выпущен в составе системы " + row_.ItemArray[0];
+                                    r[t3] = rr;
+                                    rr = "";
+                                    char ch = ttt.Contains("Г") ? 'a' :
+                                        ttt.Contains("г") ? 'b' :
+                                        'c';
+                                    switch (ch)
+                                    {
+                                        case 'a':
+                                            rr = r[t2].ToString();
+                                            rr = rr.Replace("Г", "в");
+                                            r[t2] = rr;
+                                            break;
+                                        case 'b':
+                                            rr = r[t2].ToString();
+                                            rr = rr.Replace("г", "в");
+                                            r[t2] = rr;
+                                            break;
+                                        case 'c':
+                                            rr = r[t2].ToString();
+                                            rr = rr + "в";
+                                            r[t2] = rr;
+                                            break;
+                                    }
+                                    if (rr.Contains(".сохранено в файле"))
+                                    {
+                                        char[] Mychar = { '_', 'с', 'о', 'х', 'р', 'а', 'н', 'е', 'в', 'ф', 'й', 'л', ' ' };
+                                        rr = rr.TrimEnd(Mychar);
+                                        r[t2] = rr;
+                                    }
+                                    break;
+
+                                }
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        for (int i = 1; i < length - 2; i++)
+                        {
+                            row_new["Блок" + i] = row_.ItemArray[i + 2];
+                            foreach (DataRow r in rows_)
+                            {
+                                if (r.ItemArray[0].ToString() == row_.ItemArray[i + 2].ToString())
+                                {
+                                    var ttt = r[t2].ToString();
+                                    string rr;
+                                    rr = r[t3].ToString();
+                                    rr = rr + "Выпущен в составе системы " + row_.ItemArray[0];
+                                    r[t3] = rr;
+                                    rr = "";
+                                    char ch = ttt.Contains("Г") ? 'a' :
+                                        ttt.Contains("г") ? 'b' :
+                                        'c';
+                                    switch (ch)
+                                    {
+                                        case 'a':
+                                            rr = r[t2].ToString();
+                                            rr = rr.Replace("Г", "в");
+                                            r[t2] = rr;
+                                            break;
+                                        case 'b':
+                                            rr = r[t2].ToString();
+                                            rr = rr.Replace("г", "в");
+                                            r[t2] = rr;
+                                            break;
+                                        case 'c':
+                                            rr = r[t2].ToString();
+                                            rr = rr + "в";
+                                            r[t2] = rr;
+                                            break;
+                                    }
+                                    if (rr.Contains(".сохранено в файле"))
+                                    {
+                                        char[] Mychar = { 'с', 'о','х','р','а','н','е','в','ф','й','л',' ' };
+                                        rr = rr.TrimEnd(Mychar);
+                                        r[t2] = rr;
+                                    }
+                                    break;
+
+                                }
                             }
                         }
                     }
-                    myDBs["[Системы в сборе]"].table.Rows.Add(row_new);
-                }
-
-               
-                
+                    if (length > 11)
+                    { myDBs["[Системы в сборе]"].table.Rows.Add(row_new1); }
+                        myDBs["[Системы в сборе]"].table.Rows.Add(row_new); 
+                }  
             }
             catch (Exception p)
-            { MessageBox.Show("Возможно вы не нажали на кнопку 'Собрать' или не открыли файл перед добавлением в таблицу."); }
+            { MessageBox.Show("Возможно вы не нажали на кнопку 'Собрать' или не открыли файл перед добавлением в таблицу.");
+                return;
+            }
+
+            DataTable data1 = (DataTable)dataGrid.DataSource;
+            var rows1 = data1.Rows;
+            string way_ = "";
+            foreach (DataRow row in rows1)
+            {
+                if (row[0].ToString() == "")
+                {
+                    way_ = System_ways + "\\" + row[3].ToString() + ".txt";
+                }
+                else
+                {
+                    way_ = System_ways + "\\" + row[0].ToString() + ".txt";
+                }
+                
+                if (File.Exists(way_))
+                {
+                    File.Delete(way_);
+                }
+            }
             
+            dt.Clear();
+            dataGrid.DataSource = dt;
+            textBox1.Clear();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            V_Table();
+            string msg = ((Button)sender).Text;
+            V_Table(msg);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            try
+            {
+                string comb = comboBox1.Text;
+                if (!dataGridViewLeft.Columns.Contains("Выбрать"))
+                {
+                    DataGridViewCheckBoxColumn dataColumn = new DataGridViewCheckBoxColumn();
+                    dataColumn.Name = "Выбрать";
+                    dataColumn.DefaultCellStyle = null;
+                    dataGridViewLeft.Columns.Add(dataColumn);
+                }
+                dataGridViewLeft.DataSource = ds.Tables[comb].DefaultView;
+
+            }
+            catch (Exception p)
+            { MessageBox.Show(p.ToString()); }
 
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
+            try
+            {
+                string comb = comboBox2.Text;
+                if (!dataGridViewRight.Columns.Contains("Выбрать"))
+                {
+                    DataGridViewCheckBoxColumn dataColumn = new DataGridViewCheckBoxColumn();
+                    dataColumn.Name = "Выбрать";
+                    dataColumn.DefaultCellStyle = null;
+                    dataGridViewRight.Columns.Add(dataColumn);
+                }
+                dataGridViewRight.DataSource = ds.Tables[comb].DefaultView;
 
+            }
+            catch (Exception p)
+            { MessageBox.Show(p.ToString()); }
+
+        }
+
+        private void dataGridViewLeft_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                for (int i = 0; i < Controls.Count; i++)
+                {
+                    if (Controls[i].Name == "dataGridViewLeft" || Controls[i].Name == "dataGridViewRight" || Controls[i].Name == "datagr")
+                    {
+                        Control c = Controls[i];
+                        pb.WireControl1(c);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Controls.Count; i++)
+                {
+                    if (Controls[i].Name == "dataGridViewLeft" || Controls[i].Name == "dataGridViewRight" || Controls[i].Name == "datagr")
+                    {
+                        Control c = Controls[i];
+                        pb.WireControl(c);
+                    }
+                }
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            string filename;
+            openFileDialog1.InitialDirectory = System_ways;
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                filename = openFileDialog1.SafeFileName;
+                if(filename.Contains(".txt"))
+                {
+                    filename = filename.Substring(0,filename.IndexOf('.'));
+                }
+                textBox1.Text = filename;
+                button3.PerformClick();
+            }
         }
     }
 }
-// не обновляет таблицу  блоки после добавления сборки в табл 

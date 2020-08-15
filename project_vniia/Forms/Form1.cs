@@ -77,11 +77,14 @@ namespace project_vniia
             catch(Exception k)
             { MessageBox.Show(k.ToString()); }
 
-            //for (int t = 6; this.Controls[t] != this.Controls[8]; t++)
-            //{
-            //    Control c = this.Controls[t];
-            //    pb.WireControl(c);
-            //}
+            for (int t = 0; t < Controls.Count; t++)
+            {
+                if (Controls[t].Name == "dataGridView2" || Controls[t].Name == "dataGridView1" || Controls[t].Name == "checkBox1")
+                {
+                    Control c = this.Controls[t];
+                    pb.WireControl(c);
+                }
+            }
 
             dataGridView1.DataError += new DataGridViewDataErrorEventHandler(DataGridView1_DataError);
             dataGridView2.DataError += new DataGridViewDataErrorEventHandler(DataGridView2_DataError);
@@ -90,12 +93,136 @@ namespace project_vniia
             textBox1.KeyUp += TextBox1_KeyUp;
 
             textBox2.KeyUp += TextBox2_KeyUp;
-
+            
             //резервное копирование
             //File.Copy(openFileDialog1.FileName, "C:\\Users\\APM\\Desktop\\2.mdb", true);
-            
+
+            dataGridView1.EditingControlShowing += DataGridView1_EditingControlShowing;
+            dataGridView2.EditingControlShowing += DataGridView2_EditingControlShowing;
         }
-       
+
+        private void DataGridView2_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            TextBox tbb = e.Control as TextBox;
+            if (tbb != null)
+            {
+                tbb.TextChanged += new EventHandler(Tbb_TextChanged);
+            }
+        }
+
+        private void Tbb_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox dg = (TextBox)sender;
+                string text_ = dg.Text;
+
+                int ggg = dataGridView2.CurrentCell.RowIndex;
+                int ggg_ = dataGridView2.CurrentCell.ColumnIndex;
+                int number = 0;
+                if (comboBox1.Text == "БлокиМетро")
+                {
+                    number = myDBs["[" + comboBox1.Text + "]"].table.Columns["Номер блока"].Ordinal;
+                }
+                else
+                {
+                    char numb = myDBs["[" + comboBox1.Text + "]"].table.Columns.Contains("Номер записи") ? 'a' :
+                        myDBs["[" + comboBox1.Text + "]"].table.Columns.Contains("Номер Замечания") ? 'b' :
+                         myDBs["[" + comboBox1.Text + "]"].table.Columns.Contains("Номер Записи") ? 'c' :
+                         'd';
+                    switch (numb)
+                    {
+                        case 'a':
+                            number = myDBs["[" + comboBox1.Text + "]"].table.Columns["Номер записи"].Ordinal;
+                            break;
+                        case 'b':
+                            number = myDBs["[" + comboBox1.Text + "]"].table.Columns["Номер Замечания"].Ordinal;
+                            break;
+                        case 'c':
+                            number = myDBs["[" + comboBox1.Text + "]"].table.Columns["Номер Записи"].Ordinal;
+                            break;
+                    }
+                }
+                int k = 0;
+                if (myDBs["[" + comboBox1.Text + "]"].table.Columns.Contains("s_ColLineage") == true)
+                    k++; 
+                if (myDBs["[" + comboBox1.Text + "]"].table.Columns.Contains("s_Generation") == true)
+                    k++; 
+                if (myDBs["[" + comboBox1.Text + "]"].table.Columns.Contains("s_GUID") == true)
+                    k++; 
+                if (myDBs["[" + comboBox1.Text + "]"].table.Columns.Contains("s_Lineage") == true)
+                    k++;
+                foreach (DataRow t_ in myDBs["[" + comboBox1.Text + "]"].table.Rows)
+                {
+                    string kok = dataGridView2.Rows[ggg].Cells[number].Value.ToString();
+                    if (kok == t_[number].ToString())
+                    {
+                        for (int tt = 0; tt < myDBs["[" + comboBox1.Text + "]"].table.Columns.Count - k; tt++)
+                        {
+                            if (tt == ggg_)
+                            {
+                                t_[tt] = text_;
+                            }
+                            //else
+                            //    t_[tt] = dataGridView2.Rows[ggg].Cells[tt].Value;
+                        }
+
+                        break;
+                    }
+
+                }
+            }
+            catch (Exception p)
+            {
+                //MessageBox.Show(p.ToString());
+            }
+        }
+
+        private void DataGridView1_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            TextBox tb = e.Control as TextBox;
+            if(tb !=null)
+            {
+                tb.TextChanged += new EventHandler(tb_TextChanged);
+            }
+        }
+        //не работает для удаления строки- только для ячеек
+
+        private void tb_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox dg = (TextBox)sender;
+                string text_ = dg.Text;
+
+                int ggg = dataGridView1.CurrentCell.RowIndex;
+                int ggg_ = dataGridView1.CurrentCell.ColumnIndex;
+                foreach (DataRow t_ in myDBs["[Блоки]"].table.Rows)
+                {
+                    string kok = dataGridView1.Rows[ggg].Cells[0].Value.ToString();
+                    if (kok == t_[0].ToString())
+                    {
+                        for (int tt = 1; tt < myDBs["[Блоки]"].table.Columns.Count - 4; tt++)
+                        {
+                            if (tt == ggg_)
+                            {
+                                t_[tt] = text_;
+                            }
+                            else
+                                t_[tt] = dataGridView1.Rows[ggg].Cells[tt].Value;
+                        }
+
+                        break;
+                    }
+
+                }
+            }
+            catch(Exception p)
+            {
+                //MessageBox.Show(p.ToString());
+            }
+        }
+
         private void TextBox2_KeyUp(object sender, KeyEventArgs e)
         {
             Filtr_2.Tabl2(myDBs, comboBox1, textBox1,textBox2, dataGridView1, dataGridView2);
@@ -198,15 +325,56 @@ namespace project_vniia
             Class_ways.Zap_(_ways_, F2, k_tr);
             //
             //ready and work
-            Calibr calibr = new Calibr();
-            calibr.Main_calibr(this);
-
-            Zamech_BD zamech_BD = new Zamech_BD();
-            zamech_BD.Main_Zamech_BD(this);
-
+            try
+            {
+                Calibr calibr = new Calibr();
+                calibr.Main_calibr(this);
+            }
+            catch(Exception p)
+            { MessageBox.Show("Ошибка! Файл НЕ для добавления данных в таблицу Термокалибровка, переместите в другую папку!"); }
+            try
+            {
+                Zamech_BD zamech_BD = new Zamech_BD();
+                zamech_BD.Main_Zamech_BD(this);
+            }
+            catch (Exception p)
+            { MessageBox.Show("Ошибка! Файл НЕ для добавления данных в таблицу Замечания по БД, переместите в другую папку!");
+            }
+            
             Proverka proverka = new Proverka();
             //
             MyDB myDB = new MyDB();
+
+            Class_zagruz.Combobox_(conString, comboBox1, ds, myDB, myDBs);
+            
+            proverka.Main_Proverka(this, myDBs["[Проверка]"].table);
+            //try
+            //{
+            //    if (Proverka.parts.Length == 1)
+            //    {
+            //        MessageBox.Show("Введите номера блоков входящих в систему:" + Proverka.parts[0] + "  в таблице Проверка. Вместо: ?дополнить.");
+            //    }
+            //    else
+            //    {
+            //        string yy = "";
+            //        for (int y = 0; y < Proverka.parts.Length; y++)
+            //        { yy = yy + "_" + Proverka.parts[y]; }
+            //        MessageBox.Show("Введите номер системы для блоков:" + yy + "  в таблице Проверка. Вместо: ?дополнить.");
+
+            //    }
+            //}
+            //catch (Exception h)
+            //{ Console.WriteLine(h.Message); }
+            try
+            {
+                foreach (var my in comboBox1.Items)
+                {
+                    myDBs["[" + my + "]"].table.Clear();
+                }
+                myDBs["[Блоки]"].table.Clear();
+            }
+            catch(Exception p)
+            { MessageBox.Show(p.ToString()); }
 
             Class_zagruz.Combobox_(conString, comboBox1, ds, myDB, myDBs);
 
@@ -216,28 +384,8 @@ namespace project_vniia
             Datagrid_columns_delete_blocks();
             Datagrid_columns_delete();
 
-            proverka.Main_Proverka(this, myDBs["[Проверка]"].table);
-            try
-            {
-                if (Proverka.parts.Length == 1)
-                {
-                    MessageBox.Show("Введите номера блоков входящих в систему:" + Proverka.parts[0] + "  в таблице Проверка. Вместо: ?дополнить.");
-                }
-                else
-                {
-                    string yy = "";
-                    for (int y = 0; y < Proverka.parts.Length; y++)
-                    { yy = yy + "_" + Proverka.parts[y]; }
-                    MessageBox.Show("Введите номер системы для блоков:" + yy + "  в таблице Проверка. Вместо: ?дополнить.");
-
-                }
-            }
-            catch (Exception h)
-            { Console.WriteLine(h.Message); }
-
-            Class_zagruz.Combobox_(conString, comboBox1, ds, myDB, myDBs);
-
             Form4_splash.CloseForm();
+            
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -249,13 +397,15 @@ namespace project_vniia
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             dataGridView2.DataSource = myDBs["[" + comboBox1.Text + "]"].table.DefaultView;
-            
-            for (i = 0; i < 5; i++)
+            if (comboBox1.Text != "Проверка")
             {
-                if (dataGridView2.Columns.Contains(stolbez[i]))
+                for (i = 0; i < 5; i++)
                 {
-                    dataGridView2.Columns[stolbez[i]].ReadOnly = true;
-                    break;
+                    if (dataGridView2.Columns.Contains(stolbez[i]))
+                    {
+                        dataGridView2.Columns[stolbez[i]].ReadOnly = true;
+                        break;
+                    }
                 }
             }
             Datagrid_columns_delete();
@@ -335,7 +485,9 @@ namespace project_vniia
 
 
             if (text == "")
+            {
                 dataGridView1.DataSource = myDBs["[Блоки]"].table;
+            }
             else
             {
                 var table1 = myDBs["[Блоки]"].table;
@@ -399,9 +551,9 @@ namespace project_vniia
                 rows_to_delete.Clear();
 
                 dataGridView1.DataSource = table2;
-                
+
                 Datagrid_columns_delete_blocks();
-              
+
             }
         }
         public void button_filtr_Click(Dictionary<string, MyDB> myDBs, ComboBox comboBox1, TextBox textBox1, TextBox textBox2)
@@ -491,20 +643,23 @@ namespace project_vniia
             }
         }
         
-
         private void добавитьБлокиToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateForm();
-           
         }
-
         public class MyDB
         {
             public DataSet ds;
             public OleDbDataAdapter adapter;
             public DataTable table;
         }
-
+        private Dictionary<string, MyEnd> myEnds = new Dictionary<string, MyEnd>();
+        public class MyEnd
+        {
+            public int del;
+            public int izm;
+            public int dob;
+        }
         private Dictionary<string, MyDB> myDBs = new Dictionary<string, MyDB>();
 
         private void but_peregruzka_Click(object sender, EventArgs e)
@@ -544,51 +699,7 @@ namespace project_vniia
         {
             CreateForm_zamena();
         }
-
-        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //сохранение для таблицы(авто)
-
-            ds = new DataSet();
-            myDBs["[Блоки]"].adapter.Fill(ds);
-            myDBs["[Блоки]"].ds = ds;
-
-            Class_Save_blocks.AnalizTable(myDBs["[Блоки]"].ds.Tables[0], myDBs["[Блоки]"].table, myDBs["[Блоки]"].adapter);
-
-            foreach (string str in comboBox1.Items)
-            {
-                ds = new DataSet();
-                myDBs["[" + str + "]"].adapter.Fill(ds);
-                myDBs["[" + str + "]"].ds = ds;
-            }
-
-            #region SAVE
-            Class_Save_cannote.AnalizTable(myDBs["[CANNote]"].ds.Tables[0], myDBs["[CANNote]"].table, myDBs["[CANNote]"].adapter);
-
-            Class_Save_blockMetro.AnalizTable(myDBs["[БлокиМетро]"].ds.Tables[0], myDBs["[БлокиМетро]"].table, myDBs["[БлокиМетро]"].adapter);
-
-            Class_Save_kan.AnalizTable(myDBs["[КАН]"].ds.Tables[0], myDBs["[КАН]"].table, myDBs["[КАН]"].adapter);
-
-            Class_Save_kanS.AnalizTable(myDBs["[КАНы]"].ds.Tables[0], myDBs["[КАНы]"].table, myDBs["[КАНы]"].adapter);
-
-            Class_Save_operMetro.AnalizTable(myDBs["[ОперацииМетро]"].ds.Tables[0], myDBs["[ОперацииМетро]"].table, myDBs["[ОперацииМетро]"].adapter);
-
-            Class_Save_prov.AnalizTable(myDBs["[Проверка]"].ds.Tables[0], myDBs["[Проверка]"].table, myDBs["[Проверка]"].adapter);
-
-            Class_Save_provFey.AnalizTable(myDBs["[Проверка ФЭУ]"].ds.Tables[0], myDBs["[Проверка ФЭУ]"].table, myDBs["[Проверка ФЭУ]"].adapter);
-
-            Class_Save_provTCPM.AnalizTable(myDBs["[ПроверкаТСРМ61]"].ds.Tables[0], myDBs["[ПроверкаТСРМ61]"].table, myDBs["[ПроверкаТСРМ61]"].adapter);
-
-            Class_Save_rabotBD.AnalizTable(myDBs["[Работы по БД]"].ds.Tables[0], myDBs["[Работы по БД]"].table, myDBs["[Работы по БД]"].adapter);
-
-            Class_Save_systemVsbore.AnalizTable(myDBs["[Системы в сборе]"].ds.Tables[0], myDBs["[Системы в сборе]"].table, myDBs["[Системы в сборе]"].adapter);
-
-            Class_Save_termocalibr.AnalizTable(myDBs["[Термокалибровка]"].ds.Tables[0], myDBs["[Термокалибровка]"].table, myDBs["[Термокалибровка]"].adapter);
-
-            Class_Save_zamechPoBD.AnalizTable(myDBs["[Замечания по БД]"].ds.Tables[0], myDBs["[Замечания по БД]"].table, myDBs["[Замечания по БД]"].adapter);
-
-            #endregion
-        }
+        
         public static bool zam = false;
         private void заменитьНомерБДToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -659,6 +770,7 @@ namespace project_vniia
         private void button1_Click(object sender, EventArgs e)
         {
             MessageBox.Show("При сложной фильтрации приоритет у значения из первой ячейки.\n\t");
+            
         }
 
         public Form4_func_new CreateForm_Form4()
@@ -682,6 +794,136 @@ namespace project_vniia
         private void переместитьМеждуПодразделениямиToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateForm_Form4();
+        }
+        bool k = false;
+        
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                for (int i = 0; i < Controls.Count; i++)
+                {
+                    if (Controls[i].Name == "dataGridView2"|| Controls[i].Name == "dataGridView1")
+                    {
+                        Control c = Controls[i];
+                        pb.WireControl1(c);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Controls.Count; i++)
+                {
+                    if (Controls[i].Name == "dataGridView2" || Controls[i].Name == "dataGridView1")
+                    {
+                        Control c = Controls[i];
+                        pb.WireControl(c);
+                    }
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            CreateForm_Form_way();
+        }
+        public Form_ways_change CreateForm_Form_way()
+        {
+            // Проверяем существование формы
+            foreach (Form frm in Application.OpenForms)
+                if (frm is Form_ways_change)
+                {
+                    frm.Activate();
+                    return frm as Form_ways_change;
+                }
+            // Создаем новую форму
+            Form_ways_change system = new Form_ways_change();
+            
+            system.Show();
+
+            return system;
+        }
+
+        private void сохранитьToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+
+            //сохранение для таблицы(авто)
+
+            ds = new DataSet();
+            myDBs["[Блоки]"].adapter.Fill(ds);
+            myDBs["[Блоки]"].ds = ds;
+
+            Class_Save_blocks.AnalizTable(myDBs["[Блоки]"].ds.Tables[0], myDBs["[Блоки]"].table, myDBs["[Блоки]"].adapter, myEnds);
+
+            foreach (string str in comboBox1.Items)
+            {
+                ds = new DataSet();
+                myDBs["[" + str + "]"].adapter.Fill(ds);
+                myDBs["[" + str + "]"].ds = ds;
+            }
+
+            #region SAVE
+            Class_Save_cannote.AnalizTable(myDBs["[CANNote]"].ds.Tables[0], myDBs["[CANNote]"].table, myDBs["[CANNote]"].adapter, myEnds);
+
+            Class_Save_blockMetro.AnalizTable(myDBs["[БлокиМетро]"].ds.Tables[0], myDBs["[БлокиМетро]"].table, myDBs["[БлокиМетро]"].adapter, myEnds);
+
+            Class_Save_kan.AnalizTable(myDBs["[КАН]"].ds.Tables[0], myDBs["[КАН]"].table, myDBs["[КАН]"].adapter, myEnds);
+
+            Class_Save_kanS.AnalizTable(myDBs["[КАНы]"].ds.Tables[0], myDBs["[КАНы]"].table, myDBs["[КАНы]"].adapter, myEnds);
+
+            Class_Save_operMetro.AnalizTable(myDBs["[ОперацииМетро]"].ds.Tables[0], myDBs["[ОперацииМетро]"].table, myDBs["[ОперацииМетро]"].adapter, myEnds);
+
+            Class_Save_prov.AnalizTable(myDBs["[Проверка]"].ds.Tables[0], myDBs["[Проверка]"].table, myDBs["[Проверка]"].adapter, myEnds);
+
+            Class_Save_provFey.AnalizTable(myDBs["[Проверка ФЭУ]"].ds.Tables[0], myDBs["[Проверка ФЭУ]"].table, myDBs["[Проверка ФЭУ]"].adapter, myEnds);
+
+            Class_Save_provTCPM.AnalizTable(myDBs["[ПроверкаТСРМ61]"].ds.Tables[0], myDBs["[ПроверкаТСРМ61]"].table, myDBs["[ПроверкаТСРМ61]"].adapter, myEnds);
+
+            Class_Save_rabotBD.AnalizTable(myDBs["[Работы по БД]"].ds.Tables[0], myDBs["[Работы по БД]"].table, myDBs["[Работы по БД]"].adapter, myEnds);
+
+            Class_Save_systemVsbore.AnalizTable(myDBs["[Системы в сборе]"].ds.Tables[0], myDBs["[Системы в сборе]"].table, myDBs["[Системы в сборе]"].adapter, myEnds);
+
+            Class_Save_termocalibr.AnalizTable(myDBs["[Термокалибровка]"].ds.Tables[0], myDBs["[Термокалибровка]"].table, myDBs["[Термокалибровка]"].adapter, myEnds);
+
+            Class_Save_zamechPoBD.AnalizTable(myDBs["[Замечания по БД]"].ds.Tables[0], myDBs["[Замечания по БД]"].table, myDBs["[Замечания по БД]"].adapter, myEnds);
+
+            #endregion
+            string ends = "\r\a";
+            foreach (var end in myEnds)
+            {
+                ends = ends + end.Key + "       добавлено:"+ end.Value.dob +"       изменено:"+ end.Value.izm + "       удалено:" + end.Value.del+"\r\a";
+            }
+            var kolvo = ends.Split(' ');
+            kolvo[kolvo.Length-1] = kolvo[kolvo.Length-1].Replace("\r\a","");
+            ends = "";
+            foreach (var en in kolvo)
+            {
+                if(en=="")
+                    ends = ends + " ";
+                ends = ends + en;
+            }
+            MessageBox.Show(ends);
+        }
+
+        private void протоколToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CreateForm_Form_protokol();
+        }
+        public Form_protokol CreateForm_Form_protokol()
+        {
+            // Проверяем существование формы
+            foreach (Form frm in Application.OpenForms)
+                if (frm is Form_protokol)
+                {
+                    frm.Activate();
+                    return frm as Form_protokol;
+                }
+            // Создаем новую форму
+            Form_protokol system = new Form_protokol();
+            system.myDBs = myDBs;
+            system.Show();
+
+            return system;
         }
     }
     

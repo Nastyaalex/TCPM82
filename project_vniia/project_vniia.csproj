@@ -64,6 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class_filtr_change.cs" />
+    <Compile Include="Class_Protokol.cs" />
     <Compile Include="Forms\Form4_splash.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,6 +137,18 @@
     <Compile Include="Forms\Otchet.Designer.cs">
       <DependentUpon>Otchet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Form_ways_change.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_ways_change.Designer.cs">
+      <DependentUpon>Form_ways_change.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Form_protokol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_protokol.Designer.cs">
+      <DependentUpon>Form_protokol.cs</DependentUpon>
+    </Compile>
     <Compile Include="PickBox.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -176,6 +190,13 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Otchet.resx">
       <DependentUpon>Otchet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_ways_change.resx">
+      <DependentUpon>Form_ways_change.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_protokol.resx">
+      <DependentUpon>Form_protokol.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -221,6 +242,35 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\share.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Word">
+      <Guid>{00020905-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>6</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

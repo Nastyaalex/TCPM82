@@ -1,25 +1,40 @@
-﻿using System;
+﻿using PickBoxTest;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace project_vniia
 {
     public partial class Form4_func_new : Form
     {
+        Button button_filtr = new Button();
         DataSet ds = new DataSet();
+        private PickBox pb = new PickBox();
+        public bool flag_filtr = false;
         public int t1;
         public Form4_func_new()
         {
             InitializeComponent();
             dataGridViewLeft.DataError += DataGridViewLeft_DataError;
             dataGridViewRight.DataError += DataGridViewRight_DataError;
-            
+            textBox1.KeyUp += TextBox1_KeyUp;
+
+            for (int t = 0; t < Controls.Count; t++)
+            {
+                if (Controls[t].Name == "dataGridViewLeft" || Controls[t].Name == "dataGridViewRight" || Controls[t].Name == "checkBox1")
+                {
+                    Control c = this.Controls[t];
+                    pb.WireControl(c);
+                }
+            }
+        }
+
+        private void TextBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            button_filtr_Click(ds, comboBox1, dataGridViewLeft);
+            button_filtr_Click(ds, comboBox2, dataGridViewRight);
         }
 
         private void DataGridViewRight_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -39,18 +54,39 @@ namespace project_vniia
                 DataGridViewRow row = dataGridViewLeft.Rows[i];
                 if (Convert.ToBoolean(row.Cells["Выбрать"].Value))
                 {
-                    DataRow new_ = ds.Tables[comboBox2.Text].NewRow();
-                    ds.Tables[comboBox1.Text].Rows[i][t1] = "п." + comboBox2.Text;
-                    new_ = ds.Tables[comboBox1.Text].Rows[i];
+                    DataRow new_ = ds.Tables[comboBox1.Text].NewRow();
+
+                    string l = row.Cells["Номер БД"].Value.ToString();
+                    foreach (DataRow ror in ds.Tables[comboBox1.Text].Rows)
+                    {
+                        if (ror["Номер БД"].ToString() == l)
+                        {
+                            string value_ = "п." + comboBox2.Text;
+                            ror.SetField("Местоположение", value_);
+                            new_ = ror;
+                            break;
+                        }
+                    }
+                    
                     ds.Tables[comboBox2.Text].ImportRow(new_);
                     foreach (DataRow row_ in myDBs["[Блоки]"].table.Rows)
                     {
                         if (row_["Номер БД"] == new_["Номер БД"])
                         {
-                            string value = row_.Field<string>("Местоположение").Replace(comboBox1.Text, comboBox2.Text);
+                            if (row_["Местоположение"] == DBNull.Value)
+                            {
+                                string value_ = "п." + comboBox2.Text;
+                                row_.SetField("Местоположение", value_);
+                                break;
+                            }
+                            else
+                            {
+                                string value = row_.Field<string>("Местоположение").Replace(comboBox1.Text, comboBox2.Text);
 
-                            // Then we update the value.
-                            row_.SetField("Местоположение", value);
+                                // Then we update the value.
+                                row_.SetField("Местоположение", value);
+                                break;
+                            }
                         }
                     }
                     ds.Tables[comboBox1.Text].Rows.Remove(new_);
@@ -144,18 +180,38 @@ namespace project_vniia
                 if (Convert.ToBoolean(row.Cells["Выбрать"].Value))
                 {
                     DataRow new_ = ds.Tables[comboBox1.Text].NewRow();
-                    ds.Tables[comboBox2.Text].Rows[i][t1] = "п." + comboBox1.Text;
-                    new_ = ds.Tables[comboBox2.Text].Rows[i];
+                    string l = row.Cells["Номер БД"].Value.ToString();
+                    foreach (DataRow ror in ds.Tables[comboBox2.Text].Rows)
+                    {
+                        if (ror["Номер БД"] == l)
+                        {
+                            string value_ = "п." + comboBox1.Text;
+                            ror.SetField("Местоположение", value_);
+                            new_ = ror;
+                            break;
+                        }
+                    }
+                   
                     ds.Tables[comboBox1.Text].ImportRow(new_);
                     
                     foreach (DataRow row_ in myDBs["[Блоки]"].table.Rows)
                     {
                         if (row_["Номер БД"] == new_["Номер БД"])
                         {
-                            string value = row_.Field<string>("Местоположение").Replace(comboBox2.Text, comboBox1.Text);
+                            if (row_["Местоположение"] == DBNull.Value)
+                            {
+                                string value_ = "п." + comboBox1.Text;
+                                row_.SetField("Местоположение", value_);
+                                break;
+                            }
+                            else
+                            {
+                                string value = row_.Field<string>("Местоположение").Replace(comboBox2.Text, comboBox1.Text);
 
-                            // Then we update the value.
-                            row_.SetField("Местоположение", value);
+                                // Then we update the value.
+                                row_.SetField("Местоположение", value);
+                                break;
+                            }
                         }
                     }
                     ds.Tables[comboBox2.Text].Rows.Remove(new_);
@@ -185,7 +241,11 @@ namespace project_vniia
             }
             catch (Exception p)
             { MessageBox.Show(p.ToString()); }
-           
+
+            if (flag_filtr)
+            {
+                button_filtr_Click(ds, comboBox1, dataGridViewLeft);
+            }
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -205,74 +265,119 @@ namespace project_vniia
             }
             catch (Exception p)
             { MessageBox.Show(p.ToString()); }
-        }
-        public void AnalizTable(DataTable First, DataTable Second)
-        {//сравнение 2-х таблиц
-            DataTable table = new DataTable("Различия");
-            DataTable table1 = new DataTable("Различия1");
-            DataTable table_up = new DataTable("UPDATE");
 
-            using (DataSet ds = new DataSet())
+            if (flag_filtr)
             {
-                //Добавление таблиц в DS
-                ds.Tables.AddRange(new DataTable[] { First.Copy(), Second.Copy() });
-
-                //Получение столбцов для DataRelation (1-я таблица)
-                DataColumn[] firstcolumns = new DataColumn[ds.Tables[0].Columns.Count];
-                for (int i = 0; i < firstcolumns.Length; i++)
-                {
-                    firstcolumns[i] = ds.Tables[0].Columns[i];
-                }
-
-                //Получение столбцов для DataRelation (2-я таблица)
-                DataColumn[] secondcolumns = new DataColumn[ds.Tables[1].Columns.Count];
-                for (int i = 0; i < secondcolumns.Length; i++)
-                {
-                    secondcolumns[i] = ds.Tables[1].Columns[i];
-                }
-
-                //Создание DataRelation (отношений)
-                DataRelation r1 = new DataRelation(string.Empty, firstcolumns, secondcolumns, false);
-                ds.Relations.Add(r1);
-                DataRelation r2 = new DataRelation(string.Empty, secondcolumns, firstcolumns, false);
-                ds.Relations.Add(r2);
-
-                //Создание столбцов результирующей таблицы
-                table = First.Clone();
-                table1 = First.Clone();
-
-                table.BeginLoadData();
-                table1.BeginLoadData();
-
-                table_up = First.Clone();
-                table_up.BeginLoadData();
-                //Если строки из 1-й нет во 2-й, то добавляем в результирующую таблицу
-                foreach (DataRow parentrow in ds.Tables[0].Rows)
-                {
-                    DataRow[] childrows = parentrow.GetChildRows(r1);
-                    if (childrows == null || childrows.Length == 0)
-                        table.LoadDataRow(parentrow.ItemArray, true);
-                }
-                //table.Rows.Add(000, "Akademic", "Iangal");
-
-                //Если строки из 2-й нет в 1-й, то добавляем в результирующую таблицу
-                foreach (DataRow parentrow in ds.Tables[1].Rows)
-                {
-                    DataRow[] childrows = parentrow.GetChildRows(r2);
-                    if (childrows == null || childrows.Length == 0)
-                        table1.LoadDataRow(parentrow.ItemArray, true);
-                }
-
-                table.EndLoadData();
-                table1.EndLoadData();
+                button_filtr_Click(ds, comboBox2, dataGridViewRight);
             }
-           // CompareRows_BLOCKS(table, table1, adapter, table_up);
-
         }
+        
         private void dataGridViewLeft_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
+        public void button_filtr_Click(DataSet df, ComboBox comboBox_, DataGridView view)
+        {
+                string text = textBox1.Text;
+
+                if (text == "")
+                {
+                    view.DataSource = df.Tables[comboBox_.Text];
+                
+                }
+                else
+                {
+                    var table1 = df.Tables[comboBox_.Text];
+                    int k = 0; bool s_ = false;
+                    if (table1.Columns.Contains("s_ColLineage") == true)
+                        k++; 
+                    if (table1.Columns.Contains("s_Generation") == true)
+                        k++; 
+                    if (table1.Columns.Contains("s_GUID") == true)
+                        k++; 
+                    if (table1.Columns.Contains("s_Lineage") == true)
+                        k++;
+                    var table2 = table1.Copy();
+                    if (k != 0)
+                        s_ = true;
+                    //переписать t1 -> t2 С учетом фильтра
+
+                    var rows_to_delete = new List<DataRow>();
+
+                    var rows = table2.Rows;
+                    foreach (DataRow r in rows)
+                    {
+                        bool f = true;
+                        int kolvo = r.ItemArray.Length;
+                        k = 1;
+                        foreach (var c in r.ItemArray)
+                        {
+                            if (s_)
+                            {
+                                if ((k < kolvo) && (k < kolvo - 1) && (k < kolvo - 2) && (k < kolvo - 3))
+                                {
+                                    if (c.ToString().Contains(text))
+                                    {
+                                        f = false;
+                                    }
+                                }
+                                else { break; }
+                            }
+                            else
+                            {
+                                if (c.ToString().Contains(text))
+                                {
+                                    f = false;
+                                }
+                            }
+                            k++;
+                        }
+                        if (f)
+                        {
+                            rows_to_delete.Add(r);
+                        }
+                        Console.WriteLine();
+                    }
+
+                    foreach (var r in rows_to_delete)
+                    {
+                        rows.Remove(r);
+                    }
+
+                    rows_to_delete.Clear();
+
+                    view.DataSource = table2;
+                
+                    flag_filtr = true;
+
+                }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                for (int i = 0; i < Controls.Count; i++)
+                {
+                    if (Controls[i].Name == "dataGridViewLeft" || Controls[i].Name == "dataGridViewRight")
+                    {
+                        Control c = Controls[i];
+                        pb.WireControl1(c);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Controls.Count; i++)
+                {
+                    if (Controls[i].Name == "dataGridViewLeft" || Controls[i].Name == "dataGridViewRight")
+                    {
+                        Control c = Controls[i];
+                        pb.WireControl(c);
+                    }
+                }
+            }
+        }
     }
+
 }
-///сохрвнить в таблицы
