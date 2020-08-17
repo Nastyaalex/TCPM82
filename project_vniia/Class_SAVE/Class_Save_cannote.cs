@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Windows.Forms;
 
 namespace project_vniia
 {
@@ -140,15 +142,17 @@ namespace project_vniia
 
                 table_up = First.Clone();
                 table_up.BeginLoadData();
-                //Если строки из 1-й нет во 2-й, то добавляем в результирующую таблицу
-                foreach (DataRow parentrow in ds.Tables[0].Rows)
+                try
+                {
+                    //Если строки из 1-й нет во 2-й, то добавляем в результирующую таблицу
+                    foreach (DataRow parentrow in ds.Tables[0].Rows)
                 {
                     DataRow[] childrows = parentrow.GetChildRows(r1);
                     if (childrows == null || childrows.Length == 0)
                         table.LoadDataRow(parentrow.ItemArray, true);
                 }
                 //table.Rows.Add(000, "Akademic", "Iangal");
-
+                
                 //Если строки из 2-й нет в 1-й, то добавляем в результирующую таблицу
                 foreach (DataRow parentrow in ds.Tables[1].Rows)
                 {
@@ -160,6 +164,11 @@ namespace project_vniia
                 table.EndLoadData();
                 table1.EndLoadData();
             }
+                catch (Exception p)
+            {
+                MessageBox.Show(p.ToString());
+            }
+        }
             CompareRows_cannote(table, table1, adapter, table_up,  myEnds);
           
         }

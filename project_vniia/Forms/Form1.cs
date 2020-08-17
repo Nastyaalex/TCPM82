@@ -25,8 +25,8 @@ namespace project_vniia
         "SELECT * FROM [Системы в сборе]","SELECT * FROM [Термокалибровка] ORDER BY Номер_БД ASC",
         "SELECT * FROM Блоки ORDER BY [Номер БД] ASC"};// если понадобиться порядок по определённому столбцу
 
-        public static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "change_2_rows.txt");
-        public static string filePath_calibr = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "calibration_check.txt");
+        //public static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "change_2_rows.txt");
+        //public static string filePath_calibr = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "calibration_check.txt");
         
         Button button_filtr = new Button();
 
@@ -61,21 +61,24 @@ namespace project_vniia
             Form4_splash.ShowSplashScreen();
             InitializeComponent();
 
-            
+
             //this.KeyPreview = true;
-            try
-            {
-                if (!File.Exists(filePath))
-                {
-                    File.Create(filePath).Close();
-                }
-                if (!File.Exists(filePath_calibr))
-                {
-                    File.Create(filePath_calibr).Close();
-                }
-            }
-            catch(Exception k)
-            { MessageBox.Show(k.ToString()); }
+            ////////////////////
+            ////"change_2_rows.txt"///"calibration_check.txt"
+            /////////////////
+            //try
+            //{
+            //    if (!File.Exists(filePath))
+            //    {
+            //        File.Create(filePath).Close();
+            //    }
+            //    if (!File.Exists(filePath_calibr))
+            //    {
+            //        File.Create(filePath_calibr).Close();
+            //    }
+            //}
+            //catch(Exception k)
+            //{ MessageBox.Show(k.ToString()); }
 
             for (int t = 0; t < Controls.Count; t++)
             {
