@@ -21,7 +21,7 @@ namespace project_vniia
 
         private void Form_protokol_Load(object sender, EventArgs e)
         {
-            Object templatePathObj_1 = "";
+            Object templatePathObj_1 = Form1.Protocol_saved + "\\doc1";
             if (templatePathObj_1 == null || templatePathObj_1.ToString() == "")
             {
                 WindowsIdentity wi = WindowsIdentity.GetCurrent();
@@ -30,6 +30,8 @@ namespace project_vniia
                 templatePathObj_1 = "C:\\Users\\" + www[1] + "\\Desktop\\doc1";
                 textBox1.Text = templatePathObj_1.ToString();
             }
+            else
+                textBox1.Text = templatePathObj_1.ToString();
             Delen(myDBs);
         }
         public void Peremen()
@@ -81,6 +83,7 @@ namespace project_vniia
             foreach (var par_ in par)
             {
                 string par_N = par_ + "(н)";
+                string par_N_1 = par_ + " (н)";
                 foreach (DataRow srt_ in myDBs["[Системы в сборе]"].table.Rows)
                 {
                     if (srt_[t1].ToString() == par_ && "" != srt_[t2].ToString() && !srtTypeSystem.Contains(srt_[t2].ToString()))
@@ -106,7 +109,7 @@ namespace project_vniia
                         }
                         
                     }
-                    if(srt_[t1].ToString() == par_N && "" != srt_[t2].ToString())
+                    if((srt_[t1].ToString() == par_N && "" != srt_[t2].ToString())||(srt_[t1].ToString() == par_N_1 && "" != srt_[t2].ToString()))
                     {
                         k_ = 6;
                         for (int j = 0; j < 8; j++)
@@ -147,11 +150,13 @@ namespace project_vniia
             {
                 Object templatePathObj = null;
 
-                if (templatePathObj == null || templatePathObj.ToString() == "")
-                {
-                    string s = Environment.CurrentDirectory;
-                    templatePathObj = s + "\\ПИ  ТСРМ82-09.07 №55918528 55918530 55918531.docx";
-                }
+                templatePathObj = Form1.Protocol_ways + "\\ПИ  ТСРМ82-09.07 №55918528 55918530 55918531.docx";
+                
+                //if (templatePathObj == null || templatePathObj.ToString() == "")
+                //{
+                //    string s = Environment.CurrentDirectory;
+                //    templatePathObj = s + "\\ПИ  ТСРМ82-09.07 №55918528 55918530 55918531.docx";
+                //}
 
                 Class_Protokol.Protokol(srtNumberSystem, srtTypeSystem, templatePathObj, blocks, BL_type,
                     blocksN, znach_SU50, znach_SCs50, znach_SCs10, znach_SCfCm, templatePathObj_1);
@@ -160,11 +165,13 @@ namespace project_vniia
             {
                 Object templatePathObj = null;
 
-                if (templatePathObj == null || templatePathObj.ToString() == "")
-                {
-                    string s = Environment.CurrentDirectory;
-                    templatePathObj = s + "\\ПСИ  образец.docx";
-                }
+                templatePathObj =Form1.Protocol_ways+ "\\ПСИ  образец.docx";
+
+                //if (templatePathObj == null || templatePathObj.ToString() == "")
+                //{
+                //    string s = Environment.CurrentDirectory;
+                //    templatePathObj = s + "\\ПСИ  образец.docx";
+                //}
                 Class_Protokol.Protokol_for_PSI(srtNumberSystem, srtTypeSystem, templatePathObj, blocks, BL_type,
                     blocksN, znach_SU50, znach_SCs50, znach_SCs10, znach_SCfCm, templatePathObj_1);
             }
@@ -212,14 +219,38 @@ namespace project_vniia
                                 znach_SCs50[lol, kolvo] = srt_[tt1].ToString();
                             if (srt_[tt2].ToString() != "")
                                 znach_SCs10[lol, kolvo] = srt_[tt2].ToString();
-                            if (srt_[tt4].ToString() != "")
-                                znach_SCfCm[lol, kolvo] = srt_[tt4].ToString();
+                            //if (srt_[tt4].ToString() != "")
+                            //    znach_SCfCm[lol, kolvo] = srt_[tt4].ToString();
                         }
                     }
                 }
                 kolvo++;
             }
-             
+            kolvo = 0; lol = 0;
+            foreach (var typee in blocksN)
+            {
+                if (kolvo >= 8)
+                {
+                    kolvo = 0;
+                    lol++;
+                }
+                
+                    if (typee == null)
+                    { }
+                    else
+                    {
+                        foreach (DataRow srt_ in myDBs["[Проверка]"].table.Rows)
+                        {
+                            if (srt_[tt3].ToString() == typee)
+                            {
+                                if (srt_[tt4].ToString() != "")
+                                    znach_SCfCm[lol, kolvo] = srt_[tt4].ToString();
+                            }
+                        }
+                    }
+                
+                kolvo++;
+            }
         }
         private void button1_Click(object sender, EventArgs e)
         {

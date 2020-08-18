@@ -51,11 +51,39 @@ namespace project_vniia
             if (!f[br])
             {
                 MessageBox.Show("Попытка добавить существующий блок!"+"\n\r"+ dataGridView1.Rows[br].Cells[0].Value);
+                return;
             }
             else
             {
                 try
                 {
+                    for(int i=0;i< dataGridView1.Rows.Count - 1;i++)
+                    {
+                        if(dataGridView1.Rows[i].Cells[0].Value==null)
+                        {
+                            dataGridView1.Rows[i].Cells[0].Value = DBNull.Value;
+                        }
+                        if (dataGridView1.Rows[i].Cells[1].Value == null)
+                        {
+                            dataGridView1.Rows[i].Cells[1].Value = DBNull.Value;
+                        }
+                        if (dataGridView1.Rows[i].Cells[2].Value == null)
+                        {
+                            dataGridView1.Rows[i].Cells[2].Value = DBNull.Value;
+                        }
+                        if (dataGridView1.Rows[i].Cells[3].Value == null)
+                        {
+                            dataGridView1.Rows[i].Cells[3].Value = DBNull.Value;
+                        }
+                        if (dataGridView1.Rows[i].Cells[4].Value == null)
+                        {
+                            dataGridView1.Rows[i].Cells[4].Value = DBNull.Value;
+                        }
+                        if (dataGridView1.Rows[i].Cells[5].Value == null)
+                        {
+                            dataGridView1.Rows[i].Cells[5].Value = DBNull.Value;
+                        }
+                    }
                     for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
                     {
                         DataRow newrow = blocks_T.NewRow();

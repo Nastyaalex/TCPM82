@@ -91,7 +91,7 @@ namespace project_vniia
 
         public static string[] Forma2_()
         {
-            string[] F2=new string[6];
+            string[] F2=new string[8];
 
             Form2 form2 = new Form2();
             form2.ShowDialog();
@@ -106,6 +106,8 @@ namespace project_vniia
             F2[3] = Form2.textbox4_;
             F2[4] = Form2.textbox5_;
             F2[5] = Form2.textbox6_;
+            F2[6] = Form2.textbox7_;
+            F2[7] = Form2.textbox8_;
             int g = 0;
             foreach (string t in F2)
             {
@@ -133,9 +135,9 @@ namespace project_vniia
         public static void Zap_(string[] _ways, string[] F2, int k_tr)
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            if (k_tr != 6 && k_tr < 6)
+            if (k_tr != 8 && k_tr < 8)
             {
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 8; i++)
                 {
                     using (StreamWriter sw = new StreamWriter(path + "\\TestWay" + _ways[i]))
                     {
@@ -149,6 +151,8 @@ namespace project_vniia
             Form1.Zamech_ways_peremesti = F2[3];
             Form1.Proverka_ways = F2[4];
             Form1.Proverka_ways_perem = F2[5];
+            Form1.Protocol_ways = F2[6];
+            Form1.Protocol_saved = F2[7];
         }
     }
 }

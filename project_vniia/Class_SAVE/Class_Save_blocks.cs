@@ -11,109 +11,113 @@ namespace project_vniia
        
         static void CompareRows_BLOCKS(DataTable table_del, DataTable table_in, OleDbDataAdapter adapter, DataTable table_up, Dictionary<string, Form1.MyEnd> myEnds)
         {
-            foreach (DataRow row1 in table_del.Rows)
+            try
             {
-                int k = 0;
-                foreach (DataRow row2 in table_in.Rows)
+                foreach (DataRow row1 in table_del.Rows)
                 {
-                    if (k != 2)
+                    int k = 0;
+                    foreach (DataRow row2 in table_in.Rows)
                     {
-                        var array1 = row1.ItemArray;
-                        var array2 = row2.ItemArray;
-
-                        if (array1[0].ToString() == array2[0].ToString())
+                        if (k != 2)
                         {
-                            table_up.LoadDataRow(row2.ItemArray, true);
-                            row2.Delete();
-                            row1.Delete();
-                            k = 2;
+                            var array1 = row1.ItemArray;
+                            var array2 = row2.ItemArray;
+
+                            if (array1[0].ToString() == array2[0].ToString())
+                            {
+                                table_up.LoadDataRow(row2.ItemArray, true);
+                                row2.Delete();
+                                row1.Delete();
+                                k = 2;
+                            }
                         }
+
                     }
+                    table_in.AcceptChanges();
 
                 }
-                table_in.AcceptChanges();
+                table_del.AcceptChanges();
 
+                Form1.MyEnd myEnd = new Form1.MyEnd();
+                myEnds["Блоки"] = myEnd;
+                myEnd.del = table_del.Rows.Count;
+                myEnd.dob = table_in.Rows.Count;
+                myEnd.izm = table_up.Rows.Count;
+
+                OleDbConnection dbCon = new OleDbConnection(Form1.conString);
+                dbCon.Open();
+                foreach (DataRow row_ in table_up.Rows)
+                {
+                    var array1 = row_.ItemArray;
+                    OleDbCommand cmd = new OleDbCommand();
+                    cmd.CommandType = CommandType.Text;
+
+                    cmd.CommandText = "UPDATE `Блоки` SET `Номер БД` = ?, `Тип БД` = ?, `Номер ФЭУ` = ?," +
+                        " `Номинальное U` = ?, `Примечания` = ?, `Местоположение` = ?, `Отметка выполнения` = ?, " +
+                        "`КАН` = ?, `s_ColLineage` = ?, `s_Generation` = ?, `s_GUID` = ?, `s_Lineage` = ? " +
+                        "WHERE `Номер БД` = ?";
+                    cmd.Parameters.AddWithValue("@NumberBD", array1[0]);
+                    cmd.Parameters.AddWithValue("@TypeBD", array1[1]);
+                    cmd.Parameters.AddWithValue("@FEY", array1[2]);
+                    cmd.Parameters.AddWithValue("@Nomin", array1[3]);
+                    cmd.Parameters.AddWithValue("@Prim", array1[4]);
+                    cmd.Parameters.AddWithValue("@Location", array1[5]);
+                    cmd.Parameters.AddWithValue("@Otmetca", array1[6]);
+                    cmd.Parameters.AddWithValue("@KAN", array1[7]);
+                    cmd.Parameters.AddWithValue("@s_C", array1[8]);
+                    cmd.Parameters.AddWithValue("@s_G", array1[9]);
+                    cmd.Parameters.AddWithValue("@s_GUID", array1[10]);
+                    cmd.Parameters.AddWithValue("@s_L", array1[11]);
+                    cmd.Parameters.AddWithValue("@ID", array1[0]);
+
+                    cmd.Connection = dbCon;
+                    cmd.ExecuteNonQuery();
+                }
+
+                foreach (DataRow row_ in table_del.Rows)
+                {
+                    var array1 = row_.ItemArray;
+                    OleDbCommand cmd = new OleDbCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = "DELETE FROM `Блоки` WHERE `Номер БД` = ?";
+
+                    cmd.Parameters.AddWithValue("@NumberBD", array1[0]);
+
+                    cmd.Connection = dbCon;
+                    cmd.ExecuteNonQuery();
+
+                }
+
+                foreach (DataRow row_ in table_in.Rows)
+                {
+                    var array1 = row_.ItemArray;
+                    OleDbCommand cmd = new OleDbCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = "INSERT INTO `Блоки` (`Номер БД`, `Тип БД`, `Номер ФЭУ`, `Номинальное U`," +
+                        " `Примечания`, `Местоположение`, `Отметка выполнения`, `КАН`, `s_ColLineage`, " +
+                        "`s_Generation`, `s_GUID`, `s_Lineage`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                    cmd.Parameters.AddWithValue("@NumberBD", array1[0]);
+                    cmd.Parameters.AddWithValue("@TypeBD", array1[1]);
+                    cmd.Parameters.AddWithValue("@FEY", array1[2]);
+                    cmd.Parameters.AddWithValue("@Nomin", array1[3]);
+                    cmd.Parameters.AddWithValue("@Prim", array1[4]);
+                    cmd.Parameters.AddWithValue("@Location", array1[5]);
+                    cmd.Parameters.AddWithValue("@Otmetca", array1[6]);
+                    cmd.Parameters.AddWithValue("@KAN", array1[7]);
+                    cmd.Parameters.AddWithValue("@s_C", array1[8]);
+                    cmd.Parameters.AddWithValue("@s_G", array1[9]);
+                    cmd.Parameters.AddWithValue("@s_GUID", array1[10]);
+                    cmd.Parameters.AddWithValue("@s_L", array1[11]);
+
+                    cmd.Connection = dbCon;
+                    cmd.ExecuteNonQuery();
+
+                }
+                dbCon.Close();
             }
-            table_del.AcceptChanges();
-
-            Form1.MyEnd myEnd = new Form1.MyEnd();
-            myEnds["Блоки"] = myEnd;
-            myEnd.del = table_del.Rows.Count;
-            myEnd.dob = table_in.Rows.Count;
-            myEnd.izm = table_up.Rows.Count;
-
-            OleDbConnection dbCon = new OleDbConnection(Form1.conString);
-            dbCon.Open();
-            foreach (DataRow row_ in table_up.Rows)
-            {
-                var array1 = row_.ItemArray;
-                OleDbCommand cmd = new OleDbCommand();
-                cmd.CommandType = CommandType.Text;
-
-                cmd.CommandText = "UPDATE `Блоки` SET `Номер БД` = ?, `Тип БД` = ?, `Номер ФЭУ` = ?," +
-                    " `Номинальное U` = ?, `Примечания` = ?, `Местоположение` = ?, `Отметка выполнения` = ?, " +
-                    "`КАН` = ?, `s_ColLineage` = ?, `s_Generation` = ?, `s_GUID` = ?, `s_Lineage` = ? " +
-                    "WHERE `Номер БД` = ?";
-                cmd.Parameters.AddWithValue("@NumberBD", array1[0]);
-                cmd.Parameters.AddWithValue("@TypeBD", array1[1]);
-                cmd.Parameters.AddWithValue("@FEY", array1[2]);
-                cmd.Parameters.AddWithValue("@Nomin", array1[3]);
-                cmd.Parameters.AddWithValue("@Prim", array1[4]);
-                cmd.Parameters.AddWithValue("@Location", array1[5]);
-                cmd.Parameters.AddWithValue("@Otmetca", array1[6]);
-                cmd.Parameters.AddWithValue("@KAN", array1[7]);
-                cmd.Parameters.AddWithValue("@s_C", array1[8]);
-                cmd.Parameters.AddWithValue("@s_G", array1[9]);
-                cmd.Parameters.AddWithValue("@s_GUID", array1[10]);
-                cmd.Parameters.AddWithValue("@s_L", array1[11]);
-                cmd.Parameters.AddWithValue("@ID", array1[0]);
-
-                cmd.Connection = dbCon;
-                cmd.ExecuteNonQuery();
-            }
-
-            foreach (DataRow row_ in table_del.Rows)
-            {
-                var array1 = row_.ItemArray;
-                OleDbCommand cmd = new OleDbCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "DELETE FROM `Блоки` WHERE `Номер БД` = ?";
-                
-                cmd.Parameters.AddWithValue("@NumberBD", array1[0]);
-                
-                cmd.Connection = dbCon;
-                cmd.ExecuteNonQuery();
-
-            }
-
-            foreach (DataRow row_ in table_in.Rows)
-            {
-                var array1 = row_.ItemArray;
-                OleDbCommand cmd = new OleDbCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT INTO `Блоки` (`Номер БД`, `Тип БД`, `Номер ФЭУ`, `Номинальное U`," +
-                    " `Примечания`, `Местоположение`, `Отметка выполнения`, `КАН`, `s_ColLineage`, " +
-                    "`s_Generation`, `s_GUID`, `s_Lineage`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-                cmd.Parameters.AddWithValue("@NumberBD", array1[0]);
-                cmd.Parameters.AddWithValue("@TypeBD", array1[1]);
-                cmd.Parameters.AddWithValue("@FEY", array1[2]);
-                cmd.Parameters.AddWithValue("@Nomin", array1[3]);
-                cmd.Parameters.AddWithValue("@Prim", array1[4]);
-                cmd.Parameters.AddWithValue("@Location", array1[5]);
-                cmd.Parameters.AddWithValue("@Otmetca", array1[6]);
-                cmd.Parameters.AddWithValue("@KAN", array1[7]);
-                cmd.Parameters.AddWithValue("@s_C", array1[8]);
-                cmd.Parameters.AddWithValue("@s_G", array1[9]);
-                cmd.Parameters.AddWithValue("@s_GUID", array1[10]);
-                cmd.Parameters.AddWithValue("@s_L", array1[11]);
-
-                cmd.Connection = dbCon;
-                cmd.ExecuteNonQuery();
-
-            }
-            dbCon.Close();
-
+            catch(Exception p)
+            { MessageBox.Show(p.ToString()); return; }
         }
 
         public static void AnalizTable(DataTable First, DataTable Second, OleDbDataAdapter adapter, Dictionary<string, Form1.MyEnd> myEnds)
@@ -181,7 +185,8 @@ namespace project_vniia
                 catch (Exception p)
             {
                 MessageBox.Show(p.ToString());
-            }
+                    return;
+                }
         }
             CompareRows_BLOCKS(table, table1, adapter, table_up, myEnds);
            

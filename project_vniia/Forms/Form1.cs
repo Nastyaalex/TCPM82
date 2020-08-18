@@ -37,7 +37,7 @@ namespace project_vniia
 
         public static string conString;// = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\nasty\\Desktop\\_TCPM82_New.mdb";
 
-        public static string[] F2 = new string[7];
+        public static string[] F2 = new string[9];
 
         public static string Log_ways;
         public static string Log_ways_peremesti;
@@ -48,12 +48,14 @@ namespace project_vniia
         /// </summary>
         public static string Proverka_ways;
         public static string Proverka_ways_perem;
+        public static string Protocol_ways;
+        public static string Protocol_saved;
 
         public static bool Flags = false;
         public static bool Flags_ = false;
         public static bool Flags_1 = false;
 
-        public static string[] _ways_=new string[6] {"\\log_ways.txt", "\\log_peremesti.txt", "\\zamech_ways.txt", "\\zamech_peremesti.txt", "\\prov_ways.txt", "\\prov_peremesti.txt" };
+        public static string[] _ways_=new string[8] {"\\log_ways.txt", "\\log_peremesti.txt", "\\zamech_ways.txt", "\\zamech_peremesti.txt", "\\prov_ways.txt", "\\prov_peremesti.txt", "\\protocol_ways.txt", "\\protocol_saved.txt"};
         
         public Form1()
         {
@@ -293,9 +295,9 @@ namespace project_vniia
             }
             while (conString == null);
 
-            bool[] flag_sysh = new bool[6];
+            bool[] flag_sysh = new bool[8];
             
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 8; i++)
             {
                 bool pusto = Class_ways.Pusto_(_ways_[i]);
                 flag_sysh[i] = Class_ways.Log_pusto(_ways_[i], pusto);
@@ -308,7 +310,7 @@ namespace project_vniia
             }
             try
             {
-                if (k_tr != 6 && k_tr < 6)
+                if (k_tr != 8 && k_tr < 8)
                 {
                     do
                     {

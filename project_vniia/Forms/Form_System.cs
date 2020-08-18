@@ -34,8 +34,8 @@ namespace project_vniia
             this.Controls.Add(dataGrid);
             dataGrid.DataError += DataGrid_DataError;
             
-            dataGridViewLeft.DataError += DataGridViewLeft_DataError; ;
-            dataGridViewRight.DataError += DataGridViewRight_DataError; ;
+            dataGridViewLeft.DataError += DataGridViewLeft_DataError; 
+            dataGridViewRight.DataError += DataGridViewRight_DataError; 
 
             for (int i = 0; i < Controls.Count; i++)
             {
@@ -55,19 +55,19 @@ namespace project_vniia
             {
                 do
                 {
-                    Form1.F2[6] = Ways_to_txt(Form1.F2[6]);
+                    Form1.F2[8] = Ways_to_txt(Form1.F2[8]);
                     if (Form_way_system.close_all1)
                     {
                         this.Close();
                         break;
                     }
-                } while (Form1.F2[6] == null || Form1.F2[6] == "");
+                } while (Form1.F2[8] == null || Form1.F2[8] == "");
             }
             try
             {
                 if (!Form_way_system.close_all1)
                 {
-                    Zap(way, Form1.F2[6], flag_sysh);
+                    Zap(way, Form1.F2[8], flag_sysh);
                 }
             }
             catch(Exception p)

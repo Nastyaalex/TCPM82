@@ -51,6 +51,8 @@ namespace project_vniia
         public static string textbox4_;
         public static string textbox5_;
         public static string textbox6_;
+        public static string textbox7_;
+        public static string textbox8_;
 
         private void Form2_Load(object sender, EventArgs e)
         {
@@ -64,6 +66,8 @@ namespace project_vniia
             textbox4_ = textBox4.Text;
             textbox5_ = textBox5.Text;
             textbox6_ = textBox6.Text;
+            textbox7_ = textBox7.Text;
+            textbox8_ = textBox8.Text;
             knopka = true;
             Close();
         }
@@ -115,6 +119,22 @@ namespace project_vniia
             if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 textBox5.Text = folderBrowserDialog1.SelectedPath;
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                textBox7.Text = folderBrowserDialog1.SelectedPath;
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                textBox8.Text = folderBrowserDialog1.SelectedPath;
             }
         }
     }

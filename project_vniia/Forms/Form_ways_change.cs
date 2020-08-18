@@ -31,7 +31,8 @@ namespace project_vniia
             textBox6.Text = Form1.Proverka_ways_perem;
             textBox7.Text = Form_System.System_ways;
             textBox8.Text = Form1.conString;
-
+            textBox9.Text = Form1.Protocol_ways;
+            textBox10.Text = Form1.Protocol_saved;
         }
 
         private void TextBox5_TextChanged(object sender, EventArgs e)
@@ -83,15 +84,17 @@ namespace project_vniia
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string[] textb = new string[8];
+            string[] textb = new string[10];
             textb[0] = textBox1.Text;
             textb[1] = textBox2.Text;
             textb[2] = textBox3.Text;
             textb[3] = textBox4.Text;
             textb[4] = textBox5.Text;
             textb[5] = textBox6.Text;
-            textb[6] = textBox7.Text;
-            textb[7] = textBox8.Text;
+            textb[8] = textBox7.Text;
+            textb[9] = textBox8.Text;
+            textb[6] = textBox9.Text;
+            textb[7] = textBox10.Text;
             foreach (var text in textb)
             {
                 if(text=="")
@@ -106,7 +109,7 @@ namespace project_vniia
                 if(File.Exists(path + "\\TestWay" + www))
                 File.Delete(path + "\\TestWay" + www);
             }
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 8; i++)
             {
                 if (textb[i].Contains("\\Done"))
                 {
@@ -130,7 +133,7 @@ namespace project_vniia
             }
             using (StreamWriter sw = new StreamWriter(path + "\\TestWay" + "\\build_systems.txt"))
             {
-                sw.WriteLine("{0}", textb[6]);
+                sw.WriteLine("{0}", textb[8]);
             }
             /////
             if (File.Exists(path + "\\TestWay\\savings.txt"))
@@ -146,7 +149,7 @@ namespace project_vniia
             {
                 using (StreamWriter sw = new StreamWriter(path + "\\TestWay\\savings.txt"))
                 {
-                        sw.WriteLine("{0}", textb[7]);
+                        sw.WriteLine("{0}", textb[9]);
                 }
             }
             catch (Exception k)
@@ -160,8 +163,10 @@ namespace project_vniia
             Form1.Zamech_ways_peremesti = textb[3];
             Form1.Proverka_ways = textb[4];
             Form1.Proverka_ways_perem = textb[5];
-            Form_System.System_ways= textb[6];
-            Form1.conString = textb[7];
+            Form_System.System_ways= textb[8];
+            Form1.conString = textb[9];
+            Form1.Protocol_ways = textb[6];
+            Form1.Protocol_saved = textb[7];
         }
 
         private void Form_ways_change_Load(object sender, EventArgs e)
@@ -174,6 +179,22 @@ namespace project_vniia
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 textBox8.Text = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + openFileDialog1.FileName;
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                textBox9.Text = folderBrowserDialog1.SelectedPath;
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                textBox10.Text = folderBrowserDialog1.SelectedPath;
             }
         }
     }

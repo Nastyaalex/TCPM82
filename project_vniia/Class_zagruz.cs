@@ -38,6 +38,10 @@ namespace project_vniia
                             conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + openFileDialog1.FileName;
                             zap = true;
                         } 
+                        else
+                        {
+                            Environment.Exit(0);
+                        }
                     }
                     else
                     {

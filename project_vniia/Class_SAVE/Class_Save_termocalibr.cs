@@ -11,7 +11,7 @@ namespace project_vniia
     {
         static void CompareRows_termocalibr(DataTable table_del, DataTable table_in, OleDbDataAdapter adapter, DataTable table_up, Dictionary<string, Form1.MyEnd> myEnds)
         {
-
+            try { 
             foreach (DataRow row1 in table_del.Rows)
             {
                 int k = 0;
@@ -126,7 +126,9 @@ namespace project_vniia
 
             }
             dbCon.Close();
-
+            }
+            catch (Exception p)
+            { MessageBox.Show(p.ToString()); return; }
         }
 
         public static void AnalizTable(DataTable First, DataTable Second, OleDbDataAdapter adapter, Dictionary<string, Form1.MyEnd> myEnds)
@@ -192,8 +194,8 @@ namespace project_vniia
             }
                 catch (Exception p)
             {
-                MessageBox.Show(p.ToString());
-            }
+                MessageBox.Show(p.ToString()); return;
+                }
         }
             CompareRows_termocalibr(table, table1, adapter, table_up, myEnds);
             

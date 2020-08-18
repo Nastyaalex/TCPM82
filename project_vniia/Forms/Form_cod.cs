@@ -121,12 +121,26 @@ namespace project_vniia
                             two = i;
                         }
                     }
-                    for (int i = 1; i < dataTables[0].Columns.Count - colom; i++)
+                    try
                     {
-                        dataTables[0].Rows[one][i] = mass1[i];
-                        dataTables[0].Rows[two][i] = mass[i];
+                        for (int i = 1; i < dataTables[0].Columns.Count - colom; i++)
+                        {
+                            if(mass1[i]=="")
+                            {
+                                dataTables[0].Rows[one][i] = DBNull.Value;
+                            }
+                            else
+                            dataTables[0].Rows[one][i] = mass1[i];
+                            if (mass[i] == "")
+                            {
+                                dataTables[0].Rows[two][i] = DBNull.Value;
+                            }
+                            else
+                                dataTables[0].Rows[two][i] = mass[i];
+                        }
                     }
-
+                    catch(Exception p)
+                    { MessageBox.Show(p.ToString()); }
                     ////////////////////////////
 
                     int k = 0, g = 0, m = 0;
