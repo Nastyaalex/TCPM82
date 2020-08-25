@@ -35,6 +35,8 @@ namespace project_vniia
         {
             button_filtr_Click(ds, comboBox1, dataGridViewLeft);
             button_filtr_Click(ds, comboBox2, dataGridViewRight);
+            Datagrid_columns_delete(dataGridViewRight);
+            Datagrid_columns_delete(dataGridViewLeft);
         }
 
         private void DataGridViewRight_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -92,7 +94,13 @@ namespace project_vniia
                     ds.Tables[comboBox1.Text].Rows.Remove(new_);
                 }
             }
-
+            if (flag_filtr)
+            {
+                button_filtr_Click(ds, comboBox1, dataGridViewLeft);
+                button_filtr_Click(ds, comboBox2, dataGridViewRight);
+                Datagrid_columns_delete(dataGridViewRight);
+                Datagrid_columns_delete(dataGridViewLeft);
+            }
         }
         public Dictionary<string, Form1.MyDB> myDBs;
 
@@ -217,6 +225,13 @@ namespace project_vniia
                     ds.Tables[comboBox2.Text].Rows.Remove(new_);
                 }
             }
+            if (flag_filtr)
+            {
+                button_filtr_Click(ds, comboBox1, dataGridViewLeft);
+                button_filtr_Click(ds, comboBox2, dataGridViewRight);
+                Datagrid_columns_delete(dataGridViewRight);
+                Datagrid_columns_delete(dataGridViewLeft);
+            }
         }
 
         private void Form4_func_new_Load(object sender, EventArgs e)
@@ -237,7 +252,7 @@ namespace project_vniia
                     dataGridViewLeft.Columns.Add(dataColumn);
                 }
                 dataGridViewLeft.DataSource = ds.Tables[comb].DefaultView;
-                
+                Datagrid_columns_delete(dataGridViewLeft);
             }
             catch (Exception p)
             { MessageBox.Show(p.ToString()); }
@@ -245,6 +260,7 @@ namespace project_vniia
             if (flag_filtr)
             {
                 button_filtr_Click(ds, comboBox1, dataGridViewLeft);
+                Datagrid_columns_delete(dataGridViewLeft);
             }
         }
 
@@ -261,7 +277,7 @@ namespace project_vniia
                     dataGridViewRight.Columns.Add(dataColumn);
                 }
                 dataGridViewRight.DataSource = ds.Tables[comb].DefaultView;
-
+                Datagrid_columns_delete(dataGridViewRight);
             }
             catch (Exception p)
             { MessageBox.Show(p.ToString()); }
@@ -269,9 +285,21 @@ namespace project_vniia
             if (flag_filtr)
             {
                 button_filtr_Click(ds, comboBox2, dataGridViewRight);
+                Datagrid_columns_delete(dataGridViewRight);
             }
         }
-        
+        public void Datagrid_columns_delete(DataGridView view)
+        {
+            if (view.Columns.Contains("s_ColLineage") == true)
+                view.Columns.Remove("s_ColLineage");
+            if (view.Columns.Contains("s_Generation") == true)
+                view.Columns.Remove("s_Generation");
+            if (view.Columns.Contains("s_GUID") == true)
+                view.Columns.Remove("s_GUID");
+            if (view.Columns.Contains("s_Lineage") == true)
+                view.Columns.Remove("s_Lineage");
+
+        }
         private void dataGridViewLeft_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 

@@ -320,22 +320,38 @@ namespace project_vniia
                         var _currentRange_3 = _table6.Cell(rowIndex +9, columnIndex).Range;
                         var _currentRange_4 = _table6.Cell(rowIndex + 9+9, columnIndex).Range;
                         var _currentRange_Cf = _table6.Cell(rowIndex + 9 + 9+9, columnIndex).Range;
-                        if (znach_SU50[p, j]==null || znach_SU50[p, j] == "")
+                        if (znach_SU50[p, j] == null || znach_SU50[p, j] == "")
                         { }
                         else
-                        _currentRange_2.Text = znach_SU50[p, j];
+                        {
+                            double x = Math.Round(Convert.ToDouble(znach_SU50[p, j]), 1);
+                            znach_SU50[p, j] = x.ToString();
+                            _currentRange_2.Text = znach_SU50[p, j];
+                        }
                         if (znach_SCs50[p, j] == null || znach_SCs50[p, j] == "")
                         { }
                         else
+                        {
+                            double x = Math.Round(Convert.ToDouble(znach_SCs50[p, j]), 0);
+                            znach_SCs50[p, j] = x.ToString();
                             _currentRange_3.Text = znach_SCs50[p, j];
+                        }
                         if (znach_SCs10[p, j] == null || znach_SCs10[p, j] == "")
                         { }
                         else
+                        {
+                            double x = Math.Round(Convert.ToDouble(znach_SCs10[p, j]), 0);
+                            znach_SCs10[p, j] = x.ToString();
                             _currentRange_4.Text = znach_SCs10[p, j];
+                        }
                         if (znach_SCfCm[p, j] == null || znach_SCfCm[p, j] == "")
                         { }
                         else
+                        {
+                            double x = Math.Round(Convert.ToDouble(znach_SCfCm[p, j]), 1);
+                            znach_SCfCm[p, j] = x.ToString();
                             _currentRange_Cf.Text = znach_SCfCm[p, j];
+                        }
 
                         rowIndex++;
                     }
@@ -570,16 +586,30 @@ namespace project_vniia
                         if (znach_SU50[p, j] == null || znach_SU50[p, j] == "")
                         { }
                         else
+                        {
+                            double x = Math.Round(Convert.ToDouble(znach_SU50[p, j]), 1);
+                            znach_SU50[p, j] = x.ToString();
                             _currentRange_2.Text = znach_SU50[p, j];
+                        }
                         if (znach_SCs50[p, j] == null || znach_SCs50[p, j] == "")
                         { }
                         else
+                        {
+                            double x = Math.Round(Convert.ToDouble(znach_SCs50[p, j]), 0);
+                            znach_SCs50[p, j] = x.ToString();
+
                             _currentRange_3.Text = znach_SCs50[p, j];
-                       
+                        }
+
                         if (znach_SCfCm[p, j] == null || znach_SCfCm[p, j] == "")
                         { }
                         else
+                        {
+                            double x = Math.Round(Convert.ToDouble(znach_SCfCm[p, j]), 1);
+                            znach_SCfCm[p, j] = x.ToString();
+
                             _currentRange_4.Text = znach_SCfCm[p, j];
+                        }
 
                         rowIndex++;
                     }

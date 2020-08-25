@@ -280,82 +280,82 @@ namespace project_vniia
                     break;
                 }
 
-                if (Form1.Flags == true && Form1.Flags_1 == true && Form1.Flags_== true)
+            }
+            if (Form1.Flags == true && Form1.Flags_1 == true && Form1.Flags_ == true)
+            {
+                int j = 0;
+                foreach (string p in parts)
                 {
-                    int j = 0;
-                    foreach (string p in parts)
+                    float num;
+                    if (p != "")
                     {
-                        float num;
-                        if (p != "")
+                        try
                         {
-                            try
+                            string pp = p.Replace('.', ',');
+                            if (pp.Contains(":"))
                             {
-                                string pp = p.Replace('.', ',');
-                                if (pp.Contains(":"))
-                                {
-                                    pp = pp.Substring(pp.IndexOf(':')+1);
-                                }
-                                bool no = float.TryParse(pp, out num);
+                                pp = pp.Substring(pp.IndexOf(':') + 1);
+                            }
+                            bool no = float.TryParse(pp, out num);
 
-                                if (no)
+                            if (no)
+                            {
+                                switch (j)
                                 {
-                                    switch (j)
-                                    {
-                                        case 0:
-                                            b = float.Parse(pp);
-                                            b0 = b;
-                                            j = j + 1;
-                                            break;
-                                        case 1:
-                                            b1 = float.Parse(pp);
-                                            j = j + 1;
-                                            break;
-                                        case 2:
-                                            b2 = float.Parse(pp);
-                                            j = j + 1;
-                                            break;
-                                        case 3:
-                                            b3 = float.Parse(pp);
-                                            j = j + 1;
-                                            break;
-                                        case 4:
-                                            b4 = float.Parse(pp);
-                                            j = j + 1;
-                                            break;
-                                        case 5:
-                                            b5 = float.Parse(pp);
-                                            j = j + 1;
-                                            break;
-                                        case 6:
-                                            b6 = float.Parse(pp);
-                                            j = j + 1;
-                                            break;
-                                        case 7:
-                                            b7 = float.Parse(pp);
-                                            j = j + 1;
-                                            break;
-                                    }
-                                    //b = Convert.ToDouble(pp);
-                                    if (j == r)
+                                    case 0:
+                                        b = float.Parse(pp);
+                                        b0 = b;
+                                        j = j + 1;
+                                        break;
+                                    case 1:
+                                        b1 = float.Parse(pp);
+                                        j = j + 1;
+                                        break;
+                                    case 2:
+                                        b2 = float.Parse(pp);
+                                        j = j + 1;
+                                        break;
+                                    case 3:
+                                        b3 = float.Parse(pp);
+                                        j = j + 1;
+                                        break;
+                                    case 4:
+                                        b4 = float.Parse(pp);
+                                        j = j + 1;
+                                        break;
+                                    case 5:
+                                        b5 = float.Parse(pp);
+                                        j = j + 1;
+                                        break;
+                                    case 6:
+                                        b6 = float.Parse(pp);
+                                        j = j + 1;
+                                        break;
+                                    case 7:
+                                        b7 = float.Parse(pp);
+                                        j = j + 1;
                                         break;
                                 }
+                                //b = Convert.ToDouble(pp);
+                                if (j == r)
+                                    break;
                             }
-                            catch (Exception l)
-                            {
-                                Console.WriteLine(l.Message);
-                            }
-
                         }
-                    }
-                    if (j == r)
-                    {
-                        Form1.Flags_1 = false;
-                        Form1.Flags_ = false;
-                        break;
-                    }
+                        catch (Exception l)
+                        {
+                            Console.WriteLine(l.Message);
+                        }
 
+                    }
                 }
+                if (j == r)
+                {
+                    Form1.Flags_1 = false;
+                    Form1.Flags_ = false;
+                }
+
             }
+
         }
     }
 
@@ -470,6 +470,8 @@ namespace project_vniia
                     }
                 }
             }
+            
+
         }
     }
 
@@ -502,6 +504,7 @@ namespace project_vniia
                 h++;
             return h;
         }
+        
         public void Main_Proverka(Form1 form1, DataTable First)
         {
             List<Item_Proverka> items = new List<Item_Proverka>();
@@ -534,7 +537,7 @@ namespace project_vniia
                         {
                             Item_Proverka item_o = items.LastOrDefault();
                             if (rr != 1)
-                                r = Kolvo(item_o);
+                                r = rr;// Kolvo(item_o);
                             Form1.Flags = true;
                         }
                         k++;
@@ -686,6 +689,10 @@ namespace project_vniia
                             chuvstvit[7] = item_.b7;
                             if (rr != 1)
                             {
+                                if (parts.Length < r)
+                                {
+                                    r = parts.Length;
+                                }
                                 for (int j = 0; j < r; j++)
                                 {
                                     if (table.Rows.Count == 0 || table.Rows.Count < r && table.Rows.Count == j)
@@ -803,6 +810,10 @@ namespace project_vniia
                             bbb[7] = item_o.b7;
                             if (rr != 1)
                             {
+                                if (parts.Length < r)
+                                {
+                                    r = parts.Length;
+                                }
                                 for (int j = 0; j < r; j++)
                                 {
                                     if (table.Rows.Count == 0 || table.Rows.Count < r && table.Rows.Count == j)
@@ -1086,7 +1097,7 @@ namespace project_vniia
                                 Form1.Flags_1 = false;
                                 Form1.Flags_ = false;
                             }
-                            break;
+                            //break;
                         }
 
                         Item_Prov_Chuvstv.b0 = 0;
@@ -1124,6 +1135,10 @@ namespace project_vniia
                     {
                         if (rr != 1)
                         {
+                            if(parts.Length < r)
+                            {
+                                r = parts.Length;
+                            }
                             for (int j = 0; j < r; j++)
                           {
                             if (table.Rows.Count == 0 || table.Rows.Count < r && table.Rows.Count == j)
@@ -1140,7 +1155,7 @@ namespace project_vniia
                             }
                             
                           }
-                            break;
+                            //break;
                         }
                         else
                         {
@@ -1181,7 +1196,7 @@ namespace project_vniia
                                     }
                                 }
                             }
-                            break;
+                            //break;
                         }
                     }
                 }

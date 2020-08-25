@@ -63,7 +63,7 @@ namespace project_vniia
             Form4_splash.ShowSplashScreen();
             InitializeComponent();
 
-
+            #region
             //this.KeyPreview = true;
             ////////////////////
             ////"change_2_rows.txt"///"calibration_check.txt"
@@ -81,7 +81,7 @@ namespace project_vniia
             //}
             //catch(Exception k)
             //{ MessageBox.Show(k.ToString()); }
-
+            #endregion
             for (int t = 0; t < Controls.Count; t++)
             {
                 if (Controls[t].Name == "dataGridView2" || Controls[t].Name == "dataGridView1" || Controls[t].Name == "checkBox1")
@@ -104,6 +104,110 @@ namespace project_vniia
 
             dataGridView1.EditingControlShowing += DataGridView1_EditingControlShowing;
             dataGridView2.EditingControlShowing += DataGridView2_EditingControlShowing;
+            dataGridView1.UserDeletedRow += DataGridView1_UserDeletedRow;
+            dataGridView2.UserDeletedRow += DataGridView2_UserDeletedRow;
+            dataGridView1.UserDeletingRow += DataGridView1_UserDeletingRow;
+            dataGridView2.UserDeletingRow += DataGridView2_UserDeletingRow;
+        }
+
+        private void DataGridView2_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            if (flag_filtr)
+            {
+                try
+                {
+                    int number = 0;
+                    if (comboBox1.Text == "БлокиМетро")
+                    {
+                        number = myDBs["[" + comboBox1.Text + "]"].table.Columns["Номер блока"].Ordinal;
+                    }
+                    else
+                    {
+                        char numb = myDBs["[" + comboBox1.Text + "]"].table.Columns.Contains("Номер записи") ? 'a' :
+                            myDBs["[" + comboBox1.Text + "]"].table.Columns.Contains("Номер Замечания") ? 'b' :
+                             myDBs["[" + comboBox1.Text + "]"].table.Columns.Contains("Номер Записи") ? 'c' :
+                             'd';
+                        switch (numb)
+                        {
+                            case 'a':
+                                number = myDBs["[" + comboBox1.Text + "]"].table.Columns["Номер записи"].Ordinal;
+                                break;
+                            case 'b':
+                                number = myDBs["[" + comboBox1.Text + "]"].table.Columns["Номер Замечания"].Ordinal;
+                                break;
+                            case 'c':
+                                number = myDBs["[" + comboBox1.Text + "]"].table.Columns["Номер Записи"].Ordinal;
+                                break;
+                        }
+                    }
+                    int ggg = dataGridView2.CurrentCell.RowIndex;
+                    string kok = dataGridView2.Rows[ggg].Cells[number].Value.ToString();
+
+                    for (int i = 0; i < myDBs["[" + comboBox1.Text + "]"].table.Rows.Count; i++)
+                    {
+                        DataRow t_ = myDBs["[" + comboBox1.Text + "]"].table.Rows[i];
+                        if (kok == t_[number].ToString())
+                        {
+                            myDBs["[" + comboBox1.Text + "]"].table.Rows[i].Delete();
+                            myDBs["[" + comboBox1.Text + "]"].table.AcceptChanges();
+                            myDBs["[" + comboBox1.Text + "]"].adapter.Update(myDBs["[" + comboBox1.Text + "]"].table);
+                            break;
+                        }
+
+                    }
+                }
+                catch (Exception p)
+                {
+                    //MessageBox.Show(p.ToString());
+                }
+            }
+        }
+
+        private void DataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            if (flag_filtr)
+            {
+                try
+                {
+                    int ggg = dataGridView1.CurrentCell.RowIndex;
+                    string kok = dataGridView1.Rows[ggg].Cells[0].Value.ToString();
+
+                    for (int i=0;i< myDBs["[Блоки]"].table.Rows.Count; i++)
+                    {
+                        DataRow t_ = myDBs["[Блоки]"].table.Rows[i];
+                        if (kok == t_[0].ToString())
+                        {
+                            myDBs["[Блоки]"].table.Rows[i].Delete();
+                            myDBs["[Блоки]"].table.AcceptChanges();
+                            myDBs["[Блоки]"].adapter.Update(myDBs["[Блоки]"].table);
+                            break;
+                        }
+
+                    }
+                }
+                catch (Exception p)
+                {
+                    //MessageBox.Show(p.ToString());
+                }
+            }
+        }
+
+        private void DataGridView2_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            if (!flag_filtr)
+            {
+                myDBs["[" + comboBox1.Text + "]"].table.AcceptChanges();
+                myDBs["[" + comboBox1.Text + "]"].adapter.Update(myDBs["[" + comboBox1.Text + "]"].table);
+            }
+        }
+
+        private void DataGridView1_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            if (!flag_filtr)
+            {
+                myDBs["[Блоки]"].table.AcceptChanges();
+                myDBs["[Блоки]"].adapter.Update(myDBs["[Блоки]"].table);
+            }
         }
 
         private void DataGridView2_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)

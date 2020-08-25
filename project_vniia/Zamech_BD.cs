@@ -66,8 +66,7 @@ namespace project_vniia
                         command3_sv.Parameters.AddWithValue("?", item.Cs_Unom);
                         command3_sv.Parameters.AddWithValue("?", item.Prim);
                         command3_sv.Parameters.AddWithValue("?", item.BD);
-
-
+                        
                         using (OleDbDataReader data = command3_sv.ExecuteReader())
                         {
                             validvalue = data.Read();
@@ -84,8 +83,7 @@ namespace project_vniia
                             command2_sv.Parameters.AddWithValue("?", item.Data);
                             command2_sv.Parameters.AddWithValue("?", item.Cs_Unom);
                             command2_sv.Parameters.AddWithValue("?", item.Prim);
-
-
+                            
                             //command2_sv.CommandText = "UPDATE `Замечания по БД` SET `Дата заметки` = ?, `Cs при Uном` = ?," +
                             //               "`Заметка`= ? WHERE `Номер блока` = ?";
 

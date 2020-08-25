@@ -203,6 +203,19 @@ namespace project_vniia
                     k++;
                 }  
             }
+            for (int i = 0; i < ds.Tables.Count; i++)
+            {
+                DataView view = new DataView(ds.Tables[i].Copy());
+                view.Sort = "[Номер БД] ASC";
+                ds.Tables[i].Clear();
+                DataTable data = view.ToTable();
+                var rows_ = data.Rows;
+                for (int j = 0; j < rows_.Count; j++)
+                {
+                    ds.Tables[i].LoadDataRow(rows_[j].ItemArray, true);
+                    
+                }
+            }
         }
 
         public void Sobr_system()
@@ -212,7 +225,7 @@ namespace project_vniia
             List<string> myStr = new List<string>();
             List<string> myStr_1 = new List<string>();
 
-            for (int i = dataGridViewLeft.RowCount - 1; i >= 0; i--)
+            for (int i = 0; i < dataGridViewLeft.RowCount; i++) //(int i = dataGridViewLeft.RowCount - 1; i >= 0; i--)
             {
                 DataGridViewRow row = dataGridViewLeft.Rows[i];
                 if (Convert.ToBoolean(row.Cells["Выбрать"].Value))
@@ -235,7 +248,7 @@ namespace project_vniia
                 }
             }
             
-            for (int i = dataGridViewRight.RowCount - 1; i >= 0; i--)
+            for (int i = 0; i < dataGridViewRight.RowCount; i++) //(int i = dataGridViewRight.RowCount - 1; i >= 0; i--)
             {
                 DataGridViewRow row = dataGridViewRight.Rows[i];
                 if (Convert.ToBoolean(row.Cells["Выбрать"].Value))
@@ -321,7 +334,18 @@ namespace project_vniia
             dataGrid.Visible = true;
 
         }
+        public void Datagrid_columns_delete(DataGridView view)
+        {
+            if (view.Columns.Contains("s_ColLineage") == true)
+                view.Columns.Remove("s_ColLineage");
+            if (view.Columns.Contains("s_Generation") == true)
+                view.Columns.Remove("s_Generation");
+            if (view.Columns.Contains("s_GUID") == true)
+                view.Columns.Remove("s_GUID");
+            if (view.Columns.Contains("s_Lineage") == true)
+                view.Columns.Remove("s_Lineage");
 
+        }
         public static string Ways_to_txt(string path)
         {
             if (!Directory.Exists(path))
@@ -885,7 +909,7 @@ namespace project_vniia
                     dataGridViewLeft.Columns.Add(dataColumn);
                 }
                 dataGridViewLeft.DataSource = ds.Tables[comb].DefaultView;
-
+                Datagrid_columns_delete(dataGridViewLeft);
             }
             catch (Exception p)
             { MessageBox.Show(p.ToString()); }
@@ -905,7 +929,7 @@ namespace project_vniia
                     dataGridViewRight.Columns.Add(dataColumn);
                 }
                 dataGridViewRight.DataSource = ds.Tables[comb].DefaultView;
-
+                Datagrid_columns_delete(dataGridViewRight);
             }
             catch (Exception p)
             { MessageBox.Show(p.ToString()); }
