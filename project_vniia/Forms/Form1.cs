@@ -455,8 +455,10 @@ namespace project_vniia
             MyDB myDB = new MyDB();
 
             Class_zagruz.Combobox_(conString, comboBox1, ds, myDB, myDBs);
-            
-            proverka.Main_Proverka(this, myDBs["[Проверка]"].table);
+
+            Form_System _System = new Form_System();
+
+            proverka.Main_Proverka(this, myDBs["[Проверка]"].table, myDBs["[Блоки]"].table, myDBs["[Системы в сборе]"].table);
             //try
             //{
             //    if (Proverka.parts.Length == 1)

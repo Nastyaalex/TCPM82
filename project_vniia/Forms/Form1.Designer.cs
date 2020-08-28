@@ -213,7 +213,7 @@
             // 
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
             this.сохранитьToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.сохранитьToolStripMenuItem.Text = "Сохранить";
             this.сохранитьToolStripMenuItem.Click += new System.EventHandler(this.сохранитьToolStripMenuItem_Click_1);
             // 
@@ -229,7 +229,7 @@
             // 
             this.протоколToolStripMenuItem1.Name = "протоколToolStripMenuItem1";
             this.протоколToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.протоколToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.протоколToolStripMenuItem1.Size = new System.Drawing.Size(171, 22);
             this.протоколToolStripMenuItem1.Text = "Протокол";
             this.протоколToolStripMenuItem1.Click += new System.EventHandler(this.протоколToolStripMenuItem1_Click);
             // 
@@ -311,7 +311,7 @@
             this.KeyPreview = true;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "project_vniia_TCPM82";
+            this.Text = "project_vniia_TCPM82_1.1";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();

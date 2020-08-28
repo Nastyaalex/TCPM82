@@ -723,7 +723,7 @@ namespace project_vniia
                                     var ttt = r[t2].ToString();
                                     string rr;
                                     rr = r[t3].ToString();
-                                    rr = rr + "Выпущен в составе системы " + row_.ItemArray[0];
+                                    rr = "Выпущен в составе системы " + row_.ItemArray[0];
                                     r[t3] = rr;
                                     rr = "";
                                     char ch = ttt.Contains("Г") ? 'a' :
@@ -770,7 +770,7 @@ namespace project_vniia
                                     var ttt = r[t2].ToString();
                                     string rr;
                                     rr = r[t3].ToString();
-                                    rr = rr + "Выпущен в составе системы " + row_.ItemArray[0];
+                                    rr = "Выпущен в составе системы " + row_.ItemArray[0];
                                     r[t3] = rr;
                                     rr = "";
                                     char ch = ttt.Contains("Г") ? 'a' :
@@ -819,7 +819,7 @@ namespace project_vniia
                                     var ttt = r[t2].ToString();
                                     string rr;
                                     rr = r[t3].ToString();
-                                    rr = rr + "Выпущен в составе системы " + row_.ItemArray[0];
+                                    rr = "Выпущен в составе системы " + row_.ItemArray[0];
                                     r[t3] = rr;
                                     rr = "";
                                     char ch = ttt.Contains("Г") ? 'a' :

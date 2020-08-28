@@ -309,7 +309,7 @@ namespace project_vniia
 
         public void Type_bl(string[,] blocks, List<string> BL_type, string[,] blocksN, int pered)
         {
-            int tt = 0, tt1=0;
+            int tt = 0, tt1 = 0, tt_place=0;
             if (myDBs["[Блоки]"].table.Columns.Contains("Номер БД"))
             {
                 tt = myDBs["[Блоки]"].table.Columns["Номер БД"].Ordinal;
@@ -318,54 +318,59 @@ namespace project_vniia
             {
                 tt1 = myDBs["[Блоки]"].table.Columns["Тип БД"].Ordinal;
             }
-            string[,] blocks_ = new string[pered,8];
-            int i = 0,j=0;
+            if (myDBs["[Блоки]"].table.Columns.Contains("Местоположение"))
+            {
+                tt_place = myDBs["[Блоки]"].table.Columns["Местоположение"].Ordinal;
+            }
+            string[,] blocks_ = new string[pered, 8];
+            int i = 0, j = 0;
             foreach (var bl in blocks)
             {
-                if(bl!="")
-                foreach (DataRow srt_ in myDBs["[Блоки]"].table.Rows)
-                {
-                        if(j>=8)
+                if (bl != "")
+                    foreach (DataRow srt_ in myDBs["[Блоки]"].table.Rows)
+                    {
+                        if (j >= 8)
                         {
                             i++;
                             j = 0;
                         }
                         if (srt_[tt].ToString() == bl && srt_[tt1].ToString().Contains("ТСРМ85"))
                         {
-                            blocks_[i,j] = bl;
+                            blocks_[i, j] = bl;
                         }
                         if (srt_[tt].ToString() == bl && !BL_type.Contains(srt_[tt1].ToString()))
-                    {
-                            
-                        BL_type.Add(srt_[tt1].ToString());
-                        break;
-                    }
-                }j++;
-            }
-                for(int h=0;h<pered;h++)
-                {
-                    for(int l=0;l<8;l++)
-                    {
-                        if(blocks_[h,l] != null || blocks_[h, l] != "")
                         {
-                            if (blocks_[h, l] == null)
-                            { }
-                            else
-                            {
-                                blocks[h, l] = "";
-                                for (int t_2 = 0; t_2 < 8; t_2++)
-                                {
-                                    if (blocksN[h, t_2] == "" || blocksN[h, t_2] == null)
-                                    {
-                                        blocksN[h, t_2] = blocks_[h, l];
-                                        break;
-                                    }
 
+                            BL_type.Add(srt_[tt1].ToString());
+                            break;
+                        }
+                    }
+                j++;
+            }
+            for (int h = 0; h < pered; h++)
+            {
+                for (int l = 0; l < 8; l++)
+                {
+                    if (blocks_[h, l] != null || blocks_[h, l] != "")
+                    {
+                        if (blocks_[h, l] == null)
+                        { }
+                        else
+                        {
+                            blocks[h, l] = "";
+                            for (int t_2 = 0; t_2 < 8; t_2++)
+                            {
+                                if (blocksN[h, t_2] == "" || blocksN[h, t_2] == null)
+                                {
+                                    blocksN[h, t_2] = blocks_[h, l];
+                                    break;
                                 }
+
                             }
                         }
                     }
                 }
+            }
             foreach (var bl_ in blocksN)
             {
                 if (bl_ != "")
@@ -375,6 +380,29 @@ namespace project_vniia
                         {
                             BL_type.Add(srt_[tt1].ToString());
                             break;
+                        }
+                    }
+            }
+            /////////////////////////////////
+            foreach (var bl in blocks)
+            {
+                if (bl != "")
+                    foreach (DataRow srt_ in myDBs["[Блоки]"].table.Rows)
+                    {
+                        if (srt_[tt].ToString() == bl)
+                        {
+                            srt_[tt_place] = "сдан";
+                        }
+                    }
+            }
+            foreach (var bl in blocksN)
+            {
+                if (bl != "")
+                    foreach (DataRow srt_ in myDBs["[Блоки]"].table.Rows)
+                    {
+                        if (srt_[tt].ToString() == bl)
+                        {
+                            srt_[tt_place] = "сдан";
                         }
                     }
             }

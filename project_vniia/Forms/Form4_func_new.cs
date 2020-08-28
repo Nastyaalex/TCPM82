@@ -14,6 +14,7 @@ namespace project_vniia
         private PickBox pb = new PickBox();
         public bool flag_filtr = false;
         public int t1;
+        public bool germetic = false;
         public Form4_func_new()
         {
             InitializeComponent();
@@ -59,13 +60,41 @@ namespace project_vniia
                     DataRow new_ = ds.Tables[comboBox1.Text].NewRow();
 
                     string l = row.Cells["Номер БД"].Value.ToString();
+                    string gg1 = "";
                     foreach (DataRow ror in ds.Tables[comboBox1.Text].Rows)
                     {
                         if (ror["Номер БД"].ToString() == l)
                         {
                             string value_ = "п." + comboBox2.Text;
                             ror.SetField("Местоположение", value_);
-                            new_ = ror;
+                            if (germetic)
+                            {
+                                string gg = "++г";
+                                string otm = ror["Отметка выполнения"].ToString();
+                                char nim1 = otm.Contains("?") ? 'a' :
+                                       otm.Contains("++") ? 'b' :
+                                      otm.Contains("+") ? 'c' :
+                                      'd';
+                                switch (nim1)
+                                {
+                                    case 'a':
+                                        gg1 = ror.Field<string>("Отметка выполнения").Replace("?", gg);
+                                        break;
+                                    case 'b':
+                                        gg1 = ror.Field<string>("Отметка выполнения").Replace("++", gg);
+                                        break;
+                                    case 'c':
+                                        gg1 = ror.Field<string>("Отметка выполнения").Replace("+", gg);
+                                        break;
+                                    case 'd':
+                                        gg1 = ror.Field<string>("Отметка выполнения") + " " + gg;
+
+                                        break;
+                                }
+
+                                ror.SetField("Отметка выполнения", gg1);
+                            }
+                                new_ = ror;
                             break;
                         }
                     }
@@ -79,6 +108,11 @@ namespace project_vniia
                             {
                                 string value_ = "п." + comboBox2.Text;
                                 row_.SetField("Местоположение", value_);
+                                if (germetic)
+                                {
+                                    //string gg = "++г";
+                                    row_.SetField("Отметка выполнения", gg1);
+                                }
                                 break;
                             }
                             else
@@ -87,6 +121,11 @@ namespace project_vniia
 
                                 // Then we update the value.
                                 row_.SetField("Местоположение", value);
+                                if (germetic)
+                                {
+                                    //string gg = "++г";
+                                    row_.SetField("Отметка выполнения", gg1);
+                                }
                                 break;
                             }
                         }
@@ -189,12 +228,41 @@ namespace project_vniia
                 {
                     DataRow new_ = ds.Tables[comboBox1.Text].NewRow();
                     string l = row.Cells["Номер БД"].Value.ToString();
+
+                    string gg1 = "";
                     foreach (DataRow ror in ds.Tables[comboBox2.Text].Rows)
                     {
-                        if (ror["Номер БД"] == l)
+                        if (ror["Номер БД"].ToString() == l)
                         {
                             string value_ = "п." + comboBox1.Text;
                             ror.SetField("Местоположение", value_);
+                            if (germetic)
+                            {
+                                string gg = "++г";
+                                string otm = ror["Отметка выполнения"].ToString();
+                                char nim1 = otm.Contains("?") ? 'a' :
+                                       otm.Contains("++") ? 'b' :
+                                      otm.Contains("+") ? 'c' :
+                                      'd';
+                                switch (nim1)
+                                {
+                                    case 'a':
+                                         gg1 = ror.Field<string>("Отметка выполнения").Replace("?", gg);
+                                        break;
+                                    case 'b':
+                                         gg1 = ror.Field<string>("Отметка выполнения").Replace("++", gg);
+                                        break;
+                                    case 'c':
+                                         gg1 = ror.Field<string>("Отметка выполнения").Replace("+", gg);
+                                        break;
+                                    case 'd':
+                                        gg1 = ror.Field<string>("Отметка выполнения") + " " + gg;
+
+                                        break;
+                                }
+
+                                ror.SetField("Отметка выполнения", gg1);
+                            }
                             new_ = ror;
                             break;
                         }
@@ -210,6 +278,11 @@ namespace project_vniia
                             {
                                 string value_ = "п." + comboBox1.Text;
                                 row_.SetField("Местоположение", value_);
+                                if (germetic)
+                                {
+                                    //string gg = "++г";
+                                    row_.SetField("Отметка выполнения", gg1);
+                                }
                                 break;
                             }
                             else
@@ -218,6 +291,11 @@ namespace project_vniia
 
                                 // Then we update the value.
                                 row_.SetField("Местоположение", value);
+                                if (germetic)
+                                {
+                                    //string gg = "++г";
+                                    row_.SetField("Отметка выполнения", gg1);
+                                }
                                 break;
                             }
                         }
@@ -404,6 +482,18 @@ namespace project_vniia
                         pb.WireControl(c);
                     }
                 }
+            }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked == true)
+            {
+                germetic = true;
+            }
+            else
+            {
+                germetic = false;
             }
         }
     }
