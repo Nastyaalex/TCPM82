@@ -118,29 +118,28 @@ namespace project_vniia
             try
             {
                 string loc = Properties.Settings.Default.Table1_loc;
-
-                string tloc = Regex.Match(loc, @"\d+").Value;
-                var rast_between_table = Convert.ToInt32(tloc);
+                
+                var rast_between_table = Convert.ToInt32(loc);
 
                 var gloc = (verh + rre.Height + 25).ToString();
 
-                loc = Properties.Settings.Default.Table1_w;
-                if (Convert.ToInt32(loc) > this.Width)
+                var w_1 = Properties.Settings.Default.Table1_w;
+                if (Convert.ToInt32(w_1) > this.Width)
                 {
-                    this.Width = Convert.ToInt32(loc);
+                    this.Width = Convert.ToInt32(w_1);
                 }
-                tloc = Properties.Settings.Default.Table1_h;
+                loc = Properties.Settings.Default.Table1_h;
 
-                tloc = (verh_text - 70).ToString();
+                loc = (verh_text - 70).ToString();
 
-                dataGridView1.Width = Convert.ToInt32(loc);
-                dataGridView1.Height = Convert.ToInt32(tloc);
+                dataGridView1.Width = Convert.ToInt32(w_1);
+                dataGridView1.Height = Convert.ToInt32(loc);
                 //////////////////////////////
                 string loc2 = Properties.Settings.Default.Table2_loc;
                 var locc2 = loc2.Split(',');
                 string tloc2 = Regex.Match(locc2[0], @"\d+").Value;
                 string gloc2 = Regex.Match(locc2[1], @"\d+").Value;
-                var rrr = dataGridView1.Right + rast_between_table;
+                var rrr = dataGridView1.Right + 10;//rast_between_table;
                 if (tloc2 != rrr.ToString())
                 {
                     tloc2 = rrr.ToString();
@@ -153,11 +152,9 @@ namespace project_vniia
                 dataGridView2.Location = new Point(Convert.ToInt32(dataGridView1.Right+10), Convert.ToInt32(gloc2));
                 loc2 = Properties.Settings.Default.Table2_w;
                 tloc2 = Properties.Settings.Default.Table2_h;
-                if (Convert.ToInt32(loc2) + dataGridView1.Right + rast_between_table > this.Width)
-                {
-                    this.Width = Convert.ToInt32(loc2) + dataGridView1.Right + rast_between_table + 50;
-                }
-
+                
+                    this.Width = Convert.ToInt32(loc2) + dataGridView1.Right + 10 + 50;//rast_between_table
+                
                 tloc2 = (verh_text - 70).ToString();
 
                 dataGridView2.Width = Convert.ToInt32(loc2);
