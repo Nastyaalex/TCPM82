@@ -26,17 +26,20 @@ namespace project_vniia
             if (Calibr.one == true)
             {
                 string[] parts = str.Split('\t');
-                BD = parts[0];
-                BD_ = BD;
-                Data = Convert.ToDateTime(parts[1]);
-                T_cod = int.Parse(parts[2]);
-                parts[3] = parts[3].Replace(".", ",");
-                T_proz = float.Parse(parts[3]);
-                U_sh = int.Parse(parts[4]);
-                U_cod = int.Parse(parts[5]);
-                U_izm = int.Parse(parts[6]);
-                Sv = int.Parse(parts[7]);
-                Prim = parts[8];
+                if (parts[0] != "")
+                {
+                    BD = parts[0];
+                    BD_ = BD;
+                    Data = Convert.ToDateTime(parts[1]);
+                    T_cod = int.Parse(parts[2]);
+                    parts[3] = parts[3].Replace(".", ",");
+                    T_proz = float.Parse(parts[3]);
+                    U_sh = int.Parse(parts[4]);
+                    U_cod = int.Parse(parts[5]);
+                    U_izm = int.Parse(parts[6]);
+                    Sv = int.Parse(parts[7]);
+                    Prim = parts[8];
+                }
             }
             
         }
@@ -68,7 +71,7 @@ namespace project_vniia
                 bool del = true;
                 foreach (Item item in items)
                 {
-                    if (one == true)
+                    if (one == true && item.BD != null)
                     {
                         var conn_tabl_sv = new OleDbConnection(Form1.conString);
                         try
@@ -93,7 +96,7 @@ namespace project_vniia
                                 Console.WriteLine("--->" + com2_rez_sv_0);
 
                             }
-
+                            
                             command2_sv.CommandText = "INSERT INTO `Термокалибровка` (`Дата`, `Температура (КОД)`," +
                                 "`Температура (Проц)`, `U (при коде Uном)`, `U (код)`, `U (измеренное)`," +
                                 "`Код светодиода`, `Примечание`, `Номер БД`) VALUES (?,?,?,?,?,?,?,?,?)";

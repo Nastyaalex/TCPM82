@@ -7,6 +7,7 @@ using PickBoxTest;
 using System.Drawing;
 using System.IO;
 using project_vniia.Properties;
+using System.Text.RegularExpressions;
 
 namespace project_vniia
 {
@@ -63,6 +64,7 @@ namespace project_vniia
             Form4_splash.ShowSplashScreen();
             InitializeComponent();
 
+             
             #region
             //this.KeyPreview = true;
             ////////////////////
@@ -108,6 +110,85 @@ namespace project_vniia
             dataGridView2.UserDeletedRow += DataGridView2_UserDeletedRow;
             dataGridView1.UserDeletingRow += DataGridView1_UserDeletingRow;
             dataGridView2.UserDeletingRow += DataGridView2_UserDeletingRow;
+            this.FormClosing += Form1_FormClosing;
+            var rre = menuStrip1.ClientRectangle;
+            var verh = menuStrip1.Top;
+            var nignaagran = textBox1.ClientRectangle;
+            var verh_text = textBox1.Top;
+            try
+            {
+                string loc = Properties.Settings.Default.Table1_loc;
+
+                string tloc = Regex.Match(loc, @"\d+").Value;
+                var rast_between_table = Convert.ToInt32(tloc);
+
+                var gloc = (verh + rre.Height + 25).ToString();
+
+                loc = Properties.Settings.Default.Table1_w;
+                if (Convert.ToInt32(loc) > this.Width)
+                {
+                    this.Width = Convert.ToInt32(loc);
+                }
+                tloc = Properties.Settings.Default.Table1_h;
+
+                tloc = (verh_text - 70).ToString();
+
+                dataGridView1.Width = Convert.ToInt32(loc);
+                dataGridView1.Height = Convert.ToInt32(tloc);
+                //////////////////////////////
+                string loc2 = Properties.Settings.Default.Table2_loc;
+                var locc2 = loc2.Split(',');
+                string tloc2 = Regex.Match(locc2[0], @"\d+").Value;
+                string gloc2 = Regex.Match(locc2[1], @"\d+").Value;
+                var rrr = dataGridView1.Right + rast_between_table;
+                if (tloc2 != rrr.ToString())
+                {
+                    tloc2 = rrr.ToString();
+                }
+
+                if (gloc2 != gloc)
+                {
+                    gloc2 = gloc;
+                }
+                dataGridView2.Location = new Point(Convert.ToInt32(tloc2), Convert.ToInt32(gloc2));
+                loc2 = Properties.Settings.Default.Table2_w;
+                tloc2 = Properties.Settings.Default.Table2_h;
+                if (Convert.ToInt32(loc2) + dataGridView1.Right + rast_between_table > this.Width)
+                {
+                    this.Width = Convert.ToInt32(loc2) + dataGridView1.Right + rast_between_table + 50;
+                }
+
+                tloc2 = (verh_text - 70).ToString();
+
+                dataGridView2.Width = Convert.ToInt32(loc2);
+                dataGridView2.Height = Convert.ToInt32(tloc2);
+                ///////////////////
+                string ch = Properties.Settings.Default.Galka;
+                if (ch == "True")
+                {
+                    checkBox1.Checked = true;
+                }
+            }
+            catch (Exception p)
+            { }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                var rast = -dataGridView1.Right + dataGridView2.Left;
+                Properties.Settings.Default.Table1_loc = rast.ToString();
+                Properties.Settings.Default.Table1_w = dataGridView1.Width.ToString();
+                Properties.Settings.Default.Table1_h = dataGridView1.Height.ToString();
+                Properties.Settings.Default.Table2_loc = dataGridView2.Location.ToString();
+                Properties.Settings.Default.Table2_w = dataGridView2.Width.ToString();
+                Properties.Settings.Default.Table2_h = dataGridView2.Height.ToString();
+                Properties.Settings.Default.Galka = checkBox1.Checked.ToString();
+                Properties.Settings.Default.Save();
+            }
+            catch(Exception p)
+            { MessageBox.Show(p.ToString()); }
         }
 
         private void DataGridView2_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
@@ -393,6 +474,7 @@ namespace project_vniia
        
         private void Form1_Load(object sender, EventArgs e)
         {
+            
             do
             {
                 conString = Class_zagruz.Try_(conString, openFileDialog1);

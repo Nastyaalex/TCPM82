@@ -1376,7 +1376,13 @@ namespace project_vniia
                     foreach (DataRow row_ in table.Rows)
                     {
                         var array1 = row_.ItemArray;
-                        array1[1] = blocks[kolvo_strok];
+                        if (array1_[1].ToString() == "?дополнить")
+                        {
+                            if (blocks[kolvo_strok] == null)
+                            { }
+                            else
+                                array1[1] = blocks[kolvo_strok];
+                        }
 
                             if (!validvalue)
                             {
@@ -1684,7 +1690,7 @@ namespace project_vniia
                 
             }
             catch (Exception p)
-            { MessageBox.Show("Возможно вы не нажали на кнопку 'Собрать' или не открыли файл перед добавлением в таблицу." + p.ToString()); }
+            { MessageBox.Show( p.ToString()); }
 
         }
     }

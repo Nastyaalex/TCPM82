@@ -287,11 +287,17 @@ namespace project_vniia
             {
                 t2 = table1.Columns["Тип системы"].Ordinal;
             }
-            foreach (DataRow r in rows)
+            for (int i=rows.Count-1;i>0;i--)
             {
+                DataRow r = rows[i];
                 string a = r[t1].ToString();
                 rows_Location_obj.Add(a);
             }
+            //foreach (DataRow r in rows)
+            //{
+            //    string a = r[t1].ToString();
+            //    rows_Location_obj.Add(a);
+            //}
             foreach (var obj in rows_Location_obj)
             {
                 comboBox_number.Items.Add(obj);
@@ -304,6 +310,30 @@ namespace project_vniia
             if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 textBox1.Text = folderBrowserDialog1.SelectedPath;
+            }
+        }
+
+        private void radioButton_PSI_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton_PSI.Checked)
+            {
+                //WindowsIdentity wi = WindowsIdentity.GetCurrent();
+                //string w = wi.Name;
+                //var www = w.Split('\\');
+                string templatePathObj_3 = Form1.Protocol_saved +"\\ПСИ_"+ textBox_system.Text;
+                textBox1.Text = templatePathObj_3.ToString();
+            }
+        }
+
+        private void radioButton_PK_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton_PK.Checked)
+            {
+                //WindowsIdentity wi = WindowsIdentity.GetCurrent();
+                //string w = wi.Name;
+                //var www = w.Split('\\');
+                string templatePathObj_3 = Form1.Protocol_saved + "\\ПИ_" + textBox_system.Text;
+                textBox1.Text = templatePathObj_3.ToString();
             }
         }
 

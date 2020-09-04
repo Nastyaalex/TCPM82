@@ -167,7 +167,23 @@ namespace project_vniia
             Form1.conString = textb[9];
             Form1.Protocol_ways = textb[6];
             Form1.Protocol_saved = textb[7];
+            // доработать таймер
+            timer.Interval = 500;
+            timer.Tick += Timer_Tick;
+            timer.Start();
         }
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            button1.BackColor = colors[counter++];
+            if (counter == colors.Length)
+            {
+                counter = 0;
+                timer.Stop();
+            }
+        }
+        Timer timer = new Timer();
+        Color[] colors = { Color.AliceBlue, Color.AntiqueWhite, Color.Aqua, Color.Aquamarine, Color.Azure };
+        int counter = 0;
 
         private void Form_ways_change_Load(object sender, EventArgs e)
         {
@@ -196,6 +212,11 @@ namespace project_vniia
             {
                 textBox10.Text = folderBrowserDialog1.SelectedPath;
             }
+        }
+
+        private void textBox10_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -45,7 +45,7 @@
             // 
             this.comboBox_number.FormattingEnabled = true;
             this.comboBox_number.Location = new System.Drawing.Point(15, 36);
-            this.comboBox_number.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBox_number.Margin = new System.Windows.Forms.Padding(2);
             this.comboBox_number.Name = "comboBox_number";
             this.comboBox_number.Size = new System.Drawing.Size(124, 21);
             this.comboBox_number.TabIndex = 8;
@@ -114,6 +114,7 @@
             this.radioButton_PSI.TabStop = true;
             this.radioButton_PSI.Text = "Приемосдаточных испытаний";
             this.radioButton_PSI.UseVisualStyleBackColor = true;
+            this.radioButton_PSI.CheckedChanged += new System.EventHandler(this.radioButton_PSI_CheckedChanged);
             // 
             // radioButton_PK
             // 
@@ -125,6 +126,7 @@
             this.radioButton_PK.TabStop = true;
             this.radioButton_PK.Text = "Производственного контроля";
             this.radioButton_PK.UseVisualStyleBackColor = true;
+            this.radioButton_PK.CheckedChanged += new System.EventHandler(this.radioButton_PK_CheckedChanged);
             // 
             // Form_protokol
             // 

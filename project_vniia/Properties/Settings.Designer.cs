@@ -32,5 +32,89 @@ namespace project_vniia.Properties {
                 return ((string)(this["TCPM82_NewConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Table1_loc {
+            get {
+                return ((string)(this["Table1_loc"]));
+            }
+            set {
+                this["Table1_loc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Table1_w {
+            get {
+                return ((string)(this["Table1_w"]));
+            }
+            set {
+                this["Table1_w"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Table1_h {
+            get {
+                return ((string)(this["Table1_h"]));
+            }
+            set {
+                this["Table1_h"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Table2_loc {
+            get {
+                return ((string)(this["Table2_loc"]));
+            }
+            set {
+                this["Table2_loc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Table2_w {
+            get {
+                return ((string)(this["Table2_w"]));
+            }
+            set {
+                this["Table2_w"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Table2_h {
+            get {
+                return ((string)(this["Table2_h"]));
+            }
+            set {
+                this["Table2_h"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Galka {
+            get {
+                return ((string)(this["Galka"]));
+            }
+            set {
+                this["Galka"] = value;
+            }
+        }
     }
 }
