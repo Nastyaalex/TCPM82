@@ -145,12 +145,12 @@ namespace project_vniia
                 {
                     tloc2 = rrr.ToString();
                 }
-
+                
                 if (gloc2 != gloc)
                 {
                     gloc2 = gloc;
                 }
-                dataGridView2.Location = new Point(Convert.ToInt32(tloc2), Convert.ToInt32(gloc2));
+                dataGridView2.Location = new Point(Convert.ToInt32(dataGridView1.Right+10), Convert.ToInt32(gloc2));
                 loc2 = Properties.Settings.Default.Table2_w;
                 tloc2 = Properties.Settings.Default.Table2_h;
                 if (Convert.ToInt32(loc2) + dataGridView1.Right + rast_between_table > this.Width)
