@@ -255,7 +255,9 @@ namespace project_vniia
                     Form1.Flags = true;
                     break;
                 }
-                if (parts[i].Contains("Тип") && parts[i + 1].Contains("источника:Cs") || parts[i].Contains("Тип") && parts[i + 1].Contains("источника:U")|| parts[i].Contains("Тип") && parts[i + 1].Contains("источника:Pu"))
+                if (parts[i].Contains("Тип") && (parts[i + 1].Contains("источника:Cs")|| parts[i + 1].Contains("источника:cs")) || 
+                    parts[i].Contains("Тип") && (parts[i + 1].Contains("источника:U")|| parts[i + 1].Contains("источника:u") )|| 
+                    parts[i].Contains("Тип") && (parts[i + 1].Contains("источника:Pu")|| parts[i + 1].Contains("источника:pu")))
                 {
                     Form1.Flags_1 = true;
                     istochnik = parts[i+1];
@@ -798,7 +800,7 @@ namespace project_vniia
                     {
                         Item_Prov_Chuvstv item_o = items_.LastOrDefault();
 
-                        if (Item_Prov_Chuvstv.istochnik.Contains("Cs") && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
+                        if ((Item_Prov_Chuvstv.istochnik.Contains("Cs")|| Item_Prov_Chuvstv.istochnik.Contains("cs")) && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
                         {
                             bbb[0] = item_o.b;
                             bbb[1] = item_o.b1;
@@ -875,7 +877,7 @@ namespace project_vniia
                                 Form1.Flags_ = false;
                             }
                         }
-                        if (Item_Prov_Chuvstv.istochnik.Contains("U") && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
+                        if (!Item_Prov_Chuvstv.istochnik.Contains("pu") && !Item_Prov_Chuvstv.istochnik.Contains("Pu") && (Item_Prov_Chuvstv.istochnik.Contains("U")|| Item_Prov_Chuvstv.istochnik.Contains("u")) && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
                         {
                             bbb[0] = item_o.b;
                             bbb[1] = item_o.b1;
@@ -949,7 +951,7 @@ namespace project_vniia
                                 Form1.Flags_ = false;
                             }
                         }
-                        if (Item_Prov_Chuvstv.istochnik.Contains("Pu") && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
+                        if ((Item_Prov_Chuvstv.istochnik.Contains("Pu")|| Item_Prov_Chuvstv.istochnik.Contains("pu")) && item_o.b != 0 && (item_o.b == Item_Prov_Chuvstv.b0))
                         {
                             bbb[0] = item_o.b;
                             bbb[1] = item_o.b1;
